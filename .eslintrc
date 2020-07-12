@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "airbnb-base/legacy"
+  ],
+  "env": {
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module"
+  },
+  "globals": {
+    "Promise": "readonly"
+  }
+}

@@ -1,0 +1,26 @@
+name: 'Pull Request Stats'
+author: 'Manuel de la Torre'
+description: 'Github action to print relevant stats about Pull Request reviewers'
+inputs:
+  token:
+    description: 'The GitHub authentication token'
+  repositories:
+    description: 'A comma separated list of github repositories to calculate the stats.'
+  period:
+    description: 'The length of the period used to calculate the stats, expressed in days'
+    required: true
+    default: '30'
+  charts:
+    description: 'Whether to add a chart to the start or not. Possible values: "true" or "false"'
+    required: true
+    default: 'false'
+  sort-by:
+    description: 'The column used to sort the data. Possible values: "TIME", "COMMENTS", "REVIEWS"'
+    required: true
+    default: 'TIME'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'award'
+  color: 'yellow'

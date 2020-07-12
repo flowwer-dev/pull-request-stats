@@ -1,0 +1,33 @@
+{
+  "name": "pull-request-stats",
+  "version": "1.0.0",
+  "description": "Github action to print relevant stats about Pull Request reviewers",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "ncc build src/index.js",
+    "test": "jest ./test/"
+  },
+  "keywords": [],
+  "author": "Manuel de la Torre",
+  "license": "agpl-3.0",
+  "jest": {
+    "testEnvironment": "node",
+    "setupFiles": [
+      "./test/index.js"
+    ]
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/github": "^4.0.0",
+    "humanize-duration": "^3.23.1",
+    "markdown-table": "^2.0.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.22.3",
+    "eslint": "7.2.0",
+    "eslint-config-airbnb-base": "14.2.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jest": "^23.17.1",
+    "jest": "^26.1.0"
+  }
+}
