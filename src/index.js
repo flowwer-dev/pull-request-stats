@@ -18,9 +18,11 @@ const getRepositories = (currentRepo) => {
 };
 
 const getParams = () => {
-  const { sha, repository: currentRepo } = github;
+  const { sha, payload } = github.context || {};
+  const { repository } = payload || {};
+  const currentRepo = repository.full_name;
 
-  const githubToken = core.getInput('token') || github.token;
+  const githubToken = core.getInput('token');
 
   const periodLength = getPeriodLength();
 
@@ -44,8 +46,10 @@ const getParams = () => {
 const run = async () => {
   try {
     await execute(getParams());
-    core.info('Executed successfully');
+    core.info('Action successfully executed');
   } catch (error) {
+    core.debug(`Execution failed with error: ${error.message}`);
+    core.debug(error.stack);
     core.setFailed(error.message);
   }
 };

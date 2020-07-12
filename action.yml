@@ -4,6 +4,8 @@ description: 'Github action to print relevant stats about Pull Request reviewers
 inputs:
   token:
     description: 'The GitHub authentication token'
+    required: true
+    default: ${{ github.token }}
   repositories:
     description: 'A comma separated list of github repositories to calculate the stats.'
   period:

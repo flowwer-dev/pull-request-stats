@@ -445,7 +445,7 @@ module.exports = eval("require")("encoding");
 
 const { parsePullRequest } = __webpack_require__(120);
 
-const RESULTS_PER_PAGE = 25;
+const RESULTS_PER_PAGE = 100;
 const SORT = 'created';
 const SORT_DIRECTION = 'desc';
 const STATE = 'all';
@@ -9109,6 +9109,7 @@ if (process.platform === 'linux') {
 /***/ 662:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
+const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const { subtractDaysToDate } = __webpack_require__(353);
 const {
@@ -9133,29 +9134,38 @@ const getPullRequests = async ({ repositories, octokit, startDate }) => {
   }, Promise.resolve([]));
 };
 
-module.exports = async ({
-  githubToken,
-  periodLength,
-  repositories,
-  displayCharts,
-  sortBy,
-  currentRepo,
-  sha
-}) => {
+module.exports = async (params) => {
+  const {
+    githubToken,
+    periodLength,
+    repositories,
+    displayCharts,
+    sortBy,
+    currentRepo,
+    sha
+  } = params;
+  core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
+
   const octokit = github.getOctokit(githubToken);
   const startDate = subtractDaysToDate(new Date(), periodLength);
 
   const pulls = await getPullRequests({ repositories, octokit, startDate });
+  core.info(`Found ${pulls.length} pull requests to analyze`);
 
   const reviewers = getReviewers(pulls).map(reviewer => {
     const stats = calculateReviewerStats(pulls, reviewer.id);
     return { ...reviewer, stats };
   });
+  core.info(`Analyzed stats for ${reviewers.length} pull request reviewers`);
 
   const table = buildTable(reviewers, { displayCharts, sortBy });
+  core.debug('Stats table built successfully');
+
   const content = buildComment({ table, periodLength });
+  core.debug(`Commit content built successfully: ${content}`);
 
   await postComment({ octokit, content, sha, repository: currentRepo });
+  core.debug('Posted comment successfully');
 };
 
 
@@ -9181,7 +9191,7 @@ const parseArray = (value) => value.split(',');
 
 const getPeriodLength = () => {
   const MAX_PERIOD_DATE = 365;
-  const value = parseInt(core.getInput('period-length'), 10);
+  const value = parseInt(core.getInput('period'), 10);
   return Math.min(value, MAX_PERIOD_DATE);
 };
 
@@ -9191,15 +9201,17 @@ const getRepositories = (currentRepo) => {
 };
 
 const getParams = () => {
-  const { sha, repository: currentRepo } = github;
+  const { sha, payload } = github.context || {};
+  const { repository } = payload || {};
+  const currentRepo = repository.full_name;
 
-  const githubToken = core.getInput('token') || github.token;
+  const githubToken = core.getInput('token');
 
   const periodLength = getPeriodLength();
 
   const repositories = getRepositories(currentRepo);
 
-  const displayCharts = parseBoolean(core.getInput('display-charts'));
+  const displayCharts = parseBoolean(core.getInput('charts'));
 
   const sortBy = core.getInput('sort-by');
 
@@ -9217,8 +9229,10 @@ const getParams = () => {
 const run = async () => {
   try {
     await execute(getParams());
-    core.info('Executed successfully');
+    core.info('Action successfully executed');
   } catch (error) {
+    core.debug(`Execution failed with error: ${error.message}`);
+    core.debug(error.stack);
     core.setFailed(error.message);
   }
 };

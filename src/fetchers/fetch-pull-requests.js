@@ -1,6 +1,6 @@
 const { parsePullRequest } = require('../parsers');
 
-const RESULTS_PER_PAGE = 25;
+const RESULTS_PER_PAGE = 100;
 const SORT = 'created';
 const SORT_DIRECTION = 'desc';
 const STATE = 'all';
