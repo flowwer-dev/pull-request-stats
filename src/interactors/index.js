@@ -4,6 +4,9 @@ const calculateReviewerStats = require('./calculate-reviewer-stats');
 const getRepoPulls = require('./get-repo-pulls');
 const getReviewers = require('./get-reviewers');
 const postComment = require('./post-comment');
+const trackError = require('./track-error');
+const trackRun = require('./track-run');
+const trackSuccess = require('./track-success');
 
 module.exports = {
   buildTable,
@@ -11,5 +14,8 @@ module.exports = {
   calculateReviewerStats,
   getRepoPulls,
   getReviewers,
-  postComment
+  postComment,
+  trackError,
+  trackRun,
+  trackSuccess
 };

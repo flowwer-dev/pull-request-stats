@@ -7,9 +7,11 @@ const {
   calculateReviewerStats,
   buildTable,
   buildComment,
-  postComment
+  postComment,
+  trackError,
+  trackRun,
+  trackSuccess
 } = require('./interactors');
-
 const getPullRequests = async ({ repositories, octokit, startDate }) => {
   return repositories.reduce(async (promise, repository) => {
     const prevPulls = await promise;
@@ -23,7 +25,7 @@ const getPullRequests = async ({ repositories, octokit, startDate }) => {
   }, Promise.resolve([]));
 };
 
-module.exports = async (params) => {
+const run = async (params) => {
   const {
     githubToken,
     periodLength,
@@ -55,4 +57,17 @@ module.exports = async (params) => {
 
   await postComment({ octokit, content, sha, repository: currentRepo });
   core.debug('Posted comment successfully');
+};
+
+module.exports = async (params) => {
+  try {
+    trackRun(params);
+    const start = new Date();
+    await run(params);
+    const end = new Date();
+    trackSuccess({ timeMs: end - start })
+  } catch (error) {
+    trackError(error);
+    throw error;
+  }
 };
