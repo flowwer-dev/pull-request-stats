@@ -17,29 +17,28 @@ const getRepositories = (currentRepo) => {
   return input ? parseArray(input) : [currentRepo];
 };
 
+const getSha = () => {
+  const { eventName, payload, sha } = github.context || {};
+  core.debug(`Event name: ${eventName}`);
+  if (eventName === 'pull_request') {
+    return payload.pull_request.head.sha;
+  }
+  return sha;
+};
+
 const getParams = () => {
-  const { sha, payload } = github.context || {};
+  const { payload } = github.context || {};
   const { repository } = payload || {};
   const currentRepo = repository.full_name;
 
-  const githubToken = core.getInput('token');
-
-  const periodLength = getPeriodLength();
-
-  const repositories = getRepositories(currentRepo);
-
-  const displayCharts = parseBoolean(core.getInput('charts'));
-
-  const sortBy = core.getInput('sort-by');
-
   return {
-    githubToken,
-    periodLength,
-    repositories,
-    displayCharts,
-    sortBy,
     currentRepo,
-    sha
+    githubToken: core.getInput('token'),
+    sortBy: core.getInput('sort-by'),
+    periodLength: getPeriodLength(),
+    repositories: getRepositories(currentRepo),
+    displayCharts: parseBoolean(core.getInput('charts')),
+    sha: getSha()
   };
 };
 
