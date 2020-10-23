@@ -46,7 +46,7 @@ Add this to the file `.github/workflows/stats.yml`:
 ```yml
 name: Pull Request Stats
 
-on: [push]
+on: pull_request
 
 jobs:
   stats:
@@ -74,7 +74,7 @@ Add this to the file `.github/workflows/stats.yml`:
 ```yml
 name: Pull Request Stats
 
-on: [push]
+on: pull_request
 
 jobs:
   stats:
