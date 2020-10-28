@@ -38,12 +38,14 @@ module.exports = (pulls, reviewerId) => {
     const totalComments = pulls.reduce((a, b) => a + b.userComments.length, 0);
     const commentsPerReview = totalComments / totalReviews;
     const avgTimeToFirstReview = calculateAverage(pulls.map(p => p.timeToFirstReview));
+    const reviews = pulls.map(p => ({ date: p.createdAt, time: p.timeToFirstReview }));
 
     return {
       totalReviews,
       totalComments,
       commentsPerReview,
-      avgTimeToFirstReview
+      avgTimeToFirstReview,
+      reviews
     };
   }
 

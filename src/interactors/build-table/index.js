@@ -6,7 +6,9 @@ const getTableData = require('./get-table-data');
 const sortByStats = require('./sort-by-stats');
 
 module.exports = (reviewers, options = {}) => {
-  const { sortBy, displayCharts = false } = options;
+  const {
+    sortBy, periodLength, displayCharts = false, disableLinks = false
+  } = options;
 
   const execute = () => {
     const allStats = reviewers.map(r => r.stats);
@@ -19,7 +21,9 @@ module.exports = (reviewers, options = {}) => {
     const tableData = getTableData({
       users,
       bests,
-      displayCharts
+      displayCharts,
+      disableLinks,
+      periodLength
     });
 
     return table(tableData);

@@ -1,4 +1,5 @@
 const { TITLES } = require('./constants');
+const buildReviewTimeLink = require('./build-review-time-link');
 const { durationToString, isNil } = require('../../utils');
 
 const NA = '-';
@@ -47,7 +48,17 @@ const getImage = ({ user, displayCharts }) => {
   return buildLink(url, buildImage(avatarUrl, avatarSize));
 };
 
-module.exports = ({ users, bests, displayCharts }) => {
+const addReviewsTimeLink = (text, disable, user, period) => {
+  return disable ? text : `[${text}](${buildReviewTimeLink({ user, period })})`;
+};
+
+module.exports = ({
+  users,
+  bests,
+  displayCharts,
+  disableLinks,
+  periodLength
+}) => {
   const printStat = (stats, statName, parser) => {
     const value = stats[statName];
     if (isNil(value)) return NA;
@@ -63,7 +74,8 @@ module.exports = ({ users, bests, displayCharts }) => {
 
     const image = getImage({ user, displayCharts });
     const username = `${login}`;
-    const avgTimeStr = printStat(stats, 'avgTimeToFirstReview', durationToString);
+    const avgTimeVal = printStat(stats, 'avgTimeToFirstReview', durationToString);
+    const avgTimeStr = addReviewsTimeLink(avgTimeVal, disableLinks, user, periodLength);
     const reviewsStr = printStat(stats, 'totalReviews', noParse);
     const commentsStr = printStat(stats, 'totalComments', noParse);
 

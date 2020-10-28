@@ -8,7 +8,41 @@ module.exports = [
       totalReviews: 8,
       totalComments: 9,
       commentsPerReview: 1.125,
-      avgTimeToFirstReview: 6484750
+      avgTimeToFirstReview: 2490000,
+      reviews: [
+        {
+          date: new Date('2020-06-30T23:46:50.000Z'),
+          time: 671000
+        },
+        {
+          date: new Date('2020-06-30T23:32:51.000Z'),
+          time: 1258000
+        },
+        {
+          date: new Date('2020-05-30T09:08:15.000Z'),
+          time: 7455000
+        },
+        {
+          date: new Date('2020-05-29T19:00:00.000Z'),
+          time: 654000
+        },
+        {
+          date: new Date('2020-04-30T16:55:50.000Z'),
+          time: 341000
+        },
+        {
+          date: new Date('2020-03-30T13:32:51.000Z'),
+          time: 3338000
+        },
+        {
+          date: new Date('2020-03-30T01:58:15.000Z'),
+          time: 5434000
+        },
+        {
+          date: new Date('2020-02-29T18:01:00.000Z'),
+          time: 769000
+        }
+      ]
     }
   },
   {
@@ -20,7 +54,17 @@ module.exports = [
       totalReviews: 2,
       totalComments: 0,
       commentsPerReview: 0,
-      avgTimeToFirstReview: 4267000
+      avgTimeToFirstReview: 1604500,
+      reviews: [
+        {
+          date: new Date('2020-06-30T16:46:50.000Z'),
+          time: 951000
+        },
+        {
+          date: new Date('2020-06-30T13:32:51.000Z'),
+          time: 2258000
+        }
+      ]
     }
   },
   {
@@ -32,7 +76,13 @@ module.exports = [
       totalReviews: 1,
       totalComments: 0,
       commentsPerReview: 0,
-      avgTimeToFirstReview: 119000
+      avgTimeToFirstReview: 119000,
+      reviews: [
+        {
+          date: new Date('2020-06-30T01:58:15.000Z'),
+          time: 119000
+        }
+      ]
     }
   },
   {
@@ -44,7 +94,13 @@ module.exports = [
       totalReviews: 1,
       totalComments: 0,
       commentsPerReview: 0,
-      avgTimeToFirstReview: 4203000
+      avgTimeToFirstReview: 4203000,
+      reviews: [
+        {
+          date: new Date('2020-06-29T18:01:00.000Z'),
+          time: 4203000
+        }
+      ]
     }
   }
 ];

@@ -1,6 +1,6 @@
 {
   "name": "pull-request-stats",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Github action to print relevant stats about Pull Request reviewers",
   "main": "dist/index.js",
   "scripts": {
@@ -20,6 +20,7 @@
     "@actions/core": "^1.2.4",
     "@actions/github": "^4.0.0",
     "humanize-duration": "^3.23.1",
+    "jsurl": "^0.1.5",
     "markdown-table": "^2.0.0",
     "mixpanel": "^0.11.0"
   },

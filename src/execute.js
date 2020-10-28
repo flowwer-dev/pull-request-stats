@@ -31,6 +31,7 @@ const run = async (params) => {
     periodLength,
     repositories,
     displayCharts,
+    disableLinks,
     sortBy,
     currentRepo,
     sha
@@ -49,7 +50,7 @@ const run = async (params) => {
   });
   core.info(`Analyzed stats for ${reviewers.length} pull request reviewers`);
 
-  const table = buildTable(reviewers, { displayCharts, sortBy });
+  const table = buildTable(reviewers, { displayCharts, disableLinks, sortBy, periodLength });
   core.debug('Stats table built successfully');
 
   const content = buildComment({ table, periodLength });

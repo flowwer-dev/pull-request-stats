@@ -7,13 +7,15 @@ Github action to print relevant stats about Pull Request reviewers.
 
 The objective of this action is to:
 
-* Reduce the time taken to review pull requests.
+* Reduce the time taken to review the pull requests.
 * Encourage quality on reviews.
 * Help deciding which people to assign as reviewers.
 
 Running this action will create a comment like this, visible in your pull requests:
 
 ![](/assets/example.png)
+
+**🌟 New in v1.1:** The "average time to review" metric includes a link to see the [historical behavior](https://app.flowwer.dev/charts/review-time/~(u~(i~'2741~n~'ddh)~p~30~r~(~(d~'qcrje2~t~'in)~(d~'qcriqr~t~'yy)~(d~'qb501r~t~'3fr)~(d~'qb3ws0~t~'i6)~(d~'q9m1p2~t~'9h)~(d~'q80dmr~t~'2kq)~(d~'q7zhh3~t~'46y)~(d~'q6h61o~t~'3ix)))) of each user.
 
 ## Usage
 
@@ -34,6 +36,7 @@ The possible inputs for this action are:
 | `repositories` | A comma separated list of github repositories to calculate the stats. When specifying other repo(s) it is mandatory to pass a Personal Access Token in the `token` parameter. | Current repository |
 | `period` | The length of the period used to calculate the stats, expressed in days. | `30` |
 | `charts` | Whether to add a chart to the start or not. Possible values: `true` or `false`. | `false` |
+| `disable-links` | If enabled, removes the links to the detailed charts. Possible values: `true` or `false`. | `false` |
 | `sort-by` | The column used to sort the data. Possible values: `TIME`, `COMMENTS`, `REVIEWS`. | `TIME` |
 
 

@@ -60,7 +60,9 @@ const getTableData = __webpack_require__(546);
 const sortByStats = __webpack_require__(235);
 
 module.exports = (reviewers, options = {}) => {
-  const { sortBy, displayCharts = false } = options;
+  const {
+    sortBy, periodLength, displayCharts = false, disableLinks = false
+  } = options;
 
   const execute = () => {
     const allStats = reviewers.map(r => r.stats);
@@ -73,7 +75,9 @@ module.exports = (reviewers, options = {}) => {
     const tableData = getTableData({
       users,
       bests,
-      displayCharts
+      displayCharts,
+      disableLinks,
+      periodLength
     });
 
     return table(tableData);
@@ -864,6 +868,7 @@ module.exports = ({
   periodLength,
   repositories,
   displayCharts,
+  disableLinks,
   sortBy,
   currentRepo,
   sha
@@ -874,6 +879,7 @@ module.exports = ({
   tracker.track('run', {
     periodLength,
     displayCharts,
+    disableLinks,
     sortBy,
     currentRepo,
     reposCount,
@@ -927,6 +933,182 @@ const sortByStats = (reviewers, sortBy) => {
 };
 
 module.exports = sortByStats;
+
+
+/***/ }),
+
+/***/ 241:
+/***/ (function(__unusedmodule, exports) {
+
+/**
+ * Copyright (c) 2011 Bruno Jouhier <bruno.jouhier@sage.com>
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+//
+(function(exports) {
+	"use strict";
+	exports.stringify = function stringify(v) {
+		function encode(s) {
+			return !/[^\w-.]/.test(s) ? s : s.replace(/[^\w-.]/g, function(ch) {
+				if (ch === '$') return '!';
+				ch = ch.charCodeAt(0);
+				// thanks to Douglas Crockford for the negative slice trick
+				return ch < 0x100 ? '*' + ('00' + ch.toString(16)).slice(-2) : '**' + ('0000' + ch.toString(16)).slice(-4);
+			});
+		}
+
+		var tmpAry;
+
+		switch (typeof v) {
+			case 'number':
+				return isFinite(v) ? '~' + v : '~null';
+			case 'boolean':
+				return '~' + v;
+			case 'string':
+				return "~'" + encode(v);
+			case 'object':
+				if (!v) return '~null';
+
+				tmpAry = [];
+
+				if (Array.isArray(v)) {
+					for (var i = 0; i < v.length; i++) {
+						tmpAry[i] = stringify(v[i]) || '~null';
+					}
+
+					return '~(' + (tmpAry.join('') || '~') + ')';
+				} else {
+					for (var key in v) {
+						if (v.hasOwnProperty(key)) {
+							var val = stringify(v[key]);
+
+							// skip undefined and functions
+							if (val) {
+								tmpAry.push(encode(key) + val);
+							}
+						}
+					}
+
+					return '~(' + tmpAry.join('~') + ')';
+				}
+			default:
+				// function, undefined
+				return;
+		}
+	};
+
+	var reserved = {
+		"true": true,
+		"false": false,
+		"null": null
+	};
+
+	exports.parse = function(s) {
+		if (!s) return s;
+		s = s.replace(/%(25)*27/g, "'");
+		var i = 0,
+			len = s.length;
+
+		function eat(expected) {
+			if (s.charAt(i) !== expected) throw new Error("bad JSURL syntax: expected " + expected + ", got " + (s && s.charAt(i)));
+			i++;
+		}
+
+		function decode() {
+			var beg = i,
+				ch, r = "";
+			while (i < len && (ch = s.charAt(i)) !== '~' && ch !== ')') {
+				switch (ch) {
+					case '*':
+						if (beg < i) r += s.substring(beg, i);
+						if (s.charAt(i + 1) === '*') r += String.fromCharCode(parseInt(s.substring(i + 2, i + 6), 16)), beg = (i += 6);
+						else r += String.fromCharCode(parseInt(s.substring(i + 1, i + 3), 16)), beg = (i += 3);
+						break;
+					case '!':
+						if (beg < i) r += s.substring(beg, i);
+						r += '$', beg = ++i;
+						break;
+					default:
+						i++;
+				}
+			}
+			return r + s.substring(beg, i);
+		}
+
+		return (function parseOne() {
+			var result, ch, beg;
+			eat('~');
+			switch (ch = s.charAt(i)) {
+				case '(':
+					i++;
+					if (s.charAt(i) === '~') {
+						result = [];
+						if (s.charAt(i + 1) === ')') i++;
+						else {
+							do {
+								result.push(parseOne());
+							} while (s.charAt(i) === '~');
+						}
+					} else {
+						result = {};
+						if (s.charAt(i) !== ')') {
+							do {
+								var key = decode();
+								result[key] = parseOne();
+							} while (s.charAt(i) === '~' && ++i);
+						}
+					}
+					eat(')');
+					break;
+				case "'":
+					i++;
+					result = decode();
+					break;
+				default:
+					beg = i++;
+					while (i < len && /[^)~]/.test(s.charAt(i)))
+					i++;
+					var sub = s.substring(beg, i);
+					if (/[\d\-]/.test(ch)) {
+						result = parseFloat(sub);
+					} else {
+						result = reserved[sub];
+						if (typeof result === "undefined") throw new Error("bad value keyword: " + sub);
+					}
+			}
+			return result;
+		})();
+	}
+
+	exports.tryParse = function(s, def) {
+		try {
+			return exports.parse(s);
+		} catch (ex) {
+			return def;
+		}
+	}
+
+})( true ? exports : (undefined));
 
 
 /***/ }),
@@ -3100,12 +3282,14 @@ module.exports = (pulls, reviewerId) => {
     const totalComments = pulls.reduce((a, b) => a + b.userComments.length, 0);
     const commentsPerReview = totalComments / totalReviews;
     const avgTimeToFirstReview = calculateAverage(pulls.map(p => p.timeToFirstReview));
+    const reviews = pulls.map(p => ({ date: p.createdAt, time: p.timeToFirstReview }));
 
     return {
       totalReviews,
       totalComments,
       commentsPerReview,
-      avgTimeToFirstReview
+      avgTimeToFirstReview,
+      reviews
     };
   }
 
@@ -4142,6 +4326,13 @@ const endpoint = withDefaults(null, DEFAULTS);
 exports.endpoint = endpoint;
 //# sourceMappingURL=index.js.map
 
+
+/***/ }),
+
+/***/ 402:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+module.exports = __webpack_require__(241);
 
 /***/ }),
 
@@ -7456,6 +7647,7 @@ exports.HttpClient = HttpClient;
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const { TITLES } = __webpack_require__(775);
+const buildReviewTimeLink = __webpack_require__(630);
 const { durationToString, isNil } = __webpack_require__(353);
 
 const NA = '-';
@@ -7504,7 +7696,17 @@ const getImage = ({ user, displayCharts }) => {
   return buildLink(url, buildImage(avatarUrl, avatarSize));
 };
 
-module.exports = ({ users, bests, displayCharts }) => {
+const addReviewsTimeLink = (text, disable, user, period) => {
+  return disable ? text : `[${text}](${buildReviewTimeLink({ user, period })})`;
+};
+
+module.exports = ({
+  users,
+  bests,
+  displayCharts,
+  disableLinks,
+  periodLength
+}) => {
   const printStat = (stats, statName, parser) => {
     const value = stats[statName];
     if (isNil(value)) return NA;
@@ -7520,7 +7722,8 @@ module.exports = ({ users, bests, displayCharts }) => {
 
     const image = getImage({ user, displayCharts });
     const username = `${login}`;
-    const avgTimeStr = printStat(stats, 'avgTimeToFirstReview', durationToString);
+    const avgTimeVal = printStat(stats, 'avgTimeToFirstReview', durationToString);
+    const avgTimeStr = addReviewsTimeLink(avgTimeVal, disableLinks, user, periodLength);
     const reviewsStr = printStat(stats, 'totalReviews', noParse);
     const commentsStr = printStat(stats, 'totalComments', noParse);
 
@@ -7795,6 +7998,40 @@ module.exports = isPlainObject;
 
 /***/ }),
 
+/***/ 630:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const JSURL = __webpack_require__(402);
+
+const URL = 'https://app.flowwer.dev/charts/review-time/';
+
+const toSeconds = (ms) => Math.round(ms / 1000);
+
+const compressInt = (int) => int.toString(36);
+
+const compressDate = (date) => compressInt(Math.round(date.getTime() / 1000));
+
+const parseReview = ({ date, time }) => ({
+  d: compressDate(date),
+  t: compressInt(toSeconds(time))
+});
+
+module.exports = ({ user, period }) => {
+  const data = JSURL.stringify({
+    u: {
+      i: `${user.id}`,
+      n: user.login
+    },
+    p: period,
+    r: (user.stats.reviews || []).map(parseReview)
+  });
+
+  return `${URL}${data}`;
+};
+
+
+/***/ }),
+
 /***/ 631:
 /***/ (function(module) {
 
@@ -8016,6 +8253,7 @@ const run = async (params) => {
     periodLength,
     repositories,
     displayCharts,
+    disableLinks,
     sortBy,
     currentRepo,
     sha
@@ -8034,7 +8272,7 @@ const run = async (params) => {
   });
   core.info(`Analyzed stats for ${reviewers.length} pull request reviewers`);
 
-  const table = buildTable(reviewers, { displayCharts, sortBy });
+  const table = buildTable(reviewers, { displayCharts, disableLinks, sortBy, periodLength });
   core.debug('Stats table built successfully');
 
   const content = buildComment({ table, periodLength });
@@ -8110,6 +8348,7 @@ const getParams = () => {
     periodLength: getPeriodLength(),
     repositories: getRepositories(currentRepo),
     displayCharts: parseBoolean(core.getInput('charts')),
+    disableLinks: parseBoolean(core.getInput('disable-links')),
     sha: getSha()
   };
 };
@@ -9895,7 +10134,7 @@ function isDefaultPort(port, secure) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"1.0.2","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"jest ./test/"},"keywords":[],"author":"Manuel de la Torre","license":"agpl-3.0","jest":{"testEnvironment":"node","setupFiles":["./test/index.js"]},"dependencies":{"@actions/core":"^1.2.4","@actions/github":"^4.0.0","humanize-duration":"^3.23.1","markdown-table":"^2.0.0","mixpanel":"^0.11.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"7.2.0","eslint-config-airbnb-base":"14.2.0","eslint-plugin-import":"^2.21.2","eslint-plugin-jest":"^23.17.1","jest":"^26.1.0"}};
+module.exports = {"name":"pull-request-stats","version":"1.1.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"jest ./test/"},"keywords":[],"author":"Manuel de la Torre","license":"agpl-3.0","jest":{"testEnvironment":"node","setupFiles":["./test/index.js"]},"dependencies":{"@actions/core":"^1.2.4","@actions/github":"^4.0.0","humanize-duration":"^3.23.1","jsurl":"^0.1.5","markdown-table":"^2.0.0","mixpanel":"^0.11.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"7.2.0","eslint-config-airbnb-base":"14.2.0","eslint-plugin-import":"^2.21.2","eslint-plugin-jest":"^23.17.1","jest":"^26.1.0"}};
 
 /***/ }),
 

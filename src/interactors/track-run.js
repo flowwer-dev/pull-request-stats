@@ -4,6 +4,7 @@ module.exports = ({
   periodLength,
   repositories,
   displayCharts,
+  disableLinks,
   sortBy,
   currentRepo,
   sha
@@ -14,6 +15,7 @@ module.exports = ({
   tracker.track('run', {
     periodLength,
     displayCharts,
+    disableLinks,
     sortBy,
     currentRepo,
     reposCount,

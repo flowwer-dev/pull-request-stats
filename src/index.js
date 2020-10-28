@@ -38,6 +38,7 @@ const getParams = () => {
     periodLength: getPeriodLength(),
     repositories: getRepositories(currentRepo),
     displayCharts: parseBoolean(core.getInput('charts')),
+    disableLinks: parseBoolean(core.getInput('disable-links')),
     sha: getSha()
   };
 };
