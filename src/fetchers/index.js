@@ -1,9 +1,5 @@
-const fetchComments = require('./fetch-comments');
-const fetchPullRequests = require('./fetch-pull-requests');
-const fetchReviews = require('./fetch-reviews');
+const fetchPullRequests = require('./fetchPullRequests');
 
 module.exports = {
-  fetchComments,
-  fetchPullRequests,
-  fetchReviews
+  fetchPullRequests
 };

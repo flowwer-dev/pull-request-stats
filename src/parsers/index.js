@@ -1,10 +1,8 @@
-const parseComment = require('./parse-comment');
-const parsePullRequest = require('./parse-pull-request');
+const parsePullRequest = require('./parsePullRequest');
 const parseReview = require('./parse-review');
-const parseUser = require('./parse-user');
+const parseUser = require('./parseUser');
 
 module.exports = {
-  parseComment,
   parsePullRequest,
   parseReview,
   parseUser

@@ -6,6 +6,8 @@ const parseBoolean = (value) => value === 'true';
 
 const parseArray = (value) => value.split(',');
 
+// TODO: Validate "org" and "repos" input against a Personal Access Token
+
 const getPeriodLength = () => {
   const MAX_PERIOD_DATE = 365;
   const value = parseInt(core.getInput('period'), 10);
