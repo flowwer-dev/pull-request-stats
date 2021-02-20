@@ -2,9 +2,8 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const { subtractDaysToDate } = require('./utils');
 const {
-  getRepoPulls,
+  getPulls,
   getReviewers,
-  calculateReviewerStats,
   buildTable,
   buildComment,
   postComment,
@@ -12,24 +11,13 @@ const {
   trackRun,
   trackSuccess
 } = require('./interactors');
-const getPullRequests = async ({ repositories, octokit, startDate }) => {
-  return repositories.reduce(async (promise, repository) => {
-    const prevPulls = await promise;
-    const [owner, repo] = repository.split('/');
-
-    const pulls = await getRepoPulls({
-      octokit, owner, repo, startDate
-    });
-
-    return [ ...prevPulls, ...pulls ];
-  }, Promise.resolve([]));
-};
 
 const run = async (params) => {
   const {
     githubToken,
     periodLength,
-    repositories,
+    org,
+    repos,
     displayCharts,
     disableLinks,
     sortBy,
@@ -40,14 +28,10 @@ const run = async (params) => {
 
   const octokit = github.getOctokit(githubToken);
   const startDate = subtractDaysToDate(new Date(), periodLength);
-
-  const pulls = await getPullRequests({ repositories, octokit, startDate });
+  const pulls = await getPulls({ octokit, org, repos, startDate });
   core.info(`Found ${pulls.length} pull requests to analyze`);
 
-  const reviewers = getReviewers(pulls).map(reviewer => {
-    const stats = calculateReviewerStats(pulls, reviewer.id);
-    return { ...reviewer, stats };
-  });
+  const reviewers = getReviewers(pulls);
   core.info(`Analyzed stats for ${reviewers.length} pull request reviewers`);
 
   const table = buildTable(reviewers, { displayCharts, disableLinks, sortBy, periodLength });

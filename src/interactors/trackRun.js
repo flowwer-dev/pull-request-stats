@@ -2,7 +2,8 @@ const { tracker } = require('../utils');
 
 module.exports = ({
   periodLength,
-  repositories,
+  org,
+  repos,
   displayCharts,
   disableLinks,
   sortBy,
@@ -10,7 +11,8 @@ module.exports = ({
   sha
 }) => {
   const [owner, repo] = currentRepo.split('/');
-  const reposCount = repositories.length;
+  const reposCount = (repos || []).length;
+  const orgsCount = org ? 1 : 0;
 
   tracker.track('run', {
     periodLength,
@@ -19,6 +21,7 @@ module.exports = ({
     sortBy,
     currentRepo,
     reposCount,
+    orgsCount,
     owner,
     repo,
     sha

@@ -1,5 +1,5 @@
 const input = require('./mocks/review.json');
-const parseReview = require(`${ROOT_PATH}/src/parsers/parseReview`);
+const parseReview = require('../parseReview');
 
 describe('Parsers | .parseReview', () => {
   const submittedAt = new Date('2021-02-12T23:55:22Z');
@@ -7,9 +7,11 @@ describe('Parsers | .parseReview', () => {
 
   it('parses the main fields', () => {
     const response = parseReview(input, pullRequest);
+    expect(response).toHaveProperty('id', 5678);
     expect(response).toHaveProperty('submittedAt', submittedAt);
     expect(response).toHaveProperty('commentsCount', 1);
     expect(response).toHaveProperty('author', {
+      id: '1031639',
       url: 'https://github.com/manuelmhtr',
       login: 'manuelmhtr',
       avatarUrl: 'https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4'

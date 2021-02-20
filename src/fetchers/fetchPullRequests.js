@@ -1,14 +1,16 @@
 const PRS_QUERY = `
-query($query: String!, $limit: Integer!, $after: String) {
-  search(query: $query, first: $limit, after: $after, type: ISSUE) {
+query($search: String!, $limit: Int!, $after: String) {
+  search(query: $search, first: $limit, after: $after, type: ISSUE) {
     edges {
       cursor
       node {
         ... on PullRequest {
+          databaseId
           publishedAt
           author { ...ActorFragment }
           reviews(first: 100) {
             nodes {
+              databaseId
               submittedAt
               commit { pushedDate }
               comments { totalCount }
@@ -30,11 +32,11 @@ fragment ActorFragment on Actor {
 
 module.exports = ({
   octokit,
-  query,
+  search,
   after,
-  limit
+  limit = null
 }) => {
-  const variables = { query, after, limit };
+  const variables = { search, after, limit };
   return octokit
     .graphql(PRS_QUERY, variables)
     .catch(error => {

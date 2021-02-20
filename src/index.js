@@ -8,7 +8,7 @@ const parseArray = (value) => value.split(',');
 
 // TODO: Validate "org" and "repos" input against a Personal Access Token
 
-const getPeriodLength = () => {
+const getPeriod = () => {
   const MAX_PERIOD_DATE = 365;
   const value = parseInt(core.getInput('period'), 10);
   return Math.min(value, MAX_PERIOD_DATE);
@@ -35,9 +35,9 @@ const getParams = () => {
 
   return {
     currentRepo,
+    periodLength: getPeriod(),
     githubToken: core.getInput('token'),
     sortBy: core.getInput('sort-by'),
-    periodLength: getPeriodLength(),
     repositories: getRepositories(currentRepo),
     displayCharts: parseBoolean(core.getInput('charts')),
     disableLinks: parseBoolean(core.getInput('disable-links')),

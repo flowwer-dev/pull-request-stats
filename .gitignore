@@ -115,4 +115,4 @@ out
 .pnp.*
 
 # Local test file
-.test.js
+.run.js

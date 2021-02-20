@@ -3,7 +3,8 @@
     "airbnb-base/legacy"
   ],
   "env": {
-    "node": true
+    "node": true,
+    "jest/globals": true
   },
   "parserOptions": {
     "ecmaVersion": 8,
