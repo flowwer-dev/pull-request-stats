@@ -1,0 +1,87 @@
+[
+  {
+    "author": {
+      "id": "1234",
+      "url": "https://github.com/user1",
+      "login": "user1",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/1234"
+    },
+    "reviews": [
+      {
+        "submittedAt": "2021-03-12T17:41:18.000Z",
+        "id": 611016770,
+        "commentsCount": 0,
+        "timeToReview": 363000,
+        "pullId": 591820759
+      },
+      {
+        "submittedAt": "2021-03-12T22:13:17.000Z",
+        "id": 611189051,
+        "commentsCount": 0,
+        "timeToReview": 4674000,
+        "pullId": 591932158
+      },
+      {
+        "submittedAt": "2021-03-10T22:54:45.000Z",
+        "id": 609241758,
+        "commentsCount": 0,
+        "timeToReview": 292000,
+        "pullId": 590242592
+      },
+      {
+        "submittedAt": "2021-03-29T18:25:17.000Z",
+        "id": 623480404,
+        "commentsCount": 1,
+        "timeToReview": 3742000,
+        "pullId": 602948274
+      }
+    ],
+    "stats": {
+      "totalReviews": 4,
+      "totalComments": 1,
+      "commentsPerReview": 0.25,
+      "timeToReview": 2052500
+    },
+    "contributions": {
+      "totalReviews": 0.8,
+      "totalComments": 0.16666666666666666,
+      "commentsPerReview": 0.047619047619047616,
+      "timeToReview": 0.19515093891133825
+    },
+    "urls": {
+      "timeToReview": "https://app.flowwer.dev/charts/review-time/1"
+    }
+  },
+  {
+    "author": {
+      "id": "5678",
+      "url": "https://github.com/user2",
+      "login": "user2",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/5678"
+    },
+    "reviews": [
+      {
+        "submittedAt": "2021-03-15T12:14:00.000Z",
+        "id": 611015896,
+        "commentsCount": 5,
+        "timeToReview": 8465000,
+        "pullId": 5918228571
+      }
+    ],
+    "stats": {
+      "totalReviews": 1,
+      "totalComments": 5,
+      "commentsPerReview": 5,
+      "timeToReview": 8465000
+    },
+    "contributions": {
+      "totalReviews": 0.2,
+      "totalComments": 0.8333333333333334,
+      "commentsPerReview": 0.9523809523809523,
+      "timeToReview": 0.8048490610886617
+    },
+    "urls": {
+      "timeToReview": "https://app.flowwer.dev/charts/review-time/2"
+    }
+  }
+]

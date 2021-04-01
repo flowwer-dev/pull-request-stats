@@ -1,5 +1,4 @@
 const { TITLES } = require('./constants');
-const buildReviewTimeLink = require('./build-review-time-link');
 const { durationToString, isNil } = require('../../utils');
 
 const NA = '-';
@@ -22,14 +21,13 @@ const generateChart = (percentage = 0) => {
   return Array(length).fill(CHART_CHARACTER).join('');
 };
 
-const getChartsData = ({ user, index, displayCharts }) => {
-  const { contributions } = user;
+const getChartsData = ({ index, contributions, displayCharts }) => {
   const addBr = data => displayCharts ? `<br/>${data}` : '';
   const medal = MEDAL_ICONS[index];
 
   return {
     username: addBr(medal ? String.fromCodePoint(medal) : ''),
-    avgTimeStr: addBr(generateChart(contributions.avgTimeToFirstReview)),
+    timeStr: addBr(generateChart(contributions.timeToReview)),
     reviewsStr: addBr(generateChart(contributions.totalReviews)),
     commentsStr: addBr(generateChart(contributions.totalComments))
   };
@@ -41,23 +39,23 @@ const buildLink = (href, content) => `<a href=${href}>${content}</a>`;
 
 const buildImage = (src, width) => `<img src="${src}" width="${width}">`;
 
-const getImage = ({ user, displayCharts }) => {
-  const { avatarUrl, url } = user;
+const getImage = ({ author, displayCharts }) => {
+  const { avatarUrl, url } = author;
   const avatarSize = displayCharts ? AVATAR_SIZE.LARGE : AVATAR_SIZE.SMALL;
 
   return buildLink(url, buildImage(avatarUrl, avatarSize));
 };
 
-const addReviewsTimeLink = (text, disable, user, period) => {
-  return disable ? text : `[${text}](${buildReviewTimeLink({ user, period })})`;
+const addReviewsTimeLink = (text, disable, link) => {
+  const addLink = link && !disable;
+  return addLink ? `[${text}](${link})` : text;
 };
 
 module.exports = ({
-  users,
-  bests,
-  displayCharts,
-  disableLinks,
-  periodLength
+  reviewers,
+  bests = {},
+  disableLinks = false,
+  displayCharts = false,
 }) => {
   const printStat = (stats, statName, parser) => {
     const value = stats[statName];
@@ -68,29 +66,29 @@ module.exports = ({
     return isBest ? bold(parsed) : parsed;
   };
 
-  const buildRow = ({ user, index }) => {
-    const { stats, login } = user;
-    const chartsData = getChartsData({ user, index, displayCharts });
+  const buildRow = ({ reviewer, index }) => {
+    const { author, stats, contributions, urls } = reviewer;
+    const { login } = author || {};
+    const chartsData = getChartsData({ index, contributions, displayCharts });
 
-    const image = getImage({ user, displayCharts });
-    const username = `${login}`;
-    const avgTimeVal = printStat(stats, 'avgTimeToFirstReview', durationToString);
-    const avgTimeStr = addReviewsTimeLink(avgTimeVal, disableLinks, user, periodLength);
+    const image = getImage({ author, displayCharts });
+    const timeVal = printStat(stats, 'timeToReview', durationToString);
+    const timeStr = addReviewsTimeLink(timeVal, disableLinks, urls.timeToReview);
     const reviewsStr = printStat(stats, 'totalReviews', noParse);
     const commentsStr = printStat(stats, 'totalComments', noParse);
 
     return [
       image,
-      `${username}${chartsData.username}`,
-      `${avgTimeStr}${chartsData.avgTimeStr}`,
+      `${login}${chartsData.username}`,
+      `${timeStr}${chartsData.timeStr}`,
       `${reviewsStr}${chartsData.reviewsStr}`,
       `${commentsStr}${chartsData.commentsStr}`
     ];
   };
 
   const execute = () => {
-    const data = users.map((user, index) => buildRow({
-      user,
+    const data = reviewers.map((reviewer, index) => buildRow({
+      reviewer,
       index,
       bests,
       displayCharts

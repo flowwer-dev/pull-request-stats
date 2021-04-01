@@ -13,7 +13,7 @@ describe('Interactors | getReviewers | .calculateReviewsStats', () => {
   });
 
   it('calculates the commentsPerReview', () => {
-    expect(result.commentsPerReview).toBe(2);
+    expect(result.commentsPerReview).toBe(3);
   });
 
   it('calculates the timeToReview', () => {

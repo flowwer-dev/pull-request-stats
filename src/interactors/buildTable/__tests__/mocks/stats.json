@@ -1,0 +1,20 @@
+[
+  {
+    "totalReviews": 4,
+    "totalComments": 1,
+    "commentsPerReview": 0.25,
+    "timeToReview": 2052500
+  },
+  {
+    "totalReviews": 5,
+    "totalComments": 15,
+    "commentsPerReview": 3,
+    "timeToReview": 25000
+  },
+  {
+    "totalReviews": 37,
+    "totalComments": 99,
+    "commentsPerReview": 2.67,
+    "timeToReview": 426000
+  }
+]

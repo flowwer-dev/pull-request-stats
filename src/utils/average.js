@@ -1,6 +1,4 @@
 const sum = require('./sum');
+const divide = require('./divide');
 
-module.exports = (list) => {
-  if (!list.length) return null;
-  return sum(list) / list.length;
-};
+module.exports = (list) => divide(sum(list), list.length);

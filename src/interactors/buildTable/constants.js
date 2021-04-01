@@ -10,7 +10,7 @@ const STATS_OPTIMIZATION = {
   totalReviews: 'MAX',
   totalComments: 'MAX',
   commentsPerReview: 'MAX',
-  avgTimeToFirstReview: 'MIN'
+  timeToReview: 'MIN'
 };
 
 const STATS = Object.keys(STATS_OPTIMIZATION);

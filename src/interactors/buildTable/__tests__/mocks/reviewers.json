@@ -1,0 +1,29 @@
+[
+  {
+    "author": "REVIEWER_1",
+    "stats": {
+      "totalReviews": 40,
+      "totalComments": 1,
+      "commentsPerReview": 0.025,
+      "timeToReview": 2052500
+    }
+  },
+  {
+    "author": "REVIEWER_2",
+    "stats": {
+      "totalReviews": 5,
+      "totalComments": 15,
+      "commentsPerReview": 3,
+      "timeToReview": 25000
+    }
+  },
+  {
+    "author": "REVIEWER_3",
+    "stats": {
+      "totalReviews": 37,
+      "totalComments": 99,
+      "commentsPerReview": 2.67,
+      "timeToReview": 426000
+    }
+  }
+]

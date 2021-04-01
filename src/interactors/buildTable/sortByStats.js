@@ -11,7 +11,7 @@ const buildSort = (statName) => {
 };
 
 const SORT_FNS_MAP = {
-  TIME: buildSort('avgTimeToFirstReview'),
+  TIME: buildSort('timeToReview'),
   REVIEWS: buildSort('totalReviews'),
   COMMENTS: buildSort('totalComments')
 };

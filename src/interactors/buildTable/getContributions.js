@@ -5,12 +5,11 @@ const calculatePercentage = (value, total) => {
   return Math.min(1, Math.max(0, value / total));
 };
 
-const addContributions = (reviewer, totals) => {
-  const contributions = STATS.reduce((prev, statsName) => {
+const getContributions = (reviewer, totals) => {
+  return STATS.reduce((prev, statsName) => {
     const percentage = calculatePercentage(reviewer.stats[statsName], totals[statsName]);
     return { ...prev, [statsName]: percentage };
   }, {});
-  return { ...reviewer, contributions };
 };
 
-module.exports = addContributions;
+module.exports = getContributions;

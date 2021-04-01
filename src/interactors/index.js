@@ -1,4 +1,4 @@
-const buildTable = require('./build-table');
+const buildTable = require('./buildTable');
 const buildComment = require('./build-comment');
 const getPulls = require('./getPulls');
 const getReviewers = require('./getReviewers');

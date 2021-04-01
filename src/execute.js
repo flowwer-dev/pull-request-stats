@@ -34,7 +34,8 @@ const run = async (params) => {
   const reviewers = getReviewers(pulls);
   core.info(`Analyzed stats for ${reviewers.length} pull request reviewers`);
 
-  const table = buildTable(reviewers, { displayCharts, disableLinks, sortBy, periodLength });
+  const tableOptions = { displayCharts, disableLinks, sortBy, periodLength };
+  const table = buildTable(reviewers, tableOptions);
   core.debug('Stats table built successfully');
 
   const content = buildComment({ table, periodLength });

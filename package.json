@@ -14,9 +14,6 @@
     "testEnvironment": "node",
     "testMatch": [
       "**/?(*.)+(spec|test).[jt]s?(x)"
-    ],
-    "setupFiles": [
-      "./test/index.js"
     ]
   },
   "dependencies": {

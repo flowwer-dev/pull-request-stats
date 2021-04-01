@@ -1,4 +1,5 @@
 const average = require('./average');
+const divide = require('./divide');
 const durationToString = require('./durationToString');
 const isNil = require('./isNil');
 const median = require('./median');
@@ -8,6 +9,7 @@ const tracker = require('./tracker');
 
 module.exports = {
   average,
+  divide,
   durationToString,
   isNil,
   median,
