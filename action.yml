@@ -8,18 +8,26 @@ inputs:
     default: ${{ github.token }}
   repositories:
     description: 'A comma separated list of github repositories to calculate the stats.'
+    required: false
+  organization:
+    description: 'An organization name to use all of its repositories to calculate the stats.'
+    required: false
   period:
     description: 'The length of the period used to calculate the stats, expressed in days'
-    required: true
-    default: '30'
+    required: false
+    default: 30
   charts:
-    description: 'Whether to add a chart to the start or not. Possible values: "true" or "false"'
-    required: true
+    description: 'Whether to add charts to the stats or not. Possible values: "true" or "false"'
+    required: false
     default: 'false'
   sort-by:
-    description: 'The column used to sort the data. Possible values: "TIME", "COMMENTS", "REVIEWS"'
-    required: true
+    description: 'The column used to sort the data. Possible values: "TIME", "COMMENTS" or "REVIEWS"'
+    required: false
     default: 'TIME'
+  disable-links:
+    description: 'Prevents from adding any external links in the stats'
+    required: false
+    default: false
 runs:
   using: 'node12'
   main: 'dist/index.js'
