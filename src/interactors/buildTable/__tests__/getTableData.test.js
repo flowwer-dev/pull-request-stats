@@ -11,8 +11,8 @@ const bests = {
 const HEADERS = [
   "",
   "User",
-  "Avg. time to first review",
-  "Total pull reviews",
+  "Median time to review",
+  "Total reviews",
   "Total comments"
 ];
 

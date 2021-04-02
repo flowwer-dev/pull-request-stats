@@ -7,6 +7,7 @@ const parseBoolean = (value) => value === 'true';
 const parseArray = (value) => value.split(',');
 
 // TODO: Validate "org" and "repos" input against a Personal Access Token
+// TODO: Validate action not in pull request
 
 const getPeriod = () => {
   const MAX_PERIOD_DATE = 365;
@@ -19,13 +20,12 @@ const getRepositories = (currentRepo) => {
   return input ? parseArray(input) : [currentRepo];
 };
 
-const getSha = () => {
-  const { eventName, payload, sha } = github.context || {};
+const getPrId = () => {
+  const { eventName, payload } = github.context;
   core.debug(`Event name: ${eventName}`);
-  if (eventName === 'pull_request') {
-    return payload.pull_request.head.sha;
-  }
-  return sha;
+
+  if (eventName !== 'pull_request') return null;
+  return payload.pull_request.node_id;
 };
 
 const getParams = () => {
@@ -35,13 +35,14 @@ const getParams = () => {
 
   return {
     currentRepo,
-    periodLength: getPeriod(),
-    githubToken: core.getInput('token'),
+    org: core.getInput('organization'),
+    repos: getRepositories(currentRepo),
     sortBy: core.getInput('sort-by'),
-    repositories: getRepositories(currentRepo),
+    githubToken: core.getInput('token'),
+    periodLength: getPeriod(),
     displayCharts: parseBoolean(core.getInput('charts')),
     disableLinks: parseBoolean(core.getInput('disable-links')),
-    sha: getSha()
+    pullRequestId: getPrId()
   };
 };
 

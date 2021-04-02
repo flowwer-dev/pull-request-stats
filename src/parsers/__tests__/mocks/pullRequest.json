@@ -1,7 +1,7 @@
 {
   "cursor": "Y3Vyc29yOjQ=",
   "node": {
-    "databaseId": 12345,
+    "id": 12345,
     "publishedAt": "2021-02-12T23:54:38Z",
     "author": {
       "url": "https://github.com/manuelmhtr",

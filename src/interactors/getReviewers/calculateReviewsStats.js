@@ -1,4 +1,4 @@
-const { sum, median, average, divide } = require('../../utils');
+const { sum, median, divide } = require('../../utils');
 
 const getProperty = (list, prop) => list.map(el => el[prop]);
 

@@ -30,4 +30,9 @@ describe('Utils | .median', () => {
     const input = [0, 0, 0, 0];
     expect(median(input)).toBe(0);
   });
+
+  it('returns the number in the middle', () => {
+    const input = [492000, 4865000, 188000, 25000, 107000];
+    expect(median(input)).toBe(188000);
+  });
 });

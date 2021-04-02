@@ -12,7 +12,7 @@ module.exports = (data = {}, pullRequest) => {
     author,
     isOwnPull,
     submittedAt,
-    id: get(data, 'databaseId'),
+    id: get(data, 'id'),
     commentsCount: get(data, 'comments.totalCount'),
     timeToReview: submittedAt - startDate
   };

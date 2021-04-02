@@ -1,15 +1,19 @@
+const alreadyPublished = require('./alreadyPublished');
 const buildTable = require('./buildTable');
-const buildComment = require('./build-comment');
+const buildComment = require('./buildComment');
+const getPullRequest = require('./getPullRequest');
 const getPulls = require('./getPulls');
 const getReviewers = require('./getReviewers');
-const postComment = require('./post-comment');
+const postComment = require('./postComment');
 const trackError = require('./trackError');
 const trackRun = require('./trackRun');
 const trackSuccess = require('./trackSuccess');
 
 module.exports = {
+  alreadyPublished,
   buildTable,
   buildComment,
+  getPullRequest,
   getPulls,
   getReviewers,
   postComment,

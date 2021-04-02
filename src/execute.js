@@ -2,7 +2,9 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const { subtractDaysToDate } = require('./utils');
 const {
+  alreadyPublished,
   getPulls,
+  getPullRequest,
   getReviewers,
   buildTable,
   buildComment,
@@ -14,19 +16,25 @@ const {
 
 const run = async (params) => {
   const {
-    githubToken,
-    periodLength,
     org,
     repos,
+    sortBy,
+    githubToken,
+    periodLength,
     displayCharts,
     disableLinks,
-    sortBy,
-    currentRepo,
-    sha
+    pullRequestId,
   } = params;
   core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
 
   const octokit = github.getOctokit(githubToken);
+
+  const pullRequest = await getPullRequest({ octokit, pullRequestId });
+  if (alreadyPublished(pullRequest)) {
+    core.info('Skipping execution because stats are published already');
+    return false;
+  }
+
   const startDate = subtractDaysToDate(new Date(), periodLength);
   const pulls = await getPulls({ octokit, org, repos, startDate });
   core.info(`Found ${pulls.length} pull requests to analyze`);
@@ -41,17 +49,24 @@ const run = async (params) => {
   const content = buildComment({ table, periodLength });
   core.debug(`Commit content built successfully: ${content}`);
 
-  await postComment({ octokit, content, sha, repository: currentRepo });
+  await postComment({
+    octokit,
+    content,
+    pullRequestId,
+    currentBody: pullRequest.body,
+  });
   core.debug('Posted comment successfully');
+
+  return true;
 };
 
 module.exports = async (params) => {
   try {
     trackRun(params);
     const start = new Date();
-    await run(params);
+    const executed = await run(params);
     const end = new Date();
-    trackSuccess({ timeMs: end - start })
+    trackSuccess({ executed, timeMs: end - start })
   } catch (error) {
     trackError(error);
     throw error;

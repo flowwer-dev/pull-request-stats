@@ -17,6 +17,6 @@ describe('Interactors | getReviewers | .calculateReviewsStats', () => {
   });
 
   it('calculates the timeToReview', () => {
-    expect(result.timeToReview).toBe(25000);
+    expect(result.timeToReview).toBe(75000);
   });
 });

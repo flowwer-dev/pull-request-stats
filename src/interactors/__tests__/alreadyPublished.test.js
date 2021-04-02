@@ -1,0 +1,30 @@
+const alreadyPublished = require('../alreadyPublished');
+
+const STATS = '\n## Pull reviewers stats\n|stats|table|';
+const OTHER_CONTENT = '## Other pull request content';
+
+describe('Interactors | .alreadyPublished', () => {
+  it('returns false when body is empty', () => {
+    const body = '';
+    const pullRequest = { body };
+    expect(alreadyPublished(pullRequest)).toBe(false);
+  });
+
+  it('returns false when body contains other stuff', () => {
+    const body = OTHER_CONTENT;
+    const pullRequest = { body };
+    expect(alreadyPublished(pullRequest)).toBe(false);
+  });
+
+  it('returns true when body contains stats only', () => {
+    const body = STATS;
+    const pullRequest = { body };
+    expect(alreadyPublished(pullRequest)).toBe(true);
+  });
+
+  it('returns true when body contains other stuff and stats', () => {
+    const body = `${OTHER_CONTENT}${STATS}`;
+    const pullRequest = { body };
+    expect(alreadyPublished(pullRequest)).toBe(true);
+  });
+});

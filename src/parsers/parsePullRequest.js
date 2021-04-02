@@ -7,11 +7,11 @@ module.exports = (data = {}) => {
   const publishedAt = new Date(get(data, 'node.publishedAt'));
   const handleReviews = (review) => parseReview(review, { publishedAt, authorLogin: author.login });
 
-  return ({
+  return {
     author,
     publishedAt,
     cursor: data.cursor,
-    id: get(data, 'node.databaseId'),
+    id: get(data, 'node.id'),
     reviews: get(data, 'node.reviews.nodes', []).map(handleReviews)
-  });
+  };
 };

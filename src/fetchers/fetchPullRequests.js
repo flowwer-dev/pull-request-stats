@@ -5,12 +5,12 @@ query($search: String!, $limit: Int!, $after: String) {
       cursor
       node {
         ... on PullRequest {
-          databaseId
+          id
           publishedAt
           author { ...ActorFragment }
           reviews(first: 100) {
             nodes {
-              databaseId
+              id
               submittedAt
               commit { pushedDate }
               comments { totalCount }
