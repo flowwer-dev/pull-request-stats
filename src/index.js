@@ -1,13 +1,12 @@
+const get = require('lodash.get');
 const core = require('@actions/core');
 const github = require('@actions/github');
 const execute = require('./execute');
+const { validateEnv } = require('./validation');
 
 const parseBoolean = (value) => value === 'true';
 
 const parseArray = (value) => value.split(',');
-
-// TODO: Validate "org" and "repos" input against a Personal Access Token
-// TODO: Validate action not in pull request
 
 const getPeriod = () => {
   const MAX_PERIOD_DATE = 365;
@@ -20,13 +19,7 @@ const getRepositories = (currentRepo) => {
   return input ? parseArray(input) : [currentRepo];
 };
 
-const getPrId = () => {
-  const { eventName, payload } = github.context;
-  core.debug(`Event name: ${eventName}`);
-
-  if (eventName !== 'pull_request') return null;
-  return payload.pull_request.node_id;
-};
+const getPrId = () => get(github, 'context.payload.pull_request.node_id');
 
 const getParams = () => {
   const { payload } = github.context || {};
@@ -42,12 +35,13 @@ const getParams = () => {
     periodLength: getPeriod(),
     displayCharts: parseBoolean(core.getInput('charts')),
     disableLinks: parseBoolean(core.getInput('disable-links')),
-    pullRequestId: getPrId()
+    pullRequestId: getPrId(),
   };
 };
 
 const run = async () => {
   try {
+    validateEnv(github);
     await execute(getParams());
     core.info('Action successfully executed');
   } catch (error) {

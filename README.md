@@ -15,7 +15,7 @@ Running this action will add a section at the bottom of your pull requests descr
 
 ![](/assets/pull-request.png)
 
-Also, there's a link pointing to the [historical behavior](https://app.flowwer.dev/charts/review-time/~(u~(i~'2741~n~'ddh)~p~30~r~(~(d~'qq57xy~t~'3co)~(d~'qqedft~t~'i1i)~(d~'qqfmub~t~'1rg0)~(d~'qqhjco~t~'5u)~(d~'qqlxa9~t~'20lw)~(d~'qqqo38~t~'2kp)~(d~'qpgl4i~t~'40i)~(d~'qpgq0r~t~'8wr)~(d~'qpgqv1~t~'9r1)~(d~'qqdzub~t~'398)~(d~'qq2xpc~t~'iz)~(d~'qpgoox~t~'1ep)~(d~'qpggla~t~'dt)~(d~'qpin24~t~'3nk)~(d~'qpi9kk~t~'1a89)~(d~'qpf7la~t~'jlz)~(d~'qprdyz~t~'1201)~(d~'qprf42~t~'1354)~(d~'qq4tod~t~'4ye)~(d~'qq4u7p~t~'5hq)~(d~'qq4wf3~t~'7p4)~(d~'qq4wgp~t~'7qq)~(d~'qq4g4a~t~'2v3)~(d~'qptb3r~t~'25p)~(d~'qpobfp~t~'2aq)~(d~'qq70w7~t~'ux)~(d~'qq6p5h~t~'g3d)~(d~'qqedrz~t~'im6)~(d~'qqg4sc~t~'b4)~(d~'qqlxo9~t~'a4s)~(d~'qqun50~t~'2nz)~(d~'qqr8mt~t~'14q)~(d~'qqumbp~t~'1fp)))) of each reviewer:
+Each reviewer has a link pointing to their [historical behavior](https://app.flowwer.dev/charts/review-time/~(u~(i~'2741~n~'ddh)~p~30~r~(~(d~'qq57xy~t~'3co)~(d~'qqedft~t~'i1i)~(d~'qqfmub~t~'1rg0)~(d~'qqhjco~t~'5u)~(d~'qqlxa9~t~'20lw)~(d~'qqqo38~t~'2kp)~(d~'qpgl4i~t~'40i)~(d~'qpgq0r~t~'8wr)~(d~'qpgqv1~t~'9r1)~(d~'qqdzub~t~'398)~(d~'qq2xpc~t~'iz)~(d~'qpgoox~t~'1ep)~(d~'qpggla~t~'dt)~(d~'qpin24~t~'3nk)~(d~'qpi9kk~t~'1a89)~(d~'qpf7la~t~'jlz)~(d~'qprdyz~t~'1201)~(d~'qprf42~t~'1354)~(d~'qq4tod~t~'4ye)~(d~'qq4u7p~t~'5hq)~(d~'qq4wf3~t~'7p4)~(d~'qq4wgp~t~'7qq)~(d~'qq4g4a~t~'2v3)~(d~'qptb3r~t~'25p)~(d~'qpobfp~t~'2aq)~(d~'qq70w7~t~'ux)~(d~'qq6p5h~t~'g3d)~(d~'qqedrz~t~'im6)~(d~'qqg4sc~t~'b4)~(d~'qqlxo9~t~'a4s)~(d~'qqun50~t~'2nz)~(d~'qqr8mt~t~'14q)~(d~'qqumbp~t~'1fp)))) of each reviewer:
 
 ![](/assets/historical.png)
 
@@ -137,7 +137,7 @@ This project is maintained by a single person, considering supporting the projec
 
 * Sharing your [feedback](https://forms.gle/W18tgBWp5YWt2qYEA).
 * Joining the [community](https://discord.gg/SGYbZkac).
-* [Becoming a sponsor](https://github.com/sponsors/manuelmhtr).
+* Becoming a [sponsor](https://github.com/sponsors/manuelmhtr).
 
 ### License
 
