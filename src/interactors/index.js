@@ -19,5 +19,5 @@ module.exports = {
   postComment,
   trackError,
   trackRun,
-  trackSuccess
+  trackSuccess,
 };

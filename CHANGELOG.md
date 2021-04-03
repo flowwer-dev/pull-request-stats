@@ -1,16 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [2.0.0] - 2021-04-05
+## [2.0.0] - 2021-04-03
 ### Added
 - Adds the option `organization` to calculate the stats **across all the repos** in the organization.
 
 ### Changed
 - Switched to Github's GraphAPI to minimize the number of requests and **calculate the stats faster**.
-- The stats are printed at the bottom of the description of the pull request, rather than as commit comment.
+- The stats are printed at the bottom of the description of the pull request, rather than as a commit comment.
 - When the title "Pull reviewers stats" is already present in the pull request the action is skipped.
-- The column "Avg. time to first review" is renamed to "Median time to review", and is no longer the average but the median.
-- The column "Total pull reviews" is renamed to "Total reviews".
+- "Avg. time to first review" is renamed to "Median time to review", and is no longer the average but the median.
+- "Total pull reviews" is renamed to "Total reviews".
+- The default order is now by "Total reviews".
+- The columns order depends on the "sort-by" option, to put the sorting column first.
 
 
 ## [1.1.0] - 2020-10-27

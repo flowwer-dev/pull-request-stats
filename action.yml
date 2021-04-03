@@ -21,9 +21,9 @@ inputs:
     required: false
     default: 'false'
   sort-by:
-    description: 'The column used to sort the data. Possible values: "TIME", "COMMENTS" or "REVIEWS"'
+    description: 'The column used to sort the data. Possible values: "REVIEWS", "TIME" or "COMMENTS"'
     required: false
-    default: 'TIME'
+    default: 'REVIEWS'
   disable-links:
     description: 'Prevents from adding any external links in the stats'
     required: false

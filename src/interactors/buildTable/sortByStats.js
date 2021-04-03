@@ -1,23 +1,16 @@
-const { STATS_OPTIMIZATION } = require('./constants');
+const { SORT_KEY, STATS_OPTIMIZATION } = require('./constants');
 
-const buildSort = (statName) => {
-  return (a, b) => {
-    const { stats: statsA = {} } = a;
-    const { stats: statsB = {} } = b;
-    const optimization = STATS_OPTIMIZATION[statName];
-    const multiplier = optimization === 'MAX' ? -1 : 1;
-    return multiplier * (statsA[statName] - statsB[statName]);
-  };
-};
-
-const SORT_FNS_MAP = {
-  TIME: buildSort('timeToReview'),
-  REVIEWS: buildSort('totalReviews'),
-  COMMENTS: buildSort('totalComments')
+const buildSort = (statName) => (a, b) => {
+  const { stats: statsA = {} } = a;
+  const { stats: statsB = {} } = b;
+  const optimization = STATS_OPTIMIZATION[statName];
+  const multiplier = optimization === 'MAX' ? -1 : 1;
+  return multiplier * (statsA[statName] - statsB[statName]);
 };
 
 const sortByStats = (reviewers, sortBy) => {
-  const sortFn = SORT_FNS_MAP[sortBy] || SORT_FNS_MAP.TIME;
+  const sortKey = SORT_KEY[sortBy] || SORT_KEY.REVIEWS;
+  const sortFn = buildSort(sortKey);
   return reviewers.sort(sortFn);
 };
 

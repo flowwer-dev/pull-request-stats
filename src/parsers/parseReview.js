@@ -14,6 +14,6 @@ module.exports = (data = {}, pullRequest) => {
     submittedAt,
     id: get(data, 'id'),
     commentsCount: get(data, 'comments.totalCount'),
-    timeToReview: submittedAt - startDate
+    timeToReview: submittedAt - startDate,
   };
 };

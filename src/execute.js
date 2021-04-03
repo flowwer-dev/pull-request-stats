@@ -11,7 +11,7 @@ const {
   postComment,
   trackError,
   trackRun,
-  trackSuccess
+  trackSuccess,
 } = require('./interactors');
 
 const run = async (params) => {
@@ -36,13 +36,17 @@ const run = async (params) => {
   }
 
   const startDate = subtractDaysToDate(new Date(), periodLength);
-  const pulls = await getPulls({ octokit, org, repos, startDate });
+  const pulls = await getPulls({
+    octokit, org, repos, startDate,
+  });
   core.info(`Found ${pulls.length} pull requests to analyze`);
 
   const reviewers = getReviewers(pulls);
   core.info(`Analyzed stats for ${reviewers.length} pull request reviewers`);
 
-  const tableOptions = { displayCharts, disableLinks, sortBy, periodLength };
+  const tableOptions = {
+    displayCharts, disableLinks, sortBy, periodLength,
+  };
   const table = buildTable(reviewers, tableOptions);
   core.debug('Stats table built successfully');
 
@@ -66,7 +70,7 @@ module.exports = async (params) => {
     const start = new Date();
     const executed = await run(params);
     const end = new Date();
-    trackSuccess({ executed, timeMs: end - start })
+    trackSuccess({ executed, timeMs: end - start });
   } catch (error) {
     trackError(error);
     throw error;

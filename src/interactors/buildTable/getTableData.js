@@ -11,10 +11,10 @@ const CHART_MAX_LENGTH = 10;
 
 const AVATAR_SIZE = {
   SMALL: 20,
-  LARGE: 32
+  LARGE: 32,
 };
 
-const noParse = value => value;
+const noParse = (value) => value;
 
 const generateChart = (percentage = 0) => {
   const length = Math.round(percentage * CHART_MAX_LENGTH);
@@ -22,18 +22,18 @@ const generateChart = (percentage = 0) => {
 };
 
 const getChartsData = ({ index, contributions, displayCharts }) => {
-  const addBr = data => displayCharts ? `<br/>${data}` : '';
+  const addBr = (data) => (displayCharts ? `<br/>${data}` : '');
   const medal = MEDAL_ICONS[index];
 
   return {
     username: addBr(medal ? String.fromCodePoint(medal) : ''),
     timeStr: addBr(generateChart(contributions.timeToReview)),
     reviewsStr: addBr(generateChart(contributions.totalReviews)),
-    commentsStr: addBr(generateChart(contributions.totalComments))
+    commentsStr: addBr(generateChart(contributions.totalComments)),
   };
 };
 
-const bold = value => `**${value}**`;
+const bold = (value) => `**${value}**`;
 
 const buildLink = (href, content) => `<a href=${href}>${content}</a>`;
 
@@ -67,23 +67,25 @@ module.exports = ({
   };
 
   const buildRow = ({ reviewer, index }) => {
-    const { author, stats, contributions, urls } = reviewer;
+    const {
+      author, stats, contributions, urls,
+    } = reviewer;
     const { login } = author || {};
     const chartsData = getChartsData({ index, contributions, displayCharts });
 
-    const image = getImage({ author, displayCharts });
+    const avatar = getImage({ author, displayCharts });
     const timeVal = printStat(stats, 'timeToReview', durationToString);
     const timeStr = addReviewsTimeLink(timeVal, disableLinks, urls.timeToReview);
     const reviewsStr = printStat(stats, 'totalReviews', noParse);
     const commentsStr = printStat(stats, 'totalComments', noParse);
 
-    return [
-      image,
-      `${login}${chartsData.username}`,
-      `${timeStr}${chartsData.timeStr}`,
-      `${reviewsStr}${chartsData.reviewsStr}`,
-      `${commentsStr}${chartsData.commentsStr}`
-    ];
+    return {
+      avatar,
+      username: `${login}${chartsData.username}`,
+      timeToReview: `${timeStr}${chartsData.timeStr}`,
+      totalReviews: `${reviewsStr}${chartsData.reviewsStr}`,
+      totalComments: `${commentsStr}${chartsData.commentsStr}`,
+    };
   };
 
   const execute = () => {
@@ -91,12 +93,12 @@ module.exports = ({
       reviewer,
       index,
       bests,
-      displayCharts
+      displayCharts,
     }));
 
     return [
       TITLES,
-      ...data
+      ...data,
     ];
   };
 

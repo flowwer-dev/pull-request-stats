@@ -1,6 +1,6 @@
 const { sum, median, divide } = require('../../utils');
 
-const getProperty = (list, prop) => list.map(el => el[prop]);
+const getProperty = (list, prop) => list.map((el) => el[prop]);
 
 module.exports = (reviews) => {
   const pullIds = getProperty(reviews, 'pullId');
@@ -11,6 +11,6 @@ module.exports = (reviews) => {
     totalReviews,
     totalComments,
     commentsPerReview: divide(totalComments, totalReviews),
-    timeToReview: median(getProperty(reviews, 'timeToReview'))
+    timeToReview: median(getProperty(reviews, 'timeToReview')),
   };
 };

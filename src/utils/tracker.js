@@ -4,7 +4,7 @@ const project = require('../../package.json');
 const MIXPANEL_TOKEN = '6a91c23a5c49e341a337954443e1f2a0';
 
 const getContext = () => ({
-  version: project.version
+  version: project.version,
 });
 
 const tracker = () => {
@@ -14,12 +14,12 @@ const tracker = () => {
   const track = (event, properties) => {
     mixpanel.track(event, {
       ...context,
-      ...properties
+      ...properties,
     });
   };
 
   return {
-    track
+    track,
   };
 };
 

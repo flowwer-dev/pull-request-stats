@@ -7,7 +7,7 @@ module.exports = [
       id: '1031639',
       url: 'https://github.com/manuelmhtr',
       login: 'manuelmhtr',
-      avatarUrl: 'https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4'
+      avatarUrl: 'https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4',
     },
     reviews: [
       {
@@ -18,10 +18,10 @@ module.exports = [
           id: '1031639',
           url: 'https://github.com/manuelmhtr',
           login: 'manuelmhtr',
-          avatarUrl: 'https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4'
+          avatarUrl: 'https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4',
         },
         isOwnPull: true,
-        timeToReview: 123000
+        timeToReview: 123000,
       },
       {
         id: 5679,
@@ -31,12 +31,12 @@ module.exports = [
           id: '8755542',
           url: 'https://github.com/jartmez',
           login: 'jartmez',
-          avatarUrl: 'https://avatars.githubusercontent.com/u/8755542?v=4'
+          avatarUrl: 'https://avatars.githubusercontent.com/u/8755542?v=4',
         },
         isOwnPull: false,
-        timeToReview: 75000
-      }
-    ]
+        timeToReview: 75000,
+      },
+    ],
   },
   {
     id: 12346,
@@ -46,7 +46,7 @@ module.exports = [
       id: '2009676',
       url: 'https://github.com/javierbyte',
       login: 'javierbyte',
-      avatarUrl: 'https://avatars.githubusercontent.com/u/2009676'
+      avatarUrl: 'https://avatars.githubusercontent.com/u/2009676',
     },
     reviews: [
       {
@@ -57,10 +57,10 @@ module.exports = [
           id: '1031639',
           url: 'https://github.com/manuelmhtr',
           login: 'manuelmhtr',
-          avatarUrl: 'https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4'
+          avatarUrl: 'https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4',
         },
         isOwnPull: false,
-        timeToReview: 55000
+        timeToReview: 55000,
       },
       {
         id: 9877,
@@ -70,11 +70,11 @@ module.exports = [
           id: '8755542',
           url: 'https://github.com/jartmez',
           login: 'jartmez',
-          avatarUrl: 'https://avatars.githubusercontent.com/u/8755542?v=4'
+          avatarUrl: 'https://avatars.githubusercontent.com/u/8755542?v=4',
         },
         isOwnPull: false,
-        timeToReview: 145000
-      }
-    ]
-  }
+        timeToReview: 145000,
+      },
+    ],
+  },
 ];

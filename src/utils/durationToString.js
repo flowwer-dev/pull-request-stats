@@ -11,14 +11,14 @@ const parser = humanizeDuration.humanizer({
       h: () => 'h',
       m: () => 'm',
       s: () => 's',
-      ms: () => 'ms'
-    }
-  }
+      ms: () => 'ms',
+    },
+  },
 });
 
 module.exports = (value) => parser(value, {
   delimiter: ' ',
   spacer: '',
   units: ['d', 'h', 'm'],
-  round: true
+  round: true,
 });

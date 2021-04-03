@@ -6,7 +6,7 @@ jest.mock('../../fetchers', () => ({ fetchPullRequestById: jest.fn() }));
 const RESPONSE = {
   node: {
     id: '1234',
-    body: '# MARKDOWN BODY'
+    body: '# MARKDOWN BODY',
   },
 };
 
@@ -18,7 +18,7 @@ describe('Interactors | .getPullRequest', () => {
   const octokit = 'OCTOKIT';
   const expected = {
     id: '1234',
-    body: '# MARKDOWN BODY'
+    body: '# MARKDOWN BODY',
   };
 
   it('returns a parsed pull request', async () => {

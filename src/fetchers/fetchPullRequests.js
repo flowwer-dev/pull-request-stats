@@ -34,12 +34,12 @@ module.exports = ({
   octokit,
   search,
   after,
-  limit = null
+  limit = null,
 }) => {
   const variables = { search, after, limit };
   return octokit
     .graphql(PRS_QUERY, variables)
-    .catch(error => {
+    .catch((error) => {
       const msg = `Error fetching pull requests with variables "${JSON.stringify(variables)}"`;
       throw new Error(`${msg}. Error: ${error}`);
     });

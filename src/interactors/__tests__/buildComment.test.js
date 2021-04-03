@@ -1,6 +1,6 @@
 const buildComment = require('../buildComment');
 
-const TABLE_MOCK = 'TABLE'
+const TABLE_MOCK = 'TABLE';
 
 describe('Interactors | .buildComment', () => {
   const title = '## Pull reviewers stats';

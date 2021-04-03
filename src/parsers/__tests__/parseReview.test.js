@@ -14,7 +14,7 @@ describe('Parsers | .parseReview', () => {
       id: '1031639',
       url: 'https://github.com/manuelmhtr',
       login: 'manuelmhtr',
-      avatarUrl: 'https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4'
+      avatarUrl: 'https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4',
     });
   });
 

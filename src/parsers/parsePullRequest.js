@@ -12,6 +12,6 @@ module.exports = (data = {}) => {
     publishedAt,
     cursor: data.cursor,
     id: get(data, 'node.id'),
-    reviews: get(data, 'node.reviews.nodes', []).map(handleReviews)
+    reviews: get(data, 'node.reviews.nodes', []).map(handleReviews),
   };
 };

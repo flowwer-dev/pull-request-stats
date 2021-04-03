@@ -3,7 +3,7 @@ const { parsePullRequest } = require('../parsers');
 
 const ownerFilter = ({ org, repos }) => {
   if (org) return `org:${org}`;
-  return (repos || []).map(r => `repo:${r}`).join(' ');
+  return (repos || []).map((r) => `repo:${r}`).join(' ');
 };
 
 const buildQuery = ({ org, repos, startDate }) => {
@@ -26,7 +26,7 @@ module.exports = ({
   org,
   repos,
   startDate,
-  itemsPerPage = 100
+  itemsPerPage = 100,
 }) => {
   const search = buildQuery({ org, repos, startDate });
   return getPullRequests({ octokit, search, limit: itemsPerPage });

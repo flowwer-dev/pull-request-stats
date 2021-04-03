@@ -15,5 +15,5 @@ module.exports = {
   median,
   subtractDaysToDate,
   sum,
-  tracker
+  tracker,
 };

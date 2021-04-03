@@ -4,6 +4,7 @@ const getContributions = require('./getContributions');
 const calculateTotals = require('./calculateTotals');
 const calculateBests = require('./calculateBests');
 const getTableData = require('./getTableData');
+const toTableArray = require('./toTableArray');
 const sortByStats = require('./sortByStats');
 
 module.exports = (reviewers, options = {}) => {
@@ -15,11 +16,11 @@ module.exports = (reviewers, options = {}) => {
   } = options;
 
   const execute = () => {
-    const allStats = reviewers.map(r => r.stats);
+    const allStats = reviewers.map((r) => r.stats);
     const totals = calculateTotals(allStats);
     const bests = calculateBests(allStats);
 
-    const populatedReviewers = sortByStats(reviewers, sortBy).map(reviewer => ({
+    const populatedReviewers = sortByStats(reviewers, sortBy).map((reviewer) => ({
       ...reviewer,
       contributions: getContributions(reviewer, totals),
       urls: { timeToReview: buildReviewTimeLink(reviewer, periodLength) },
@@ -32,7 +33,7 @@ module.exports = (reviewers, options = {}) => {
       reviewers: populatedReviewers,
     });
 
-    return table(tableData);
+    return table(toTableArray(tableData));
   };
 
   return execute();

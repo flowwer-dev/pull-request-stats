@@ -5,5 +5,5 @@ const parseUser = require('./parseUser');
 module.exports = {
   parsePullRequest,
   parseReview,
-  parseUser
+  parseUser,
 };

@@ -1,13 +1,13 @@
 {
-  "extends": [
-    "airbnb-base/legacy"
-  ],
+  "extends": "airbnb-base",
   "env": {
     "node": true,
     "jest/globals": true
   },
+  "plugins": [
+    "jest"
+  ],
   "parserOptions": {
-    "ecmaVersion": 8,
     "sourceType": "module"
   },
   "globals": {

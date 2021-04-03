@@ -11,7 +11,7 @@ module.exports = ({
   currentBody,
   pullRequestId,
 }) => updatePullRequest({
-    octokit,
-    id: pullRequestId,
-    body: buildBody(currentBody || '', content)
+  octokit,
+  id: pullRequestId,
+  body: buildBody(currentBody || '', content),
 });

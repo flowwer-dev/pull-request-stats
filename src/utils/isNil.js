@@ -1,3 +1,1 @@
-module.exports = (value) => {
-  return value === null || value === undefined;
-};
+module.exports = (value) => value === null || value === undefined;

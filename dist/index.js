@@ -487,6 +487,31 @@ module.exports = (reviews) => {
 
 /***/ }),
 
+/***/ 65:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { SORT_KEY, COLUMNS_ORDER } = __webpack_require__(844);
+
+const FIXED_COLUMNS = ['avatar', 'username'];
+
+const hasValue = (str) => !!str;
+
+const getColumnsOrder = (sortBy) => {
+  const main = SORT_KEY[sortBy];
+  const others = COLUMNS_ORDER.filter(c => c !== main);
+  return [ ...FIXED_COLUMNS, main, ...others ].filter(hasValue);
+};
+
+const toArray = (columns) => (row) => columns.map(c => row[c]);
+
+module.exports = (tableData, sortBy) => {
+  const columns = getColumnsOrder(sortBy);
+  return tableData.map(toArray(columns));
+};
+
+
+/***/ }),
+
 /***/ 81:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -793,7 +818,7 @@ module.exports = require("os");
 /***/ 94:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { STATS_OPTIMIZATION } = __webpack_require__(844);
+const { SORT_KEY, STATS_OPTIMIZATION } = __webpack_require__(844);
 
 const buildSort = (statName) => {
   return (a, b) => {
@@ -805,14 +830,9 @@ const buildSort = (statName) => {
   };
 };
 
-const SORT_FNS_MAP = {
-  TIME: buildSort('timeToReview'),
-  REVIEWS: buildSort('totalReviews'),
-  COMMENTS: buildSort('totalComments')
-};
-
 const sortByStats = (reviewers, sortBy) => {
-  const sortFn = SORT_FNS_MAP[sortBy] || SORT_FNS_MAP.TIME;
+  const sortKey = SORT_KEY[sortBy] || SORT_KEY.REVIEWS;
+  const sortFn = buildSort(sortKey);
   return reviewers.sort(sortFn);
 };
 
@@ -1357,6 +1377,7 @@ const getContributions = __webpack_require__(159);
 const calculateTotals = __webpack_require__(603);
 const calculateBests = __webpack_require__(236);
 const getTableData = __webpack_require__(587);
+const toTableArray = __webpack_require__(65);
 const sortByStats = __webpack_require__(94);
 
 module.exports = (reviewers, options = {}) => {
@@ -1385,7 +1406,7 @@ module.exports = (reviewers, options = {}) => {
       reviewers: populatedReviewers,
     });
 
-    return table(tableData);
+    return table(toTableArray(tableData));
   };
 
   return execute();
@@ -8860,19 +8881,19 @@ module.exports = ({
     const { login } = author || {};
     const chartsData = getChartsData({ index, contributions, displayCharts });
 
-    const image = getImage({ author, displayCharts });
+    const avatar = getImage({ author, displayCharts });
     const timeVal = printStat(stats, 'timeToReview', durationToString);
     const timeStr = addReviewsTimeLink(timeVal, disableLinks, urls.timeToReview);
     const reviewsStr = printStat(stats, 'totalReviews', noParse);
     const commentsStr = printStat(stats, 'totalComments', noParse);
 
-    return [
-      image,
-      `${login}${chartsData.username}`,
-      `${timeStr}${chartsData.timeStr}`,
-      `${reviewsStr}${chartsData.reviewsStr}`,
-      `${commentsStr}${chartsData.commentsStr}`
-    ];
+    return {
+      avatar,
+      username: `${login}${chartsData.username}`,
+      timeToReview: `${timeStr}${chartsData.timeStr}`,
+      totalReviews: `${reviewsStr}${chartsData.reviewsStr}`,
+      totalComments: `${commentsStr}${chartsData.commentsStr}`,
+    };
   };
 
   const execute = () => {
@@ -10970,13 +10991,21 @@ exports.restEndpointMethods = restEndpointMethods;
 /***/ 844:
 /***/ (function(module) {
 
-const TITLES = [
-  '',
-  'User',
-  'Median time to review',
-  'Total reviews',
-  'Total comments'
-];
+const SORT_KEY = {
+  TIME: 'timeToReview',
+  REVIEWS: 'totalReviews',
+  COMMENTS: 'totalComments'
+};
+
+const TITLES = {
+  avatar: '',
+  username: 'User',
+  timeToReview: 'Median time to review',
+  totalReviews: 'Total reviews',
+  totalComments: 'Total comments',
+};
+
+const COLUMNS_ORDER = ['totalReviews', 'timeToReview', 'totalComments'];
 
 const STATS_OPTIMIZATION = {
   totalReviews: 'MAX',
@@ -10988,7 +11017,9 @@ const STATS_OPTIMIZATION = {
 const STATS = Object.keys(STATS_OPTIMIZATION);
 
 module.exports = {
+  SORT_KEY,
   TITLES,
+  COLUMNS_ORDER,
   STATS,
   STATS_OPTIMIZATION
 };
