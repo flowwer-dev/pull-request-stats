@@ -16,10 +16,10 @@ const TITLES = {
   totalComments: 'Total comments',
 };
 
-const AVATAR1 = '<a href=https://github.com/user1><img src="https://avatars.githubusercontent.com/u/1234" width="20"></a>';
-const AVATAR2 = '<a href=https://github.com/user2><img src="https://avatars.githubusercontent.com/u/5678" width="20"></a>';
-const AVATAR1_BIG = '<a href=https://github.com/user1><img src="https://avatars.githubusercontent.com/u/1234" width="32"></a>';
-const AVATAR2_BIG = '<a href=https://github.com/user2><img src="https://avatars.githubusercontent.com/u/5678" width="32"></a>';
+const AVATAR1 = '<a href="https://github.com/user1"><img src="https://avatars.githubusercontent.com/u/1234" width="20"></a>';
+const AVATAR2 = '<a href="https://github.com/user2"><img src="https://avatars.githubusercontent.com/u/5678" width="20"></a>';
+const AVATAR1_BIG = '<a href="https://github.com/user1"><img src="https://avatars.githubusercontent.com/u/1234" width="32"></a>';
+const AVATAR2_BIG = '<a href="https://github.com/user2"><img src="https://avatars.githubusercontent.com/u/5678" width="32"></a>';
 
 const SIMPLE_RESPONSE = [
   TITLES,

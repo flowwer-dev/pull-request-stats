@@ -1,9 +1,12 @@
 module.exports = (pulls) => {
   const removeOwnPulls = ({ isOwnPull }) => !isOwnPull;
 
+  const removeWithEmptyId = ({ id }) => !!id;
+
   const all = Object.values(pulls).reduce((acc, pull) => {
     const reviews = pull.reviews
       .filter(removeOwnPulls)
+      .filter(removeWithEmptyId)
       .map((r) => ({ ...r, pullId: pull.id }));
     return acc.concat(reviews);
   }, []);

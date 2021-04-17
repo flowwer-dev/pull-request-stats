@@ -4,6 +4,7 @@
     "id": 12345,
     "publishedAt": "2021-02-12T23:54:38Z",
     "author": {
+      "databaseId": "1031639",
       "url": "https://github.com/manuelmhtr",
       "login": "manuelmhtr",
       "avatarUrl": "https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4"
@@ -19,6 +20,7 @@
             "totalCount": 1
           },
           "author": {
+            "databaseId": "1031639",
             "url": "https://github.com/manuelmhtr",
             "login": "manuelmhtr",
             "avatarUrl": "https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4"
@@ -33,6 +35,7 @@
             "totalCount": 3
           },
           "author": {
+            "databaseId": "22161828",
             "url": "https://github.com/Estebes10",
             "login": "Estebes10",
             "avatarUrl": "https://avatars.githubusercontent.com/u/22161828?v=4"

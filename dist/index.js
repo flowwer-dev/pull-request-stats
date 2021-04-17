@@ -469,7 +469,7 @@ function onceStrict (fn) {
 
 const { sum, median, divide } = __webpack_require__(353);
 
-const getProperty = (list, prop) => list.map(el => el[prop]);
+const getProperty = (list, prop) => list.map((el) => el[prop]);
 
 module.exports = (reviews) => {
   const pullIds = getProperty(reviews, 'pullId');
@@ -480,7 +480,7 @@ module.exports = (reviews) => {
     totalReviews,
     totalComments,
     commentsPerReview: divide(totalComments, totalReviews),
-    timeToReview: median(getProperty(reviews, 'timeToReview'))
+    timeToReview: median(getProperty(reviews, 'timeToReview')),
   };
 };
 
@@ -498,11 +498,11 @@ const hasValue = (str) => !!str;
 
 const getColumnsOrder = (sortBy) => {
   const main = SORT_KEY[sortBy];
-  const others = COLUMNS_ORDER.filter(c => c !== main);
-  return [ ...FIXED_COLUMNS, main, ...others ].filter(hasValue);
+  const others = COLUMNS_ORDER.filter((c) => c !== main);
+  return [...FIXED_COLUMNS, main, ...others].filter(hasValue);
 };
 
-const toArray = (columns) => (row) => columns.map(c => row[c]);
+const toArray = (columns) => (row) => columns.map((c) => row[c]);
 
 module.exports = (tableData, sortBy) => {
   const columns = getColumnsOrder(sortBy);
@@ -820,14 +820,12 @@ module.exports = require("os");
 
 const { SORT_KEY, STATS_OPTIMIZATION } = __webpack_require__(844);
 
-const buildSort = (statName) => {
-  return (a, b) => {
-    const { stats: statsA = {} } = a;
-    const { stats: statsB = {} } = b;
-    const optimization = STATS_OPTIMIZATION[statName];
-    const multiplier = optimization === 'MAX' ? -1 : 1;
-    return multiplier * (statsA[statName] - statsB[statName]);
-  };
+const buildSort = (statName) => (a, b) => {
+  const { stats: statsA = {} } = a;
+  const { stats: statsB = {} } = b;
+  const optimization = STATS_OPTIMIZATION[statName];
+  const multiplier = optimization === 'MAX' ? -1 : 1;
+  return multiplier * (statsA[statName] - statsB[statName]);
 };
 
 const sortByStats = (reviewers, sortBy) => {
@@ -887,7 +885,7 @@ const parseUser = __webpack_require__(359);
 module.exports = {
   parsePullRequest,
   parseReview,
-  parseUser
+  parseUser,
 };
 
 
@@ -896,9 +894,7 @@ module.exports = {
 /***/ 125:
 /***/ (function(module) {
 
-module.exports = (value) => {
-  return value === null || value === undefined;
-};
+module.exports = (value) => value === null || value === undefined;
 
 
 /***/ }),
@@ -1244,7 +1240,7 @@ module.exports = (data = {}, pullRequest) => {
     submittedAt,
     id: get(data, 'id'),
     commentsCount: get(data, 'comments.totalCount'),
-    timeToReview: submittedAt - startDate
+    timeToReview: submittedAt - startDate,
   };
 };
 
@@ -1261,12 +1257,10 @@ const calculatePercentage = (value, total) => {
   return Math.min(1, Math.max(0, value / total));
 };
 
-const getContributions = (reviewer, totals) => {
-  return STATS.reduce((prev, statsName) => {
-    const percentage = calculatePercentage(reviewer.stats[statsName], totals[statsName]);
-    return { ...prev, [statsName]: percentage };
-  }, {});
-};
+const getContributions = (reviewer, totals) => STATS.reduce((prev, statsName) => {
+  const percentage = calculatePercentage(reviewer.stats[statsName], totals[statsName]);
+  return { ...prev, [statsName]: percentage };
+}, {});
 
 module.exports = getContributions;
 
@@ -1319,9 +1313,9 @@ module.exports = ({
   currentBody,
   pullRequestId,
 }) => updatePullRequest({
-    octokit,
-    id: pullRequestId,
-    body: buildBody(currentBody || '', content)
+  octokit,
+  id: pullRequestId,
+  body: buildBody(currentBody || '', content),
 });
 
 
@@ -1389,11 +1383,11 @@ module.exports = (reviewers, options = {}) => {
   } = options;
 
   const execute = () => {
-    const allStats = reviewers.map(r => r.stats);
+    const allStats = reviewers.map((r) => r.stats);
     const totals = calculateTotals(allStats);
     const bests = calculateBests(allStats);
 
-    const populatedReviewers = sortByStats(reviewers, sortBy).map(reviewer => ({
+    const populatedReviewers = sortByStats(reviewers, sortBy).map((reviewer) => ({
       ...reviewer,
       contributions: getContributions(reviewer, totals),
       urls: { timeToReview: buildReviewTimeLink(reviewer, periodLength) },
@@ -1442,17 +1436,13 @@ module.exports = (pullRequest) => {
 
 const { STATS, STATS_OPTIMIZATION } = __webpack_require__(844);
 
-const getBest = (values, optimization) => {
-  return optimization === 'MAX' ? Math.max(...values) : Math.min(...values);
-};
+const getBest = (values, optimization) => (optimization === 'MAX' ? Math.max(...values) : Math.min(...values));
 
-const calculateBests = (allStats) => {
-  return STATS.reduce((prev, statName) => {
-    const values = allStats.map((values) => values[statName]);
-    const best = getBest(values, STATS_OPTIMIZATION[statName]);
-    return { ...prev, [statName]: best};
-  }, {});
-};
+const calculateBests = (allStats) => STATS.reduce((prev, statName) => {
+  const values = allStats.map((v) => v[statName]);
+  const best = getBest(values, STATS_OPTIMIZATION[statName]);
+  return { ...prev, [statName]: best };
+}, {});
 
 module.exports = calculateBests;
 
@@ -3312,7 +3302,7 @@ module.exports = (data = {}) => {
     publishedAt,
     cursor: data.cursor,
     id: get(data, 'node.id'),
-    reviews: get(data, 'node.reviews.nodes', []).map(handleReviews)
+    reviews: get(data, 'node.reviews.nodes', []).map(handleReviews),
   };
 };
 
@@ -3382,7 +3372,7 @@ exports.Context = Context;
 const { tracker } = __webpack_require__(353);
 
 module.exports = (error) => {
-  const message = (error || {}).message;
+  const { message } = error || {};
 
   tracker.track('error', { message });
 };
@@ -3439,7 +3429,7 @@ module.exports = require("buffer");
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const VERSION = "2.9.1";
+const VERSION = "2.13.3";
 
 /**
  * Some “list” response that can be paginated have a different response structure
@@ -3550,6 +3540,16 @@ const composePaginateRest = Object.assign(paginate, {
   iterator
 });
 
+const paginatingEndpoints = ["GET /app/installations", "GET /applications/grants", "GET /authorizations", "GET /enterprises/{enterprise}/actions/permissions/organizations", "GET /enterprises/{enterprise}/actions/runner-groups", "GET /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations", "GET /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners", "GET /enterprises/{enterprise}/actions/runners", "GET /enterprises/{enterprise}/actions/runners/downloads", "GET /events", "GET /gists", "GET /gists/public", "GET /gists/starred", "GET /gists/{gist_id}/comments", "GET /gists/{gist_id}/commits", "GET /gists/{gist_id}/forks", "GET /installation/repositories", "GET /issues", "GET /marketplace_listing/plans", "GET /marketplace_listing/plans/{plan_id}/accounts", "GET /marketplace_listing/stubbed/plans", "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts", "GET /networks/{owner}/{repo}/events", "GET /notifications", "GET /organizations", "GET /orgs/{org}/actions/permissions/repositories", "GET /orgs/{org}/actions/runner-groups", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/runners", "GET /orgs/{org}/actions/runners", "GET /orgs/{org}/actions/runners/downloads", "GET /orgs/{org}/actions/secrets", "GET /orgs/{org}/actions/secrets/{secret_name}/repositories", "GET /orgs/{org}/blocks", "GET /orgs/{org}/credential-authorizations", "GET /orgs/{org}/events", "GET /orgs/{org}/failed_invitations", "GET /orgs/{org}/hooks", "GET /orgs/{org}/installations", "GET /orgs/{org}/invitations", "GET /orgs/{org}/invitations/{invitation_id}/teams", "GET /orgs/{org}/issues", "GET /orgs/{org}/members", "GET /orgs/{org}/migrations", "GET /orgs/{org}/migrations/{migration_id}/repositories", "GET /orgs/{org}/outside_collaborators", "GET /orgs/{org}/projects", "GET /orgs/{org}/public_members", "GET /orgs/{org}/repos", "GET /orgs/{org}/team-sync/groups", "GET /orgs/{org}/teams", "GET /orgs/{org}/teams/{team_slug}/discussions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/invitations", "GET /orgs/{org}/teams/{team_slug}/members", "GET /orgs/{org}/teams/{team_slug}/projects", "GET /orgs/{org}/teams/{team_slug}/repos", "GET /orgs/{org}/teams/{team_slug}/team-sync/group-mappings", "GET /orgs/{org}/teams/{team_slug}/teams", "GET /projects/columns/{column_id}/cards", "GET /projects/{project_id}/collaborators", "GET /projects/{project_id}/columns", "GET /repos/{owner}/{repo}/actions/artifacts", "GET /repos/{owner}/{repo}/actions/runners", "GET /repos/{owner}/{repo}/actions/runners/downloads", "GET /repos/{owner}/{repo}/actions/runs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", "GET /repos/{owner}/{repo}/actions/secrets", "GET /repos/{owner}/{repo}/actions/workflows", "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs", "GET /repos/{owner}/{repo}/assignees", "GET /repos/{owner}/{repo}/branches", "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations", "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs", "GET /repos/{owner}/{repo}/code-scanning/alerts", "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", "GET /repos/{owner}/{repo}/code-scanning/analyses", "GET /repos/{owner}/{repo}/collaborators", "GET /repos/{owner}/{repo}/comments", "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/commits", "GET /repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head", "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments", "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls", "GET /repos/{owner}/{repo}/commits/{ref}/check-runs", "GET /repos/{owner}/{repo}/commits/{ref}/check-suites", "GET /repos/{owner}/{repo}/commits/{ref}/statuses", "GET /repos/{owner}/{repo}/contributors", "GET /repos/{owner}/{repo}/deployments", "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", "GET /repos/{owner}/{repo}/events", "GET /repos/{owner}/{repo}/forks", "GET /repos/{owner}/{repo}/git/matching-refs/{ref}", "GET /repos/{owner}/{repo}/hooks", "GET /repos/{owner}/{repo}/invitations", "GET /repos/{owner}/{repo}/issues", "GET /repos/{owner}/{repo}/issues/comments", "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/issues/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", "GET /repos/{owner}/{repo}/issues/{issue_number}/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/labels", "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions", "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline", "GET /repos/{owner}/{repo}/keys", "GET /repos/{owner}/{repo}/labels", "GET /repos/{owner}/{repo}/milestones", "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels", "GET /repos/{owner}/{repo}/notifications", "GET /repos/{owner}/{repo}/pages/builds", "GET /repos/{owner}/{repo}/projects", "GET /repos/{owner}/{repo}/pulls", "GET /repos/{owner}/{repo}/pulls/comments", "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments", "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits", "GET /repos/{owner}/{repo}/pulls/{pull_number}/files", "GET /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments", "GET /repos/{owner}/{repo}/releases", "GET /repos/{owner}/{repo}/releases/{release_id}/assets", "GET /repos/{owner}/{repo}/secret-scanning/alerts", "GET /repos/{owner}/{repo}/stargazers", "GET /repos/{owner}/{repo}/subscribers", "GET /repos/{owner}/{repo}/tags", "GET /repos/{owner}/{repo}/teams", "GET /repositories", "GET /repositories/{repository_id}/environments/{environment_name}/secrets", "GET /scim/v2/enterprises/{enterprise}/Groups", "GET /scim/v2/enterprises/{enterprise}/Users", "GET /scim/v2/organizations/{org}/Users", "GET /search/code", "GET /search/commits", "GET /search/issues", "GET /search/labels", "GET /search/repositories", "GET /search/topics", "GET /search/users", "GET /teams/{team_id}/discussions", "GET /teams/{team_id}/discussions/{discussion_number}/comments", "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /teams/{team_id}/discussions/{discussion_number}/reactions", "GET /teams/{team_id}/invitations", "GET /teams/{team_id}/members", "GET /teams/{team_id}/projects", "GET /teams/{team_id}/repos", "GET /teams/{team_id}/team-sync/group-mappings", "GET /teams/{team_id}/teams", "GET /user/blocks", "GET /user/emails", "GET /user/followers", "GET /user/following", "GET /user/gpg_keys", "GET /user/installations", "GET /user/installations/{installation_id}/repositories", "GET /user/issues", "GET /user/keys", "GET /user/marketplace_purchases", "GET /user/marketplace_purchases/stubbed", "GET /user/memberships/orgs", "GET /user/migrations", "GET /user/migrations/{migration_id}/repositories", "GET /user/orgs", "GET /user/public_emails", "GET /user/repos", "GET /user/repository_invitations", "GET /user/starred", "GET /user/subscriptions", "GET /user/teams", "GET /users", "GET /users/{username}/events", "GET /users/{username}/events/orgs/{org}", "GET /users/{username}/events/public", "GET /users/{username}/followers", "GET /users/{username}/following", "GET /users/{username}/gists", "GET /users/{username}/gpg_keys", "GET /users/{username}/keys", "GET /users/{username}/orgs", "GET /users/{username}/projects", "GET /users/{username}/received_events", "GET /users/{username}/received_events/public", "GET /users/{username}/repos", "GET /users/{username}/starred", "GET /users/{username}/subscriptions"];
+
+function isPaginatingEndpoint(arg) {
+  if (typeof arg === "string") {
+    return paginatingEndpoints.includes(arg);
+  } else {
+    return false;
+  }
+}
+
 /**
  * @param octokit Octokit instance
  * @param options Options passed to Octokit constructor
@@ -3565,7 +3565,9 @@ function paginateRest(octokit) {
 paginateRest.VERSION = VERSION;
 
 exports.composePaginateRest = composePaginateRest;
+exports.isPaginatingEndpoint = isPaginatingEndpoint;
 exports.paginateRest = paginateRest;
+exports.paginatingEndpoints = paginatingEndpoints;
 //# sourceMappingURL=index.js.map
 
 
@@ -3760,7 +3762,7 @@ const project = __webpack_require__(731);
 const MIXPANEL_TOKEN = '6a91c23a5c49e341a337954443e1f2a0';
 
 const getContext = () => ({
-  version: project.version
+  version: project.version,
 });
 
 const tracker = () => {
@@ -3770,12 +3772,12 @@ const tracker = () => {
   const track = (event, properties) => {
     mixpanel.track(event, {
       ...context,
-      ...properties
+      ...properties,
     });
   };
 
   return {
-    track
+    track,
   };
 };
 
@@ -3825,7 +3827,7 @@ module.exports = {
   median,
   subtractDaysToDate,
   sum,
-  tracker
+  tracker,
 };
 
 
@@ -3849,16 +3851,11 @@ module.exports = (list) => (list || []).reduce((a, b) => a + b, 0);
 /***/ 359:
 /***/ (function(module) {
 
-const ID_PREFIX = 'https://avatars.githubusercontent.com/u/';
-const ID_REGEXP = /^[0-9]+/
-
-const extractId = (url) => url.replace(ID_PREFIX, '').match(ID_REGEXP)[0];
-
 module.exports = (data = {}) => ({
-  id: extractId(data.avatarUrl),
+  id: data.databaseId,
   url: data.url,
   login: data.login,
-  avatarUrl: data.avatarUrl
+  avatarUrl: data.avatarUrl,
 });
 
 
@@ -5605,7 +5602,7 @@ function _objectWithoutProperties(source, excluded) {
   return target;
 }
 
-const VERSION = "3.2.5";
+const VERSION = "3.3.2";
 
 class Octokit {
   constructor(options = {}) {
@@ -5614,6 +5611,7 @@ class Octokit {
       baseUrl: request.request.endpoint.DEFAULTS.baseUrl,
       headers: {},
       request: Object.assign({}, options.request, {
+        // @ts-ignore internal usage only, no need to type
         hook: hook.bind(null, "request")
       }),
       mediaType: {
@@ -8649,7 +8647,9 @@ class HttpClient {
                 maxSockets: maxSockets,
                 keepAlive: this._keepAlive,
                 proxy: {
-                    proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`,
+                    ...((proxyUrl.username || proxyUrl.password) && {
+                        proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
+                    }),
                     host: proxyUrl.hostname,
                     port: proxyUrl.port
                 }
@@ -8785,7 +8785,7 @@ const compressDate = (date) => compressInt(Math.round(date.getTime() / 1000));
 
 const parseReview = ({ submittedAt, timeToReview }) => ({
   d: compressDate(new Date(submittedAt)),
-  t: compressInt(toSeconds(timeToReview))
+  t: compressInt(toSeconds(timeToReview)),
 });
 
 module.exports = (reviewer, period) => {
@@ -8793,10 +8793,10 @@ module.exports = (reviewer, period) => {
   const data = JSURL.stringify({
     u: {
       i: `${author.id}`,
-      n: author.login
+      n: author.login,
     },
     p: period,
-    r: (reviews || []).map(parseReview)
+    r: (reviews || []).map(parseReview),
   });
 
   return `${URL}${data}`;
@@ -8821,10 +8821,10 @@ const CHART_MAX_LENGTH = 10;
 
 const AVATAR_SIZE = {
   SMALL: 20,
-  LARGE: 32
+  LARGE: 32,
 };
 
-const noParse = value => value;
+const noParse = (value) => value;
 
 const generateChart = (percentage = 0) => {
   const length = Math.round(percentage * CHART_MAX_LENGTH);
@@ -8832,20 +8832,20 @@ const generateChart = (percentage = 0) => {
 };
 
 const getChartsData = ({ index, contributions, displayCharts }) => {
-  const addBr = data => displayCharts ? `<br/>${data}` : '';
+  const addBr = (data) => (displayCharts ? `<br/>${data}` : '');
   const medal = MEDAL_ICONS[index];
 
   return {
     username: addBr(medal ? String.fromCodePoint(medal) : ''),
     timeStr: addBr(generateChart(contributions.timeToReview)),
     reviewsStr: addBr(generateChart(contributions.totalReviews)),
-    commentsStr: addBr(generateChart(contributions.totalComments))
+    commentsStr: addBr(generateChart(contributions.totalComments)),
   };
 };
 
-const bold = value => `**${value}**`;
+const bold = (value) => `**${value}**`;
 
-const buildLink = (href, content) => `<a href=${href}>${content}</a>`;
+const buildLink = (href, content) => `<a href="${href}">${content}</a>`;
 
 const buildImage = (src, width) => `<img src="${src}" width="${width}">`;
 
@@ -8877,7 +8877,9 @@ module.exports = ({
   };
 
   const buildRow = ({ reviewer, index }) => {
-    const { author, stats, contributions, urls } = reviewer;
+    const {
+      author, stats, contributions, urls,
+    } = reviewer;
     const { login } = author || {};
     const chartsData = getChartsData({ index, contributions, displayCharts });
 
@@ -8901,12 +8903,12 @@ module.exports = ({
       reviewer,
       index,
       bests,
-      displayCharts
+      displayCharts,
     }));
 
     return [
       TITLES,
-      ...data
+      ...data,
     ];
   };
 
@@ -8924,7 +8926,7 @@ const { parsePullRequest } = __webpack_require__(120);
 
 const ownerFilter = ({ org, repos }) => {
   if (org) return `org:${org}`;
-  return (repos || []).map(r => `repo:${r}`).join(' ');
+  return (repos || []).map((r) => `repo:${r}`).join(' ');
 };
 
 const buildQuery = ({ org, repos, startDate }) => {
@@ -8947,7 +8949,7 @@ module.exports = ({
   org,
   repos,
   startDate,
-  itemsPerPage = 100
+  itemsPerPage = 100,
 }) => {
   const search = buildQuery({ org, repos, startDate });
   return getPullRequests({ octokit, search, limit: itemsPerPage });
@@ -8984,10 +8986,11 @@ query($search: String!, $limit: Int!, $after: String) {
   }
 }
 
-fragment ActorFragment on Actor {
+fragment ActorFragment on User {
   url
   login
   avatarUrl
+  databaseId
 }
 `;
 
@@ -8995,12 +8998,12 @@ module.exports = ({
   octokit,
   search,
   after,
-  limit = null
+  limit = null,
 }) => {
   const variables = { search, after, limit };
   return octokit
     .graphql(PRS_QUERY, variables)
-    .catch(error => {
+    .catch((error) => {
       const msg = `Error fetching pull requests with variables "${JSON.stringify(variables)}"`;
       throw new Error(`${msg}. Error: ${error}`);
     });
@@ -9014,13 +9017,12 @@ module.exports = ({
 
 const { STATS } = __webpack_require__(844);
 
-const sumStat = (allStats, statName) => {
-  return allStats.reduce((a, values) => a + (values[statName] || 0), 0);
-};
+const sumStat = (stats, statName) => stats.reduce((a, values) => a + (values[statName] || 0), 0);
 
-const calculateTotals = (allStats) => {
-  return STATS.reduce((prev, statName) => ({ ...prev, [statName]: sumStat(allStats, statName)}), {});
-};
+const calculateTotals = (allStats) => STATS.reduce((prev, statName) => ({
+  ...prev,
+  [statName]: sumStat(allStats, statName),
+}), {});
 
 module.exports = calculateTotals;
 
@@ -9123,7 +9125,7 @@ module.exports = (octokit, id) => {
   const variables = { id };
   return octokit
     .graphql(PR_BY_ID_QUERY, variables)
-    .catch(error => {
+    .catch((error) => {
       const msg = `Error fetching pull requests with id "${id}"`;
       throw new Error(`${msg}. Error: ${error}`);
     });
@@ -9178,7 +9180,7 @@ const {
   postComment,
   trackError,
   trackRun,
-  trackSuccess
+  trackSuccess,
 } = __webpack_require__(942);
 
 const run = async (params) => {
@@ -9203,13 +9205,17 @@ const run = async (params) => {
   }
 
   const startDate = subtractDaysToDate(new Date(), periodLength);
-  const pulls = await getPulls({ octokit, org, repos, startDate });
+  const pulls = await getPulls({
+    octokit, org, repos, startDate,
+  });
   core.info(`Found ${pulls.length} pull requests to analyze`);
 
   const reviewers = getReviewers(pulls);
   core.info(`Analyzed stats for ${reviewers.length} pull request reviewers`);
 
-  const tableOptions = { displayCharts, disableLinks, sortBy, periodLength };
+  const tableOptions = {
+    displayCharts, disableLinks, sortBy, periodLength,
+  };
   const table = buildTable(reviewers, tableOptions);
   core.debug('Stats table built successfully');
 
@@ -9233,7 +9239,7 @@ module.exports = async (params) => {
     const start = new Date();
     const executed = await run(params);
     const end = new Date();
-    trackSuccess({ executed, timeMs: end - start })
+    trackSuccess({ executed, timeMs: end - start });
   } catch (error) {
     trackError(error);
     throw error;
@@ -9259,11 +9265,16 @@ mutation($id: ID!, $body: String!) {
 }
 `;
 
-module.exports = ({ octokit, id, body, event }) => {
+module.exports = ({
+  octokit,
+  id,
+  body,
+  event,
+}) => {
   const variables = { id, body, event };
   return octokit
     .graphql(UPDATE_PR_MUTATION, variables)
-    .catch(error => {
+    .catch((error) => {
       const msg = `Error updating pull request with id "${id}"`;
       throw new Error(`${msg}. Error: ${error}`);
     });
@@ -9365,9 +9376,7 @@ module.exports = ({ executed, timeMs }) => {
 
 const DAY_IN_SEC = 24 * 60 * 60 * 1000;
 
-module.exports = (date, days) => {
-  return new Date(date.getTime() - days * DAY_IN_SEC);
-};
+module.exports = (date, days) => new Date(date.getTime() - days * DAY_IN_SEC);
 
 
 /***/ }),
@@ -9462,16 +9471,16 @@ const parser = humanizeDuration.humanizer({
       h: () => 'h',
       m: () => 'm',
       s: () => 's',
-      ms: () => 'ms'
-    }
-  }
+      ms: () => 'ms',
+    },
+  },
 });
 
 module.exports = (value) => parser(value, {
   delimiter: ' ',
   spacer: '',
   units: ['d', 'h', 'm'],
-  round: true
+  round: true,
 });
 
 
@@ -9480,7 +9489,7 @@ module.exports = (value) => parser(value, {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.0.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"jest ./test/"},"keywords":[],"author":"Manuel de la Torre","license":"agpl-3.0","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.2.6","@actions/github":"^4.0.0","humanize-duration":"^3.25.1","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"7.2.0","eslint-config-airbnb-base":"14.2.0","eslint-plugin-import":"^2.21.2","eslint-plugin-jest":"^23.17.1","jest":"^26.1.0"}};
+module.exports = {"name":"pull-request-stats","version":"2.0.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"jest"},"keywords":[],"author":"Manuel de la Torre","license":"agpl-3.0","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.2.6","@actions/github":"^4.0.0","humanize-duration":"^3.25.1","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.2.0","eslint-config-airbnb-base":"14.2.1","eslint-plugin-import":"^2.22.1","eslint-plugin-jest":"^24.3.3","jest":"^26.6.3"}};
 
 /***/ }),
 
@@ -9653,9 +9662,12 @@ exports.request = request;
 module.exports = (pulls) => {
   const removeOwnPulls = ({ isOwnPull }) => !isOwnPull;
 
+  const removeWithEmptyId = ({ id }) => !!id;
+
   const all = Object.values(pulls).reduce((acc, pull) => {
     const reviews = pull.reviews
       .filter(removeOwnPulls)
+      .filter(removeWithEmptyId)
       .map((r) => ({ ...r, pullId: pull.id }));
     return acc.concat(reviews);
   }, []);
@@ -9842,10 +9854,60 @@ module.exports = require("url");
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
 const Endpoints = {
   actions: {
     addSelectedRepoToOrgSecret: ["PUT /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"],
     cancelWorkflowRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel"],
+    createOrUpdateEnvironmentSecret: ["PUT /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"],
     createOrUpdateOrgSecret: ["PUT /orgs/{org}/actions/secrets/{secret_name}"],
     createOrUpdateRepoSecret: ["PUT /repos/{owner}/{repo}/actions/secrets/{secret_name}"],
     createRegistrationTokenForOrg: ["POST /orgs/{org}/actions/runners/registration-token"],
@@ -9854,6 +9916,7 @@ const Endpoints = {
     createRemoveTokenForRepo: ["POST /repos/{owner}/{repo}/actions/runners/remove-token"],
     createWorkflowDispatch: ["POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches"],
     deleteArtifact: ["DELETE /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"],
+    deleteEnvironmentSecret: ["DELETE /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"],
     deleteOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}"],
     deleteRepoSecret: ["DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name}"],
     deleteSelfHostedRunnerFromOrg: ["DELETE /orgs/{org}/actions/runners/{runner_id}"],
@@ -9870,16 +9933,20 @@ const Endpoints = {
     getAllowedActionsOrganization: ["GET /orgs/{org}/actions/permissions/selected-actions"],
     getAllowedActionsRepository: ["GET /repos/{owner}/{repo}/actions/permissions/selected-actions"],
     getArtifact: ["GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"],
+    getEnvironmentPublicKey: ["GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key"],
+    getEnvironmentSecret: ["GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"],
     getGithubActionsPermissionsOrganization: ["GET /orgs/{org}/actions/permissions"],
     getGithubActionsPermissionsRepository: ["GET /repos/{owner}/{repo}/actions/permissions"],
     getJobForWorkflowRun: ["GET /repos/{owner}/{repo}/actions/jobs/{job_id}"],
     getOrgPublicKey: ["GET /orgs/{org}/actions/secrets/public-key"],
     getOrgSecret: ["GET /orgs/{org}/actions/secrets/{secret_name}"],
+    getPendingDeploymentsForRun: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"],
     getRepoPermissions: ["GET /repos/{owner}/{repo}/actions/permissions", {}, {
       renamed: ["actions", "getGithubActionsPermissionsRepository"]
     }],
     getRepoPublicKey: ["GET /repos/{owner}/{repo}/actions/secrets/public-key"],
     getRepoSecret: ["GET /repos/{owner}/{repo}/actions/secrets/{secret_name}"],
+    getReviewsForRun: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/approvals"],
     getSelfHostedRunnerForOrg: ["GET /orgs/{org}/actions/runners/{runner_id}"],
     getSelfHostedRunnerForRepo: ["GET /repos/{owner}/{repo}/actions/runners/{runner_id}"],
     getWorkflow: ["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}"],
@@ -9887,6 +9954,7 @@ const Endpoints = {
     getWorkflowRunUsage: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing"],
     getWorkflowUsage: ["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing"],
     listArtifactsForRepo: ["GET /repos/{owner}/{repo}/actions/artifacts"],
+    listEnvironmentSecrets: ["GET /repositories/{repository_id}/environments/{environment_name}/secrets"],
     listJobsForWorkflowRun: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs"],
     listOrgSecrets: ["GET /orgs/{org}/actions/secrets"],
     listRepoSecrets: ["GET /repos/{owner}/{repo}/actions/secrets"],
@@ -9902,6 +9970,7 @@ const Endpoints = {
     listWorkflowRunsForRepo: ["GET /repos/{owner}/{repo}/actions/runs"],
     reRunWorkflow: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun"],
     removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"],
+    reviewPendingDeploymentsForRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"],
     setAllowedActionsOrganization: ["PUT /orgs/{org}/actions/permissions/selected-actions"],
     setAllowedActionsRepository: ["PUT /repos/{owner}/{repo}/actions/permissions/selected-actions"],
     setGithubActionsPermissionsOrganization: ["PUT /orgs/{org}/actions/permissions"],
@@ -10004,12 +10073,16 @@ const Endpoints = {
     update: ["PATCH /repos/{owner}/{repo}/check-runs/{check_run_id}"]
   },
   codeScanning: {
+    deleteAnalysis: ["DELETE /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}{?confirm_delete}"],
     getAlert: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}", {}, {
       renamedParameters: {
         alert_id: "alert_number"
       }
     }],
+    getAnalysis: ["GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"],
+    getSarif: ["GET /repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}"],
     listAlertsForRepo: ["GET /repos/{owner}/{repo}/code-scanning/alerts"],
+    listAlertsInstances: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances"],
     listRecentAnalyses: ["GET /repos/{owner}/{repo}/code-scanning/analyses"],
     updateAlert: ["PATCH /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}"],
     uploadSarif: ["POST /repos/{owner}/{repo}/code-scanning/sarifs"]
@@ -10282,6 +10355,31 @@ const Endpoints = {
     updateWebhook: ["PATCH /orgs/{org}/hooks/{hook_id}"],
     updateWebhookConfigForOrg: ["PATCH /orgs/{org}/hooks/{hook_id}/config"]
   },
+  packages: {
+    deletePackageForAuthenticatedUser: ["DELETE /user/packages/{package_type}/{package_name}"],
+    deletePackageForOrg: ["DELETE /orgs/{org}/packages/{package_type}/{package_name}"],
+    deletePackageVersionForAuthenticatedUser: ["DELETE /user/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+    deletePackageVersionForOrg: ["DELETE /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+    getAllPackageVersionsForAPackageOwnedByAnOrg: ["GET /orgs/{org}/packages/{package_type}/{package_name}/versions", {}, {
+      renamed: ["packages", "getAllPackageVersionsForPackageOwnedByOrg"]
+    }],
+    getAllPackageVersionsForAPackageOwnedByTheAuthenticatedUser: ["GET /user/packages/{package_type}/{package_name}/versions", {}, {
+      renamed: ["packages", "getAllPackageVersionsForPackageOwnedByAuthenticatedUser"]
+    }],
+    getAllPackageVersionsForPackageOwnedByAuthenticatedUser: ["GET /user/packages/{package_type}/{package_name}/versions"],
+    getAllPackageVersionsForPackageOwnedByOrg: ["GET /orgs/{org}/packages/{package_type}/{package_name}/versions"],
+    getAllPackageVersionsForPackageOwnedByUser: ["GET /users/{username}/packages/{package_type}/{package_name}/versions"],
+    getPackageForAuthenticatedUser: ["GET /user/packages/{package_type}/{package_name}"],
+    getPackageForOrganization: ["GET /orgs/{org}/packages/{package_type}/{package_name}"],
+    getPackageForUser: ["GET /users/{username}/packages/{package_type}/{package_name}"],
+    getPackageVersionForAuthenticatedUser: ["GET /user/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+    getPackageVersionForOrganization: ["GET /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+    getPackageVersionForUser: ["GET /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+    restorePackageForAuthenticatedUser: ["POST /user/packages/{package_type}/{package_name}/restore{?token}"],
+    restorePackageForOrg: ["POST /orgs/{org}/packages/{package_type}/{package_name}/restore{?token}"],
+    restorePackageVersionForAuthenticatedUser: ["POST /user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"],
+    restorePackageVersionForOrg: ["POST /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"]
+  },
   projects: {
     addCollaborator: ["PUT /projects/{project_id}/collaborators/{username}", {
       mediaType: {
@@ -10511,7 +10609,7 @@ const Endpoints = {
         previews: ["squirrel-girl"]
       }
     }, {
-      deprecated: "octokit.reactions.deleteLegacy() is deprecated, see https://docs.github.com/v3/reactions/#delete-a-reaction-legacy"
+      deprecated: "octokit.reactions.deleteLegacy() is deprecated, see https://docs.github.com/rest/reference/reactions/#delete-a-reaction-legacy"
     }],
     listForCommitComment: ["GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", {
       mediaType: {
@@ -10578,8 +10676,9 @@ const Endpoints = {
     createDeploymentStatus: ["POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
     createDispatchEvent: ["POST /repos/{owner}/{repo}/dispatches"],
     createForAuthenticatedUser: ["POST /user/repos"],
-    createFork: ["POST /repos/{owner}/{repo}/forks"],
+    createFork: ["POST /repos/{owner}/{repo}/forks{?org,organization}"],
     createInOrg: ["POST /orgs/{org}/repos"],
+    createOrUpdateEnvironment: ["PUT /repos/{owner}/{repo}/environments/{environment_name}"],
     createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
     createPagesSite: ["POST /repos/{owner}/{repo}/pages", {
       mediaType: {
@@ -10597,6 +10696,7 @@ const Endpoints = {
     delete: ["DELETE /repos/{owner}/{repo}"],
     deleteAccessRestrictions: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions"],
     deleteAdminBranchProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"],
+    deleteAnEnvironment: ["DELETE /repos/{owner}/{repo}/environments/{environment_name}"],
     deleteBranchProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection"],
     deleteCommitComment: ["DELETE /repos/{owner}/{repo}/comments/{comment_id}"],
     deleteCommitSignatureProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures", {
@@ -10645,6 +10745,7 @@ const Endpoints = {
     get: ["GET /repos/{owner}/{repo}"],
     getAccessRestrictions: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions"],
     getAdminBranchProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"],
+    getAllEnvironments: ["GET /repos/{owner}/{repo}/environments"],
     getAllStatusCheckContexts: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts"],
     getAllTopics: ["GET /repos/{owner}/{repo}/topics", {
       mediaType: {
@@ -10672,6 +10773,7 @@ const Endpoints = {
     getDeployKey: ["GET /repos/{owner}/{repo}/keys/{key_id}"],
     getDeployment: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}"],
     getDeploymentStatus: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses/{status_id}"],
+    getEnvironment: ["GET /repos/{owner}/{repo}/environments/{environment_name}"],
     getLatestPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/latest"],
     getLatestRelease: ["GET /repos/{owner}/{repo}/releases/latest"],
     getPages: ["GET /repos/{owner}/{repo}/pages"],
@@ -10680,6 +10782,7 @@ const Endpoints = {
     getPullRequestReviewProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
     getPunchCardStats: ["GET /repos/{owner}/{repo}/stats/punch_card"],
     getReadme: ["GET /repos/{owner}/{repo}/readme"],
+    getReadmeInDirectory: ["GET /repos/{owner}/{repo}/readme/{dir}"],
     getRelease: ["GET /repos/{owner}/{repo}/releases/{release_id}"],
     getReleaseAsset: ["GET /repos/{owner}/{repo}/releases/assets/{asset_id}"],
     getReleaseByTag: ["GET /repos/{owner}/{repo}/releases/tags/{tag}"],
@@ -10883,7 +10986,7 @@ const Endpoints = {
   }
 };
 
-const VERSION = "4.10.3";
+const VERSION = "4.15.0";
 
 function endpointsToMethods(octokit, endpointsMap) {
   const newMethods = {};
@@ -10966,19 +11069,11 @@ function decorate(octokit, scope, methodName, defaults, decorations) {
   return Object.assign(withDecorations, requestWithDefaults);
 }
 
-/**
- * This plugin is a 1:1 copy of internal @octokit/rest plugins. The primary
- * goal is to rebuild @octokit/rest on top of @octokit/core. Once that is
- * done, we will remove the registerEndpoints methods and return the methods
- * directly as with the other plugins. At that point we will also remove the
- * legacy workarounds and deprecations.
- *
- * See the plan at
- * https://github.com/octokit/plugin-rest-endpoint-methods.js/pull/1
- */
-
 function restEndpointMethods(octokit) {
-  return endpointsToMethods(octokit, Endpoints);
+  const api = endpointsToMethods(octokit, Endpoints);
+  return _objectSpread2(_objectSpread2({}, api), {}, {
+    rest: api
+  });
 }
 restEndpointMethods.VERSION = VERSION;
 
@@ -10994,7 +11089,7 @@ exports.restEndpointMethods = restEndpointMethods;
 const SORT_KEY = {
   TIME: 'timeToReview',
   REVIEWS: 'totalReviews',
-  COMMENTS: 'totalComments'
+  COMMENTS: 'totalComments',
 };
 
 const TITLES = {
@@ -11011,7 +11106,7 @@ const STATS_OPTIMIZATION = {
   totalReviews: 'MAX',
   totalComments: 'MAX',
   commentsPerReview: 'MAX',
-  timeToReview: 'MIN'
+  timeToReview: 'MIN',
 };
 
 const STATS = Object.keys(STATS_OPTIMIZATION);
@@ -11021,7 +11116,7 @@ module.exports = {
   TITLES,
   COLUMNS_ORDER,
   STATS,
-  STATS_OPTIMIZATION
+  STATS_OPTIMIZATION,
 };
 
 
@@ -12248,7 +12343,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var request = __webpack_require__(753);
 var universalUserAgent = __webpack_require__(796);
 
-const VERSION = "4.6.0";
+const VERSION = "4.6.1";
 
 class GraphqlError extends Error {
   constructor(request, response) {
@@ -12271,10 +12366,18 @@ class GraphqlError extends Error {
 }
 
 const NON_VARIABLE_OPTIONS = ["method", "baseUrl", "url", "headers", "request", "query", "mediaType"];
+const FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
 const GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
 function graphql(request, query, options) {
-  if (typeof query === "string" && options && "query" in options) {
-    return Promise.reject(new Error(`[@octokit/graphql] "query" cannot be used as variable name`));
+  if (options) {
+    if (typeof query === "string" && "query" in options) {
+      return Promise.reject(new Error(`[@octokit/graphql] "query" cannot be used as variable name`));
+    }
+
+    for (const key in options) {
+      if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key)) continue;
+      return Promise.reject(new Error(`[@octokit/graphql] "${key}" cannot be used as variable name`));
+    }
   }
 
   const parsedOptions = typeof query === "string" ? Object.assign({
@@ -12377,7 +12480,7 @@ module.exports = {
   postComment,
   trackError,
   trackRun,
-  trackSuccess
+  trackSuccess,
 };
 
 
