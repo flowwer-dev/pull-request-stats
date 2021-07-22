@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.0.2] - 2021-07-22
+### Changed
+- Ignore pull requests of deleted users (by [Derek Young](https://github.com/derek-young))
+
 ## [2.0.1] - 2021-04-19
 ### Changed
 - Fixes bug related with bots authoring or reviewing pull requests (#3)

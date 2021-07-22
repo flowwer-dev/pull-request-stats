@@ -16,7 +16,10 @@ const buildQuery = ({ org, repos, startDate }) => {
 const getPullRequests = async (params) => {
   const { limit } = params;
   const data = await fetchPullRequests(params);
-  const results = data.search.edges.filter(filterNullAuthor).map(parsePullRequest);
+  const results = data.search.edges
+    .filter(filterNullAuthor)
+    .map(parsePullRequest);
+
   if (results.length < limit) return results;
 
   const last = results[results.length - 1].cursor;
