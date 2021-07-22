@@ -1,6 +1,8 @@
 const { fetchPullRequests } = require('../fetchers');
 const { parsePullRequest } = require('../parsers');
 
+const filterNullAuthor = ({ node }) => !!node.author;
+
 const ownerFilter = ({ org, repos }) => {
   if (org) return `org:${org}`;
   return (repos || []).map((r) => `repo:${r}`).join(' ');
@@ -14,7 +16,7 @@ const buildQuery = ({ org, repos, startDate }) => {
 const getPullRequests = async (params) => {
   const { limit } = params;
   const data = await fetchPullRequests(params);
-  const results = data.search.edges.map(parsePullRequest);
+  const results = data.search.edges.filter(filterNullAuthor).map(parsePullRequest);
   if (results.length < limit) return results;
 
   const last = results[results.length - 1].cursor;
