@@ -2,6 +2,10 @@ const get = require('lodash.get');
 const parseUser = require('./parseUser');
 const parseReview = require('./parseReview');
 
+const filterNullAuthor = ({ author }) => !!author;
+
+const getFilteredReviews = (data) => get(data, 'node.reviews.nodes', []).filter(filterNullAuthor);
+
 module.exports = (data = {}) => {
   const author = parseUser(get(data, 'node.author'));
   const publishedAt = new Date(get(data, 'node.publishedAt'));
@@ -12,6 +16,6 @@ module.exports = (data = {}) => {
     publishedAt,
     cursor: data.cursor,
     id: get(data, 'node.id'),
-    reviews: get(data, 'node.reviews.nodes', []).map(handleReviews),
+    reviews: getFilteredReviews(data).map(handleReviews),
   };
 };

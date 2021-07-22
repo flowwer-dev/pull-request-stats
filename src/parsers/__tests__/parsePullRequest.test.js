@@ -15,5 +15,6 @@ describe('Parsers | .parsePullRequest', () => {
       avatarUrl: 'https://avatars.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4',
     });
     expect(response).toHaveProperty('reviews');
+    expect(response.reviews).toHaveLength(2);
   });
 });
