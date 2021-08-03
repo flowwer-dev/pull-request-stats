@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.0.3] - 2021-08-02
+### Fixes
+- [#7](https://github.com/flowwer-dev/pull-request-stats/issues/7) Do not duplicate results table when there's no other content
+
 ## [2.0.2] - 2021-07-22
 ### Changed
 - Ignore pull requests of deleted users (by [Derek Young](https://github.com/derek-young))
