@@ -6,8 +6,12 @@ jest.mock('../../parsers', () => ({ parsePullRequest: jest.fn() }));
 jest.mock('../../fetchers', () => ({ fetchPullRequests: jest.fn() }));
 
 const buildResponse = (items) => {
-  const edges = [];
-  for (let i = 0; i < items; i++) edges.push({ cursor: 'CURSOR', node: { id: i } });
+  const edges = [{ cursor: 'CURSOR', node: { id: 123, author: null } }];
+
+  for (let i = 0; i < items; i++) {
+    edges.push({ cursor: 'CURSOR', node: { id: i, author: {} } });
+  }
+
   return { search: { edges } };
 };
 

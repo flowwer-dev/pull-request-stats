@@ -1,6 +1,6 @@
 const alreadyPublished = require('../alreadyPublished');
 
-const STATS = '\n## Pull reviewers stats\n|stats|table|';
+const STATS = '## Pull reviewers stats\n|stats|table|';
 const OTHER_CONTENT = '## Other pull request content';
 
 describe('Interactors | .alreadyPublished', () => {
@@ -23,7 +23,7 @@ describe('Interactors | .alreadyPublished', () => {
   });
 
   it('returns true when body contains other stuff and stats', () => {
-    const body = `${OTHER_CONTENT}${STATS}`;
+    const body = `${OTHER_CONTENT}\n${STATS}`;
     const pullRequest = { body };
     expect(alreadyPublished(pullRequest)).toBe(true);
   });

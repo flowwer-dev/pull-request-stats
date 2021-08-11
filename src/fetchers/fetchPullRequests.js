@@ -23,10 +23,11 @@ query($search: String!, $limit: Int!, $after: String) {
   }
 }
 
-fragment ActorFragment on Actor {
+fragment ActorFragment on User {
   url
   login
   avatarUrl
+  databaseId
 }
 `;
 

@@ -35,7 +35,7 @@ const getChartsData = ({ index, contributions, displayCharts }) => {
 
 const bold = (value) => `**${value}**`;
 
-const buildLink = (href, content) => `<a href=${href}>${content}</a>`;
+const buildLink = (href, content) => `<a href="${href}">${content}</a>`;
 
 const buildImage = (src, width) => `<img src="${src}" width="${width}">`;
 
