@@ -13,6 +13,7 @@ module.exports = (reviewers, options = {}) => {
     periodLength,
     disableLinks,
     displayCharts,
+    limit,
   } = options;
 
   const execute = () => {
@@ -20,11 +21,15 @@ module.exports = (reviewers, options = {}) => {
     const totals = calculateTotals(allStats);
     const bests = calculateBests(allStats);
 
-    const populatedReviewers = sortByStats(reviewers, sortBy).map((reviewer) => ({
+    let populatedReviewers = sortByStats(reviewers, sortBy).map((reviewer) => ({
       ...reviewer,
       contributions: getContributions(reviewer, totals),
       urls: { timeToReview: buildReviewTimeLink(reviewer, periodLength) },
     }));
+
+    if (limit > 0) {
+      populatedReviewers = populatedReviewers.slice(0, limit);
+    }
 
     const tableData = getTableData({
       bests,

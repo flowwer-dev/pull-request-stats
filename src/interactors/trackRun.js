@@ -8,6 +8,7 @@ module.exports = ({
   displayCharts,
   disableLinks,
   currentRepo,
+  limit,
 }) => {
   const [owner, repo] = currentRepo.split('/');
   const reposCount = (repos || []).length;
@@ -23,5 +24,6 @@ module.exports = ({
     periodLength,
     displayCharts,
     disableLinks,
+    limit,
   });
 };

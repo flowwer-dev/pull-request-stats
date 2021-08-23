@@ -36,6 +36,7 @@ const getParams = () => {
     displayCharts: parseBoolean(core.getInput('charts')),
     disableLinks: parseBoolean(core.getInput('disable-links')),
     pullRequestId: getPrId(),
+    limit: core.getInput('limit'),
   };
 };
 
