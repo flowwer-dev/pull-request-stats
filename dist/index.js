@@ -1289,7 +1289,7 @@ module.exports = {
 const calculateReviewsStats = __webpack_require__(57);
 const groupReviews = __webpack_require__(755);
 
-module.exports = (pulls) => groupReviews(pulls).map(({ author, reviews }) => {
+module.exports = (pulls, limit) => groupReviews(pulls).map(({ author, reviews }) => {
   const stats = calculateReviewsStats(reviews);
   return { author, reviews, stats };
 });
@@ -1334,6 +1334,7 @@ module.exports = ({
   displayCharts,
   disableLinks,
   currentRepo,
+  limit,
 }) => {
   const [owner, repo] = currentRepo.split('/');
   const reposCount = (repos || []).length;
@@ -1349,6 +1350,7 @@ module.exports = ({
     periodLength,
     displayCharts,
     disableLinks,
+    limit,
   });
 };
 
@@ -1380,6 +1382,7 @@ module.exports = (reviewers, options = {}) => {
     periodLength,
     disableLinks,
     displayCharts,
+    limit,
   } = options;
 
   const execute = () => {
@@ -1387,11 +1390,15 @@ module.exports = (reviewers, options = {}) => {
     const totals = calculateTotals(allStats);
     const bests = calculateBests(allStats);
 
-    const populatedReviewers = sortByStats(reviewers, sortBy).map((reviewer) => ({
+    let populatedReviewers = sortByStats(reviewers, sortBy).map((reviewer) => ({
       ...reviewer,
       contributions: getContributions(reviewer, totals),
       urls: { timeToReview: buildReviewTimeLink(reviewer, periodLength) },
     }));
+
+    if (limit > 0) {
+      populatedReviewers = populatedReviewers.slice(0, limit);
+    }
 
     const tableData = getTableData({
       bests,
@@ -1424,7 +1431,7 @@ const { TABLE_TITLE } = __webpack_require__(648);
 module.exports = (pullRequest) => {
   const { body } = pullRequest || {};
 
-  const regexp = new RegExp(`\\n(${TABLE_TITLE})\\n`);
+  const regexp = new RegExp(`(^|\\n)(${TABLE_TITLE})\\n`);
   return regexp.test(body);
 };
 
@@ -3292,6 +3299,10 @@ const get = __webpack_require__(854);
 const parseUser = __webpack_require__(359);
 const parseReview = __webpack_require__(158);
 
+const filterNullAuthor = ({ author }) => !!author;
+
+const getFilteredReviews = (data) => get(data, 'node.reviews.nodes', []).filter(filterNullAuthor);
+
 module.exports = (data = {}) => {
   const author = parseUser(get(data, 'node.author'));
   const publishedAt = new Date(get(data, 'node.publishedAt'));
@@ -3302,7 +3313,7 @@ module.exports = (data = {}) => {
     publishedAt,
     cursor: data.cursor,
     id: get(data, 'node.id'),
-    reviews: get(data, 'node.reviews.nodes', []).map(handleReviews),
+    reviews: getFilteredReviews(data).map(handleReviews),
   };
 };
 
@@ -8924,6 +8935,8 @@ module.exports = ({
 const { fetchPullRequests } = __webpack_require__(162);
 const { parsePullRequest } = __webpack_require__(120);
 
+const filterNullAuthor = ({ node }) => !!node.author;
+
 const ownerFilter = ({ org, repos }) => {
   if (org) return `org:${org}`;
   return (repos || []).map((r) => `repo:${r}`).join(' ');
@@ -8937,7 +8950,10 @@ const buildQuery = ({ org, repos, startDate }) => {
 const getPullRequests = async (params) => {
   const { limit } = params;
   const data = await fetchPullRequests(params);
-  const results = data.search.edges.map(parsePullRequest);
+  const results = data.search.edges
+    .filter(filterNullAuthor)
+    .map(parsePullRequest);
+
   if (results.length < limit) return results;
 
   const last = results[results.length - 1].cursor;
@@ -9193,6 +9209,7 @@ const run = async (params) => {
     displayCharts,
     disableLinks,
     pullRequestId,
+    limit,
   } = params;
   core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
 
@@ -9214,7 +9231,7 @@ const run = async (params) => {
   core.info(`Analyzed stats for ${reviewers.length} pull request reviewers`);
 
   const tableOptions = {
-    displayCharts, disableLinks, sortBy, periodLength,
+    displayCharts, disableLinks, sortBy, periodLength, limit,
   };
   const table = buildTable(reviewers, tableOptions);
   core.debug('Stats table built successfully');
@@ -9331,6 +9348,7 @@ const getParams = () => {
     displayCharts: parseBoolean(core.getInput('charts')),
     disableLinks: parseBoolean(core.getInput('disable-links')),
     pullRequestId: getPrId(),
+    limit: core.getInput('limit'),
   };
 };
 
@@ -9489,7 +9507,7 @@ module.exports = (value) => parser(value, {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.0.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"jest"},"keywords":[],"author":"Manuel de la Torre","license":"agpl-3.0","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.2.6","@actions/github":"^4.0.0","humanize-duration":"^3.25.1","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.2.0","eslint-config-airbnb-base":"14.2.1","eslint-plugin-import":"^2.22.1","eslint-plugin-jest":"^24.3.3","jest":"^26.6.3"}};
+module.exports = {"name":"pull-request-stats","version":"2.0.3","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"jest"},"keywords":[],"author":"Manuel de la Torre","license":"agpl-3.0","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.2.6","@actions/github":"^4.0.0","humanize-duration":"^3.25.1","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.2.0","eslint-config-airbnb-base":"14.2.1","eslint-plugin-import":"^2.22.1","eslint-plugin-jest":"^24.3.3","jest":"^26.6.3"}};
 
 /***/ }),
 
