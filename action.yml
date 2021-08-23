@@ -28,6 +28,10 @@ inputs:
     description: 'Prevents from adding any external links in the stats'
     required: false
     default: false
+  limit:
+    description: 'The maximum number of rows to display in the table. A value of `0` means unlimited.'
+    required: false
+    default: 0
 runs:
   using: 'node12'
   main: 'dist/index.js'

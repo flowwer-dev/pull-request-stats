@@ -24,6 +24,7 @@ const run = async (params) => {
     displayCharts,
     disableLinks,
     pullRequestId,
+    limit,
   } = params;
   core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
 
@@ -44,10 +45,13 @@ const run = async (params) => {
   const reviewers = getReviewers(pulls);
   core.info(`Analyzed stats for ${reviewers.length} pull request reviewers`);
 
-  const tableOptions = {
-    displayCharts, disableLinks, sortBy, periodLength,
-  };
-  const table = buildTable(reviewers, tableOptions);
+  const table = buildTable(reviewers, {
+    limit,
+    sortBy,
+    disableLinks,
+    periodLength,
+    displayCharts,
+  });
   core.debug('Stats table built successfully');
 
   const content = buildComment({ table, periodLength });
