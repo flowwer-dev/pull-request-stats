@@ -51,7 +51,7 @@ describe('Interactors | .buildTable', () => {
     expect(response).toEqual(LINKS_RESPONSE);
   });
 
-  it('with limit 1', () => {
+  it('with limit is 1', () => {
     const response = buildTable(reviewers, { limit: 1 });
     expect(response).toEqual(LIMIT_ONE_RESPONSE);
   });

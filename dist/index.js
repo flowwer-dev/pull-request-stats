@@ -1383,15 +1383,12 @@ module.exports = (reviewers, options = {}) => {
       urls: { timeToReview: buildReviewTimeLink(reviewer, periodLength) },
     }));
 
-    const limitedReviewers = limit > 0
-      ? populatedReviewers.slice(0, limit)
-      : populatedReviewers;
-
     const tableData = getTableData({
       bests,
       disableLinks,
       displayCharts,
-      reviewers: limitedReviewers,
+      limit,
+      reviewers: populatedReviewers,
     });
 
     return table(toTableArray(tableData));
@@ -9405,11 +9402,14 @@ const addReviewsTimeLink = (text, disable, link) => {
   return addLink ? `[${text}](${link})` : text;
 };
 
+const applyLimit = (data, limit) => (limit > 0 ? data.slice(0, limit) : data);
+
 module.exports = ({
   reviewers,
   bests = {},
   disableLinks = false,
   displayCharts = false,
+  limit = null,
 }) => {
   const printStat = (stats, statName, parser) => {
     const value = stats[statName];
@@ -9452,7 +9452,7 @@ module.exports = ({
 
     return [
       TITLES,
-      ...data,
+      ...applyLimit(data, limit),
     ];
   };
 
@@ -9997,7 +9997,7 @@ module.exports = (value) => parser(value, {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.1.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"agpl-3.0","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","humanize-duration":"^3.27.0","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
+module.exports = {"name":"pull-request-stats","version":"2.1.1","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"agpl-3.0","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","humanize-duration":"^3.27.0","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
 
 /***/ }),
 

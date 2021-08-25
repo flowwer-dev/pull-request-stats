@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.1] - 2021-08-24
+### Fixes
+- Fixes a bug introduced with `limit` option (reviewers sort was broken).
+
 ## [2.1.0] - 2021-08-23
 ### Added
 - Option `limit` to indicate the maximum numbers of rows to display in the table ([#13](https://github.com/flowwer-dev/pull-request-stats/pull/13) by [escudero89](https://github.com/escudero89))

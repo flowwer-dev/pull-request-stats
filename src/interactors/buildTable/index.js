@@ -27,15 +27,12 @@ module.exports = (reviewers, options = {}) => {
       urls: { timeToReview: buildReviewTimeLink(reviewer, periodLength) },
     }));
 
-    const limitedReviewers = limit > 0
-      ? populatedReviewers.slice(0, limit)
-      : populatedReviewers;
-
     const tableData = getTableData({
       bests,
       disableLinks,
       displayCharts,
-      reviewers: limitedReviewers,
+      limit,
+      reviewers: populatedReviewers,
     });
 
     return table(toTableArray(tableData));
