@@ -1,0 +1,17 @@
+name: Pull Request Stats
+
+on: pull_request
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run pull request stats
+        uses: d4nicoder/pull-request-stats@master
+        with:
+          token: ${{ secrets.ADD_A_PERSONAL_ACCESS_TOKEN }}
+          period: 7
+          charts: true
+          disable-links: true
+          sort-by: 'COMMENTS'
+          reviewers: 'd4nicoder,example'
