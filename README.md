@@ -102,6 +102,7 @@ jobs:
           charts: true
           disable-links: true
           sort-by: 'COMMENTS'
+          reviewers: 'd4nicoder,other'
 ```
 
 This config will:
