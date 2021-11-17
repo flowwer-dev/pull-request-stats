@@ -12,6 +12,9 @@ inputs:
   organization:
     description: 'An organization name to use all of its repositories to calculate the stats.'
     required: false
+  reviewers:
+    description: 'A comma separated list of reviewers to show. The others will be skipped'
+    required: false
   period:
     description: 'The length of the period used to calculate the stats, expressed in days'
     required: false
