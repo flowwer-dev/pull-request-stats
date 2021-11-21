@@ -1,4 +1,4 @@
-const VALID_EVENT_NAMES = ['pull_request','pull_request_target'];
+const VALID_EVENT_NAMES = ['pull_request', 'pull_request_target'];
 
 const validateEnv = (github) => {
   const { eventName } = github.context;
