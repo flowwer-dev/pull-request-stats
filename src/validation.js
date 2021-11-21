@@ -5,7 +5,8 @@ const validateEnv = (github) => {
   for (let validEvent of VALID_EVENT_NAMES) {
     if (eventName === validEvent) return;
   }
-  const error = `This action runs only in one of the following events "${VALID_EVENT_NAMES.join()}". Change the property "on" of your workflow file from "${eventName}" one of "${VALID_EVENT_NAME.join()}".`;
+  const validEvents = VALID_EVENT_NAMES.map(e => `"${e}"`).join(', ');
+  const error = `This action runs only in one of the following events: ${validEvents}. Change the property "on" of your workflow file from "${eventName}" to one of ${validEvents}.`;
   throw new Error(error);
 };
 
