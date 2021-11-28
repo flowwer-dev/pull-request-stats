@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.2] - 2021-11-28
+### Added
+- Support for `pull_request_target` event.
+
 ## [2.1.1] - 2021-08-24
 ### Fixes
 - Fixes a bug introduced with `limit` option (reviewers sort was broken).
