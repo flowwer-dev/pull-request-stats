@@ -30,6 +30,7 @@ const getChartsData = ({ index, contributions, displayCharts }) => {
     timeStr: addBr(generateChart(contributions.timeToReview)),
     reviewsStr: addBr(generateChart(contributions.totalReviews)),
     commentsStr: addBr(generateChart(contributions.totalComments)),
+    commentsPerReviewStr: addBr(generateChart(contributions.commentsPerReview)),
   };
 };
 
@@ -81,6 +82,7 @@ module.exports = ({
     const timeStr = addReviewsTimeLink(timeVal, disableLinks, urls.timeToReview);
     const reviewsStr = printStat(stats, 'totalReviews', noParse);
     const commentsStr = printStat(stats, 'totalComments', noParse);
+    const commentsPerReviewStr = printStat(stats, 'commentsPerReview', noParse);
 
     return {
       avatar,
@@ -88,6 +90,7 @@ module.exports = ({
       timeToReview: `${timeStr}${chartsData.timeStr}`,
       totalReviews: `${reviewsStr}${chartsData.reviewsStr}`,
       totalComments: `${commentsStr}${chartsData.commentsStr}`,
+      commentsPerReview: `${commentsPerReviewStr}${chartsData.commentsPerReviewStr}`,
     };
   };
 

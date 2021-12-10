@@ -10,7 +10,7 @@ module.exports = (reviews) => {
   return {
     totalReviews,
     totalComments,
-    commentsPerReview: divide(totalComments, totalReviews),
+    commentsPerReview: Math.round(divide(totalComments, totalReviews) * 10) / 10 ,
     timeToReview: median(getProperty(reviews, 'timeToReview')),
   };
 };
