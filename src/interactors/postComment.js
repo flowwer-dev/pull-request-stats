@@ -2,7 +2,7 @@ const { updatePullRequest } = require('../fetchers');
 
 const buildBody = (currentBody, content) => {
   if (!currentBody.trim()) return content;
-  return `${currentBody}\n${content}`;
+  return `${currentBody}\n\n${content}`;
 };
 
 module.exports = ({
