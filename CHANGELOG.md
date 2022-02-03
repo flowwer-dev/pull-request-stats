@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.3] - 2022-02-02
+### Fixed
+- [#20](https://github.com/flowwer-dev/pull-request-stats/issues/20) Add extra new line before stats table ([#21](https://github.com/flowwer-dev/pull-request-stats/pull/13) by [dantehemerson](https://github.com/dantehemerson)).
+
 ## [2.1.2] - 2021-11-28
 ### Added
 - Support for `pull_request_target` event.
@@ -14,7 +18,7 @@ All notable changes to this project will be documented in this file.
 - Option `limit` to indicate the maximum numbers of rows to display in the table ([#13](https://github.com/flowwer-dev/pull-request-stats/pull/13) by [escudero89](https://github.com/escudero89))
 
 ## [2.0.3] - 2021-08-02
-### Fixes
+### Fixed
 - [#7](https://github.com/flowwer-dev/pull-request-stats/issues/7) Do not duplicate results table when there's no other content
 
 ## [2.0.2] - 2021-07-22
