@@ -19,6 +19,9 @@ Each reviewer has a link pointing to their [historical behavior](https://app.flo
 
 ![](/assets/historical.png)
 
+## PRIVACY
+No repository data is collected, stored or distributed by this GitHub action. This action is state-less.  
+
 ## Usage
 
 Just add this action to one of your [workflow files](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow):
