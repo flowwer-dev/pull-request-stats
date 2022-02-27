@@ -19,8 +19,10 @@ Each reviewer has a link pointing to their [historical behavior](https://app.flo
 
 ![](/assets/historical.png)
 
-## PRIVACY
-No repository data is collected, stored or distributed by this GitHub action. This action is state-less.  
+## Privacy
+* **No repository data is collected**, stored or distributed by this GitHub action. This action is **state-less**.
+* Charts data is send over the URL, and never stored or transmitted anywhere else.
+* [Minimal data](/src/interactors/trackRun.js) is send to Mixpanel in order to improve this action. However, you can opt-out using `telemtry` option.
 
 ## Usage
 
@@ -45,6 +47,7 @@ The possible inputs for this action are:
 | `disable-links` | If `true`, removes the links to the detailed charts. Possible values: `true` or `false`. | `false` |
 | `sort-by` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
 | `limit` | The maximum number of rows to display in the table. A value of `0` means unlimited. |`0`|
+| `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/interactors/trackRun.js) and helps me improve this action. |`true`|
 
 
 ## Examples

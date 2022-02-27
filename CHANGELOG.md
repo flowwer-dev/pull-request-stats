@@ -1,9 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - 2022-02-27
+### Added
+- Add disclaimer about privacy ([#22](https://github.com/flowwer-dev/pull-request-stats/pull/22)) by [marcocrasso](https://github.com/marcocrasso)).
+- Add `telemetry` option to prevent monitoring data used to improve this action.
+
 ## [2.1.3] - 2022-02-02
 ### Fixed
-- [#20](https://github.com/flowwer-dev/pull-request-stats/issues/20) Add extra new line before stats table ([#21](https://github.com/flowwer-dev/pull-request-stats/pull/13) by [dantehemerson](https://github.com/dantehemerson)).
+- [#20](https://github.com/flowwer-dev/pull-request-stats/issues/20) Add extra new line before stats table ([#21](https://github.com/flowwer-dev/pull-request-stats/pull/21) by [dantehemerson](https://github.com/dantehemerson)).
 
 ## [2.1.2] - 2021-11-28
 ### Added

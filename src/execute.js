@@ -70,13 +70,13 @@ const run = async (params) => {
 
 module.exports = async (params) => {
   try {
-    trackRun(params);
+    if (params.telemetry) trackRun(params);
     const start = new Date();
     const executed = await run(params);
-    const end = new Date();
-    trackSuccess({ executed, timeMs: end - start });
+    const timeMs = new Date() - start;
+    if (params.telemetry) trackSuccess({ executed, timeMs });
   } catch (error) {
-    trackError(error);
+    if (params.telemetry) trackError(error);
     throw error;
   }
 };

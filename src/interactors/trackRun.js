@@ -10,17 +10,19 @@ module.exports = ({
   currentRepo,
   limit,
 }) => {
-  const [owner, repo] = currentRepo.split('/');
+  const [owner] = currentRepo.split('/');
   const reposCount = (repos || []).length;
   const orgsCount = org ? 1 : 0;
 
   tracker.track('run', {
-    repo,
+    // Necessary to build the "Used by" section in Readme:
     owner,
-    currentRepo,
-    sortBy,
-    reposCount,
+    // Necessary to learn if used against specific repos or full organizations:
     orgsCount,
+    reposCount,
+    currentRepo,
+    // Necessary to learn which options are commonly used and improve them:
+    sortBy,
     periodLength,
     displayCharts,
     disableLinks,

@@ -32,6 +32,10 @@ inputs:
     description: 'The maximum number of rows to display in the table. A value of `0` means unlimited.'
     required: false
     default: 0
+  telemetry:
+    description: 'Indicates if the action is allowed to send monitoring data to the developer.'
+    required: false
+    default: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
