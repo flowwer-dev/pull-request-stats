@@ -2,6 +2,7 @@ const SORT_KEY = {
   TIME: 'timeToReview',
   REVIEWS: 'totalReviews',
   COMMENTS: 'totalComments',
+  COMMENTS_PER_REVIEW: 'commentsPerReview',
 };
 
 const TITLES = {
@@ -10,9 +11,10 @@ const TITLES = {
   timeToReview: 'Median time to review',
   totalReviews: 'Total reviews',
   totalComments: 'Total comments',
+  commentsPerReview: 'Comments / review',
 };
 
-const COLUMNS_ORDER = ['totalReviews', 'timeToReview', 'totalComments'];
+const COLUMNS_ORDER = ['totalReviews', 'timeToReview', 'totalComments', 'commentsPerReview'];
 
 const STATS_OPTIMIZATION = {
   totalReviews: 'MAX',
