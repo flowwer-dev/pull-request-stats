@@ -1540,17 +1540,19 @@ module.exports = ({
   currentRepo,
   limit,
 }) => {
-  const [owner, repo] = currentRepo.split('/');
+  const [owner] = currentRepo.split('/');
   const reposCount = (repos || []).length;
   const orgsCount = org ? 1 : 0;
 
   tracker.track('run', {
-    repo,
+    // Necessary to build the "Used by" section in Readme:
     owner,
-    currentRepo,
-    sortBy,
-    reposCount,
+    // Necessary to learn if used against specific repos or full organizations:
     orgsCount,
+    reposCount,
+    currentRepo,
+    // Necessary to learn which options are commonly used and improve them:
+    sortBy,
     periodLength,
     displayCharts,
     disableLinks,
@@ -10350,13 +10352,13 @@ const run = async (params) => {
 
 module.exports = async (params) => {
   try {
-    trackRun(params);
+    if (params.telemetry) trackRun(params);
     const start = new Date();
     const executed = await run(params);
-    const end = new Date();
-    trackSuccess({ executed, timeMs: end - start });
+    const timeMs = new Date() - start;
+    if (params.telemetry) trackSuccess({ executed, timeMs });
   } catch (error) {
-    trackError(error);
+    if (params.telemetry) trackError(error);
     throw error;
   }
 };
@@ -10447,6 +10449,7 @@ const getParams = () => {
     disableLinks: parseBoolean(core.getInput('disable-links')),
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),
+    telemetry: parseBoolean(core.getInput('telemetry')),
   };
 };
 
@@ -10559,7 +10562,7 @@ module.exports = (value) => parser(value, {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.1.3","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"agpl-3.0","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","humanize-duration":"^3.27.0","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
+module.exports = {"name":"pull-request-stats","version":"2.2.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"agpl-3.0","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","humanize-duration":"^3.27.0","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
 
 /***/ }),
 

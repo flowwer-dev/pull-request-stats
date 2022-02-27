@@ -37,6 +37,7 @@ const getParams = () => {
     disableLinks: parseBoolean(core.getInput('disable-links')),
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),
+    telemetry: parseBoolean(core.getInput('telemetry')),
   };
 };
 
