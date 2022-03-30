@@ -1,9 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.1] - 2022-03-29
+### Changed
+- Moved from AGPLv3 license to MIT ❤️
+
 ## [2.2.0] - 2022-02-27
 ### Added
-- Add disclaimer about privacy ([#22](https://github.com/flowwer-dev/pull-request-stats/pull/22)) by [marcocrasso](https://github.com/marcocrasso)).
+- Add disclaimer about privacy ([#22](https://github.com/flowwer-dev/pull-request-stats/pull/22) by [marcocrasso](https://github.com/marcocrasso)).
 - Add `telemetry` option to prevent monitoring data used to improve this action.
 
 ## [2.1.3] - 2022-02-02

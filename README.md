@@ -155,4 +155,4 @@ This project is maintained by a single person, considering supporting the projec
 
 ### License
 
-AGPLv3
+MIT
