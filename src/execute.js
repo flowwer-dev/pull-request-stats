@@ -1,39 +1,35 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const { subtractDaysToDate } = require('./utils');
+const { Telemetry } = require('./services');
 const {
-  alreadyPublished,
   getPulls,
-  getPullRequest,
-  getReviewers,
   buildTable,
-  buildComment,
   postComment,
-  trackError,
-  trackRun,
-  trackSuccess,
+  getReviewers,
+  buildComment,
+  getPullRequest,
+  checkSponsorship,
+  alreadyPublished,
 } = require('./interactors');
 
 const run = async (params) => {
   const {
     org,
     repos,
-    sortBy,
-    githubToken,
-    periodLength,
-    displayCharts,
-    disableLinks,
-    pullRequestId,
     limit,
+    sortBy,
+    octokit,
+    periodLength,
+    disableLinks,
+    displayCharts,
+    pullRequestId,
   } = params;
-  core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
-
-  const octokit = github.getOctokit(githubToken);
 
   const pullRequest = await getPullRequest({ octokit, pullRequestId });
   if (alreadyPublished(pullRequest)) {
     core.info('Skipping execution because stats are published already');
-    return false;
+    return;
   }
 
   const startDate = subtractDaysToDate(new Date(), periodLength);
@@ -64,19 +60,23 @@ const run = async (params) => {
     currentBody: pullRequest.body,
   });
   core.debug('Posted comment successfully');
-
-  return true;
 };
 
 module.exports = async (params) => {
+  core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
+
+  const { githubToken, org, repos } = params;
+  const octokit = github.getOctokit(githubToken);
+  const isSponsor = await checkSponsorship({ octokit, org, repos });
+  const telemetry = new Telemetry({ core, isSponsor, telemetry: params.telemetry });
+  if (isSponsor) core.info('Thanks for sponsoring this project! 💙');
+
   try {
-    if (params.telemetry) trackRun(params);
-    const start = new Date();
-    const executed = await run(params);
-    const timeMs = new Date() - start;
-    if (params.telemetry) trackSuccess({ executed, timeMs });
+    telemetry.start(params);
+    await run({ ...params, octokit });
+    telemetry.success();
   } catch (error) {
-    if (params.telemetry) trackError(error);
+    telemetry.error(error);
     throw error;
   }
 };

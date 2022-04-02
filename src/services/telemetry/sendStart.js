@@ -1,4 +1,4 @@
-const { tracker } = require('../utils');
+const { getRepoOwner } = require('../../utils/repos');
 
 module.exports = ({
   org,
@@ -9,8 +9,9 @@ module.exports = ({
   disableLinks,
   currentRepo,
   limit,
+  tracker,
 }) => {
-  const [owner] = currentRepo.split('/');
+  const owner = getRepoOwner(currentRepo);
   const reposCount = (repos || []).length;
   const orgsCount = org ? 1 : 0;
 

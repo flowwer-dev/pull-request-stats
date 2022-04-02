@@ -1,6 +1,4 @@
-const { tracker } = require('../utils');
-
-module.exports = ({ executed, timeMs }) => {
+module.exports = ({ tracker, timeMs }) => {
   const timeSec = Math.floor(timeMs / 1000);
   const timeMin = Math.floor(timeMs / 60000);
 
@@ -8,6 +6,5 @@ module.exports = ({ executed, timeMs }) => {
     timeMs,
     timeSec,
     timeMin,
-    executed,
   });
 };

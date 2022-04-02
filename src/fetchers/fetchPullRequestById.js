@@ -1,12 +1,12 @@
 const PR_BY_ID_QUERY = `
-query($id: ID!) {
-  node(id: $id) {
-    ... on PullRequest {
-      id
-      body
+  query($id: ID!) {
+    node(id: $id) {
+      ... on PullRequest {
+        id
+        body
+      }
     }
   }
-}
 `;
 
 module.exports = (octokit, id) => {

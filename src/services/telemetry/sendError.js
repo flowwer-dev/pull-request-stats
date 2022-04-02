@@ -1,6 +1,4 @@
-const { tracker } = require('../utils');
-
-module.exports = (error) => {
+module.exports = ({ tracker, error }) => {
   const { message } = error || {};
 
   tracker.track('error', { message });

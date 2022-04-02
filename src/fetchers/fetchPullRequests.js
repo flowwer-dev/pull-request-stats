@@ -1,34 +1,34 @@
 const PRS_QUERY = `
-query($search: String!, $limit: Int!, $after: String) {
-  search(query: $search, first: $limit, after: $after, type: ISSUE) {
-    edges {
-      cursor
-      node {
-        ... on PullRequest {
-          id
-          publishedAt
-          author { ...ActorFragment }
-          reviews(first: 100) {
-            nodes {
-              id
-              submittedAt
-              commit { pushedDate }
-              comments { totalCount }
-              author { ...ActorFragment }
+  query($search: String!, $limit: Int!, $after: String) {
+    search(query: $search, first: $limit, after: $after, type: ISSUE) {
+      edges {
+        cursor
+        node {
+          ... on PullRequest {
+            id
+            publishedAt
+            author { ...ActorFragment }
+            reviews(first: 100) {
+              nodes {
+                id
+                submittedAt
+                commit { pushedDate }
+                comments { totalCount }
+                author { ...ActorFragment }
+              }
             }
           }
         }
       }
     }
   }
-}
 
-fragment ActorFragment on User {
-  url
-  login
-  avatarUrl
-  databaseId
-}
+  fragment ActorFragment on User {
+    url
+    login
+    avatarUrl
+    databaseId
+  }
 `;
 
 module.exports = ({

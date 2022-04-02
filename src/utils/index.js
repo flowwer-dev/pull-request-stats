@@ -5,7 +5,6 @@ const isNil = require('./isNil');
 const median = require('./median');
 const subtractDaysToDate = require('./subtractDaysToDate');
 const sum = require('./sum');
-const tracker = require('./tracker');
 
 module.exports = {
   average,
@@ -15,5 +14,4 @@ module.exports = {
   median,
   subtractDaysToDate,
   sum,
-  tracker,
 };

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.2] - 2022-04-02
+### Changed
+- Makes "telemetry" a premium feature for sponsors.
+
 ## [2.2.1] - 2022-03-29
 ### Changed
 - Moved from AGPLv3 license to MIT ❤️

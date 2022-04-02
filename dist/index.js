@@ -882,6 +882,68 @@ exports.issueCommand = issueCommand;
 
 /***/ }),
 
+/***/ 104:
+/***/ (function(module) {
+
+const SPONSORED_ACCOUNT = 'manuelmhtr';
+
+const buildQuery = (logins) => {
+  const fields = logins.map(
+    (login, index) => `sponsor${index + 1}: isSponsoredBy(accountLogin: "${login}")`,
+  ).join('\n');
+
+  return `{
+    user(
+      login: "${SPONSORED_ACCOUNT}"
+    ) {
+      ${fields}
+    }
+  }`;
+};
+
+module.exports = ({
+  octokit,
+  logins,
+}) => octokit
+  .graphql(buildQuery(logins))
+  .catch((error) => {
+    const msg = `Error fetching sponsorships with logins: "${JSON.stringify(logins)}"`;
+    throw new Error(`${msg}. Error: ${error}`);
+  });
+
+
+/***/ }),
+
+/***/ 109:
+/***/ (function(module) {
+
+const getRepoComponents = (repo) => repo.split('/');
+
+const getRepoOwner = (repo) => {
+  const [owner] = getRepoComponents(repo);
+  return owner;
+};
+
+module.exports = {
+  getRepoComponents,
+  getRepoOwner,
+};
+
+
+/***/ }),
+
+/***/ 111:
+/***/ (function(module) {
+
+module.exports = ({ tracker, error }) => {
+  const { message } = error || {};
+
+  tracker.track('error', { message });
+};
+
+
+/***/ }),
+
 /***/ 120:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -1476,11 +1538,13 @@ module.exports = getContributions;
 
 const fetchPullRequestById = __webpack_require__(637);
 const fetchPullRequests = __webpack_require__(593);
+const fetchSponsorships = __webpack_require__(104);
 const updatePullRequest = __webpack_require__(664);
 
 module.exports = {
   fetchPullRequestById,
   fetchPullRequests,
+  fetchSponsorships,
   updatePullRequest,
 };
 
@@ -1521,44 +1585,6 @@ module.exports = ({
   id: pullRequestId,
   body: buildBody(currentBody || '', content),
 });
-
-
-/***/ }),
-
-/***/ 177:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { tracker } = __webpack_require__(353);
-
-module.exports = ({
-  org,
-  repos,
-  sortBy,
-  periodLength,
-  displayCharts,
-  disableLinks,
-  currentRepo,
-  limit,
-}) => {
-  const [owner] = currentRepo.split('/');
-  const reposCount = (repos || []).length;
-  const orgsCount = org ? 1 : 0;
-
-  tracker.track('run', {
-    // Necessary to build the "Used by" section in Readme:
-    owner,
-    // Necessary to learn if used against specific repos or full organizations:
-    orgsCount,
-    reposCount,
-    currentRepo,
-    // Necessary to learn which options are commonly used and improve them:
-    sortBy,
-    periodLength,
-    displayCharts,
-    disableLinks,
-    limit,
-  });
-};
 
 
 /***/ }),
@@ -4175,15 +4201,21 @@ exports.Context = Context;
 
 /***/ }),
 
-/***/ 263:
+/***/ 277:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { tracker } = __webpack_require__(353);
+const { fetchSponsorships } = __webpack_require__(162);
+const getLogins = __webpack_require__(379);
+const isSponsoring = __webpack_require__(477);
 
-module.exports = (error) => {
-  const { message } = error || {};
-
-  tracker.track('error', { message });
+module.exports = async ({
+  octokit,
+  org,
+  repos,
+}) => {
+  const logins = getLogins({ org, repos });
+  const { user } = await fetchSponsorships({ octokit, logins });
+  return isSponsoring(user);
 };
 
 
@@ -4635,39 +4667,6 @@ module.exports = (numerator, denominator) => {
 
 /***/ }),
 
-/***/ 324:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const Mixpanel = __webpack_require__(960);
-const project = __webpack_require__(731);
-
-const MIXPANEL_TOKEN = '6a91c23a5c49e341a337954443e1f2a0';
-
-const getContext = () => ({
-  version: project.version,
-});
-
-const tracker = () => {
-  const mixpanel = Mixpanel.init(MIXPANEL_TOKEN);
-  const context = getContext();
-
-  const track = (event, properties) => {
-    mixpanel.track(event, {
-      ...context,
-      ...properties,
-    });
-  };
-
-  return {
-    track,
-  };
-};
-
-module.exports = tracker();
-
-
-/***/ }),
-
 /***/ 338:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -4699,7 +4698,6 @@ const isNil = __webpack_require__(125);
 const median = __webpack_require__(825);
 const subtractDaysToDate = __webpack_require__(689);
 const sum = __webpack_require__(358);
-const tracker = __webpack_require__(324);
 
 module.exports = {
   average,
@@ -4709,7 +4707,6 @@ module.exports = {
   median,
   subtractDaysToDate,
   sum,
-  tracker,
 };
 
 
@@ -5058,6 +5055,21 @@ function toAlignment(value) {
     ? c
     : x
 }
+
+
+/***/ }),
+
+/***/ 379:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { getRepoOwner } = __webpack_require__(109);
+
+module.exports = ({ org, repos } = {}) => {
+  const logins = new Set();
+  if (org) logins.add(org);
+  (repos || []).forEach((repo) => logins.add(getRepoOwner(repo)));
+  return [...logins];
+};
 
 
 /***/ }),
@@ -5799,6 +5811,23 @@ exports.endpoint = endpoint;
 
 /***/ }),
 
+/***/ 389:
+/***/ (function(module) {
+
+module.exports = ({ tracker, timeMs }) => {
+  const timeSec = Math.floor(timeMs / 1000);
+  const timeMin = Math.floor(timeMs / 60000);
+
+  tracker.track('success', {
+    timeMs,
+    timeSec,
+    timeMin,
+  });
+};
+
+
+/***/ }),
+
 /***/ 402:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -6279,6 +6308,35 @@ module.exports = async ({ octokit, pullRequestId }) => {
   const data = await fetchPullRequestById(octokit, pullRequestId);
   return parsePullRequest(data);
 };
+
+
+/***/ }),
+
+/***/ 438:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const Mixpanel = __webpack_require__(960);
+const project = __webpack_require__(731);
+
+const MIXPANEL_TOKEN = '6a91c23a5c49e341a337954443e1f2a0';
+
+const getContext = () => ({ version: project.version });
+
+const buildTracker = () => {
+  const mixpanel = Mixpanel.init(MIXPANEL_TOKEN);
+  const context = getContext();
+
+  const track = (event, properties) => mixpanel.track(event, {
+    ...context,
+    ...properties,
+  });
+
+  return {
+    track,
+  };
+};
+
+module.exports = buildTracker;
 
 
 /***/ }),
@@ -8800,6 +8858,16 @@ exports.getIDToken = getIDToken;
 
 /***/ }),
 
+/***/ 477:
+/***/ (function(module) {
+
+module.exports = (list = {}) => Object
+  .values(list)
+  .some((value) => value === true);
+
+
+/***/ }),
+
 /***/ 482:
 /***/ (function(module) {
 
@@ -9262,6 +9330,18 @@ module.exports = Hook
 module.exports.Hook = Hook
 module.exports.Singular = Hook.Singular
 module.exports.Collection = Hook.Collection
+
+
+/***/ }),
+
+/***/ 530:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const Telemetry = __webpack_require__(954);
+
+module.exports = {
+  Telemetry,
+};
 
 
 /***/ }),
@@ -10047,36 +10127,36 @@ module.exports = ({
 /***/ (function(module) {
 
 const PRS_QUERY = `
-query($search: String!, $limit: Int!, $after: String) {
-  search(query: $search, first: $limit, after: $after, type: ISSUE) {
-    edges {
-      cursor
-      node {
-        ... on PullRequest {
-          id
-          publishedAt
-          author { ...ActorFragment }
-          reviews(first: 100) {
-            nodes {
-              id
-              submittedAt
-              commit { pushedDate }
-              comments { totalCount }
-              author { ...ActorFragment }
+  query($search: String!, $limit: Int!, $after: String) {
+    search(query: $search, first: $limit, after: $after, type: ISSUE) {
+      edges {
+        cursor
+        node {
+          ... on PullRequest {
+            id
+            publishedAt
+            author { ...ActorFragment }
+            reviews(first: 100) {
+              nodes {
+                id
+                submittedAt
+                commit { pushedDate }
+                comments { totalCount }
+                author { ...ActorFragment }
+              }
             }
           }
         }
       }
     }
   }
-}
 
-fragment ActorFragment on User {
-  url
-  login
-  avatarUrl
-  databaseId
-}
+  fragment ActorFragment on User {
+    url
+    login
+    avatarUrl
+    databaseId
+  }
 `;
 
 module.exports = ({
@@ -10196,14 +10276,14 @@ module.exports = require("net");
 /***/ (function(module) {
 
 const PR_BY_ID_QUERY = `
-query($id: ID!) {
-  node(id: $id) {
-    ... on PullRequest {
-      id
-      body
+  query($id: ID!) {
+    node(id: $id) {
+      ... on PullRequest {
+        id
+        body
+      }
     }
   }
-}
 `;
 
 module.exports = (octokit, id) => {
@@ -10283,39 +10363,35 @@ module.exports.implForWrapper = function (wrapper) {
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const { subtractDaysToDate } = __webpack_require__(353);
+const { Telemetry } = __webpack_require__(530);
 const {
-  alreadyPublished,
   getPulls,
-  getPullRequest,
-  getReviewers,
   buildTable,
-  buildComment,
   postComment,
-  trackError,
-  trackRun,
-  trackSuccess,
+  getReviewers,
+  buildComment,
+  getPullRequest,
+  checkSponsorship,
+  alreadyPublished,
 } = __webpack_require__(942);
 
 const run = async (params) => {
   const {
     org,
     repos,
-    sortBy,
-    githubToken,
-    periodLength,
-    displayCharts,
-    disableLinks,
-    pullRequestId,
     limit,
+    sortBy,
+    octokit,
+    periodLength,
+    disableLinks,
+    displayCharts,
+    pullRequestId,
   } = params;
-  core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
-
-  const octokit = github.getOctokit(githubToken);
 
   const pullRequest = await getPullRequest({ octokit, pullRequestId });
   if (alreadyPublished(pullRequest)) {
     core.info('Skipping execution because stats are published already');
-    return false;
+    return;
   }
 
   const startDate = subtractDaysToDate(new Date(), periodLength);
@@ -10346,19 +10422,23 @@ const run = async (params) => {
     currentBody: pullRequest.body,
   });
   core.debug('Posted comment successfully');
-
-  return true;
 };
 
 module.exports = async (params) => {
+  core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
+
+  const { githubToken, org, repos } = params;
+  const octokit = github.getOctokit(githubToken);
+  const isSponsor = await checkSponsorship({ octokit, org, repos });
+  const telemetry = new Telemetry({ core, isSponsor, telemetry: params.telemetry });
+  if (isSponsor) core.info('Thanks for sponsoring this project! 💙');
+
   try {
-    if (params.telemetry) trackRun(params);
-    const start = new Date();
-    const executed = await run(params);
-    const timeMs = new Date() - start;
-    if (params.telemetry) trackSuccess({ executed, timeMs });
+    telemetry.start(params);
+    await run({ ...params, octokit });
+    telemetry.success();
   } catch (error) {
-    if (params.telemetry) trackError(error);
+    telemetry.error(error);
     throw error;
   }
 };
@@ -10466,26 +10546,6 @@ const run = async () => {
 };
 
 run();
-
-
-/***/ }),
-
-/***/ 679:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { tracker } = __webpack_require__(353);
-
-module.exports = ({ executed, timeMs }) => {
-  const timeSec = Math.floor(timeMs / 1000);
-  const timeMin = Math.floor(timeMs / 60000);
-
-  tracker.track('success', {
-    timeMs,
-    timeSec,
-    timeMin,
-    executed,
-  });
-};
 
 
 /***/ }),
@@ -13653,6 +13713,45 @@ exports.withCustomRequest = withCustomRequest;
 
 /***/ }),
 
+/***/ 907:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { getRepoOwner } = __webpack_require__(109);
+
+module.exports = ({
+  org,
+  repos,
+  sortBy,
+  periodLength,
+  displayCharts,
+  disableLinks,
+  currentRepo,
+  limit,
+  tracker,
+}) => {
+  const owner = getRepoOwner(currentRepo);
+  const reposCount = (repos || []).length;
+  const orgsCount = org ? 1 : 0;
+
+  tracker.track('run', {
+    // Necessary to build the "Used by" section in Readme:
+    owner,
+    // Necessary to learn if used against specific repos or full organizations:
+    orgsCount,
+    reposCount,
+    currentRepo,
+    // Necessary to learn which options are commonly used and improve them:
+    sortBy,
+    periodLength,
+    displayCharts,
+    disableLinks,
+    limit,
+  });
+};
+
+
+/***/ }),
+
 /***/ 936:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -14964,25 +15063,21 @@ module.exports.parseURL = function (input, options) {
 const alreadyPublished = __webpack_require__(217);
 const buildTable = __webpack_require__(194);
 const buildComment = __webpack_require__(641);
+const checkSponsorship = __webpack_require__(277);
 const getPullRequest = __webpack_require__(435);
 const getPulls = __webpack_require__(591);
 const getReviewers = __webpack_require__(164);
 const postComment = __webpack_require__(173);
-const trackError = __webpack_require__(263);
-const trackRun = __webpack_require__(177);
-const trackSuccess = __webpack_require__(679);
 
 module.exports = {
   alreadyPublished,
   buildTable,
   buildComment,
+  checkSponsorship,
   getPullRequest,
   getPulls,
   getReviewers,
   postComment,
-  trackError,
-  trackRun,
-  trackSuccess,
 };
 
 
@@ -15049,6 +15144,53 @@ function checkBypass(reqUrl) {
     return false;
 }
 exports.checkBypass = checkBypass;
+
+
+/***/ }),
+
+/***/ 954:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const sendError = __webpack_require__(111);
+const sendStart = __webpack_require__(907);
+const sendSuccess = __webpack_require__(389);
+const buildTracker = __webpack_require__(438);
+
+class Telemetry {
+  constructor({ core, isSponsor, telemetry }) {
+    this.useTelemetry = !isSponsor || telemetry;
+    this.tracker = this.useTelemetry ? buildTracker() : null;
+    if (!this.useTelemetry) core.debug('Telemetry disabled correctly');
+    if (!telemetry && !isSponsor) core.warning('Disabling telemetry is a premium feature for sponsors.');
+  }
+
+  start(params) {
+    if (!this.useTelemetry) return;
+    this.startDate = new Date();
+    sendStart({
+      ...params,
+      tracker: this.tracker,
+    });
+  }
+
+  error(error) {
+    if (!this.useTelemetry) return;
+    sendError({
+      error,
+      tracker: this.tracker,
+    });
+  }
+
+  success() {
+    if (!this.useTelemetry) return;
+    sendSuccess({
+      timeMs: new Date() - this.startDate,
+      tracker: this.tracker,
+    });
+  }
+}
+
+module.exports = Telemetry;
 
 
 /***/ }),
