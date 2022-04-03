@@ -12,16 +12,16 @@ jest.mock('../buildTracker', () => jest.fn(() => TRACKER));
 
 describe('Telemetry', () => {
   const debug = jest.fn();
-  const warning = jest.fn();
+  const error = jest.fn();
 
   const core = {
     debug,
-    warning,
+    error,
   };
 
   beforeEach(() => {
     debug.mockClear();
-    warning.mockClear();
+    error.mockClear();
     sendError.mockClear();
     sendStart.mockClear();
     sendSuccess.mockClear();
@@ -41,9 +41,9 @@ describe('Telemetry', () => {
         expect(debug).toHaveBeenCalled();
       });
 
-      it('does not send a warning', () => {
+      it('does not send an error', () => {
         getTelemetry();
-        expect(warning).not.toHaveBeenCalled();
+        expect(error).not.toHaveBeenCalled();
       });
 
       it('does not create a tracker', () => {
@@ -86,7 +86,7 @@ describe('Telemetry', () => {
 
       it('warns this is a premium feature', () => {
         getTelemetry();
-        expect(warning).toHaveBeenCalled();
+        expect(error).toHaveBeenCalled();
       });
     });
   });
@@ -96,10 +96,10 @@ describe('Telemetry', () => {
 
     it('calls .sendError with the correct parameters', () => {
       const telemetry = getTelemetry();
-      const error = 'Sample error message';
-      telemetry.error(error);
+      const message = 'Sample error message';
+      telemetry.error(message);
       expect(sendError).toHaveBeenCalledWith({
-        error,
+        error: message,
         tracker: TRACKER,
       });
     });

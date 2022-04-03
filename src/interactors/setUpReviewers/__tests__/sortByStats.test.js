@@ -1,4 +1,4 @@
-const reviewers = require('./mocks/reviewers.json');
+const reviewers = require('../../__tests__/mocks/reviewers.json');
 const sortByStats = require('../sortByStats');
 
 describe('Interactors | .buildTable | .sortByStats', () => {

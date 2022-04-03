@@ -38,6 +38,10 @@ const getParams = () => {
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),
     telemetry: parseBoolean(core.getInput('telemetry')),
+    slack: {
+      webhook: core.getInput('slack-webhook'),
+      channel: core.getInput('slack-channel'),
+    },
   };
 };
 

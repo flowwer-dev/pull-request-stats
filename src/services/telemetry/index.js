@@ -8,7 +8,7 @@ class Telemetry {
     this.useTelemetry = !isSponsor || telemetry;
     this.tracker = this.useTelemetry ? buildTracker() : null;
     if (!this.useTelemetry) core.debug('Telemetry disabled correctly');
-    if (!telemetry && !isSponsor) core.warning('Disabling telemetry is a premium feature for sponsors.');
+    if (!telemetry && !isSponsor) core.error('Disabling telemetry is a premium feature, available to sponsors.');
   }
 
   start(params) {

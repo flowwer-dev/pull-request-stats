@@ -12,6 +12,7 @@ const {
   setUpReviewers,
   checkSponsorship,
   alreadyPublished,
+  postSlackMessage,
 } = require('./interactors');
 
 const run = async (params) => {
@@ -27,15 +28,20 @@ const run = async (params) => {
     pullRequestId,
   } = params;
 
-  const pullRequest = await getPullRequest({ octokit, pullRequestId });
-  if (alreadyPublished(pullRequest)) {
+  const pullRequest = pullRequestId
+    ? await getPullRequest({ octokit, pullRequestId })
+    : null;
+
+  if (pullRequest && alreadyPublished(pullRequest)) {
     core.info('Skipping execution because stats are published already');
     return;
   }
 
-  const startDate = subtractDaysToDate(new Date(), periodLength);
   const pulls = await getPulls({
-    octokit, org, repos, startDate,
+    octokit,
+    org,
+    repos,
+    startDate: subtractDaysToDate(new Date(), periodLength),
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
 
@@ -55,6 +61,14 @@ const run = async (params) => {
   const content = buildComment({ table, periodLength });
   core.debug(`Commit content built successfully: ${content}`);
 
+  await postSlackMessage({
+    ...params,
+    core,
+    reviewers,
+    pullRequest,
+  });
+
+  if (!pullRequestId) return;
   await postComment({
     octokit,
     content,
@@ -75,7 +89,7 @@ module.exports = async (params) => {
 
   try {
     telemetry.start(params);
-    await run({ ...params, octokit });
+    await run({ ...params, isSponsor, octokit });
     telemetry.success();
   } catch (error) {
     telemetry.error(error);

@@ -4,7 +4,9 @@ const parsePullRequest = (data) => {
   const { node } = data;
   return {
     id: node.id,
+    url: node.url,
     body: node.body,
+    number: node.number,
   };
 };
 

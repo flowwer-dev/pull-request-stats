@@ -1,6 +1,6 @@
 {
   "name": "pull-request-stats",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Github action to print relevant stats about Pull Request reviewers",
   "main": "dist/index.js",
   "scripts": {
@@ -19,7 +19,9 @@
   "dependencies": {
     "@actions/core": "^1.5.0",
     "@actions/github": "^5.0.0",
+    "axios": "^0.26.1",
     "humanize-duration": "^3.27.0",
+    "i18n-js": "^3.9.2",
     "jsurl": "^0.1.5",
     "lodash.get": "^4.4.2",
     "markdown-table": "^2.0.0",

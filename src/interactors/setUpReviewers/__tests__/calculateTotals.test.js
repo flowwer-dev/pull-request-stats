@@ -1,5 +1,5 @@
-const stats = require('./mocks/stats.json');
-const statsSum = require('./mocks/statsSum.json');
+const stats = require('../../__tests__/mocks/stats.json');
+const statsSum = require('../../__tests__/mocks/statsSum.json');
 const calculateTotals = require('../calculateTotals');
 
 describe('Interactors | .buildTable | .calculateTotals', () => {

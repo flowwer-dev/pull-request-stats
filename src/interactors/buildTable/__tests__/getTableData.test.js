@@ -1,4 +1,5 @@
-const reviewers = require('./mocks/populatedReviewers.json');
+const { t } = require('../../../i18n');
+const reviewers = require('../../__tests__/mocks/populatedReviewers.json');
 const getTableData = require('../getTableData');
 
 const bests = {
@@ -9,11 +10,11 @@ const bests = {
 };
 
 const TITLES = {
-  avatar: '',
-  username: 'User',
-  timeToReview: 'Median time to review',
-  totalReviews: 'Total reviews',
-  totalComments: 'Total comments',
+  avatar: t('table.columns.avatar'),
+  username: t('table.columns.username'),
+  timeToReview: t('table.columns.timeToReview'),
+  totalReviews: t('table.columns.totalReviews'),
+  totalComments: t('table.columns.totalComments'),
 };
 
 const AVATAR1 = '<a href="https://github.com/user1"><img src="https://avatars.githubusercontent.com/u/1234" width="20"></a>';

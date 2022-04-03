@@ -19,6 +19,10 @@ Each reviewer has a link pointing to their [historical behavior](https://app.flo
 
 ![](/assets/historical.png)
 
+Or integrate this action with **Slack**:
+
+![](/assets/slack.png)
+
 ## Privacy
 * **No repository data is collected**, stored or distributed by this GitHub action. This action is **state-less**.
 * Charts data is send over the URL, and never stored or transmitted anywhere else.
@@ -48,6 +52,8 @@ The possible inputs for this action are:
 | `sort-by` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
 | `limit` | The maximum number of rows to display in the table. A value of `0` means unlimited. |`0`|
 | `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps me improve this action. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`true`|
+| `slack-webhook` | A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`null`|
+| `slack-channel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slack-webhook` is configured. |`null`|
 
 
 ## Examples
@@ -134,16 +140,44 @@ and print a table like this:
 The stats are calculated as following:
 
 * **Time to review:** It is the time taken by a reviewer from the _Pull Request publication_ or the last _Commit push_ (whatever happens last) to the first time the pull request is reviewed.
-* **Median time to review:** It is the median of the _times to review_ of all Pull Requests reviewed by a person in the period.
+* **Time to review:** It is the **median** of the _times to review_ of all Pull Requests reviewed by a person in the period.
 * **Total reviews:** It is the count of all Pull Requests reviewed by a person in the period.
 * **Total comments:** It is the count of all the comments while reviewing other user's Pull Requests in the period (comments in own PRs don't count).
+
+## Slack integration
+
+To configure the Slack, integration:
+
+1. [Create a webhook](https://slack.com/help/articles/115005265063-Incoming-webhooks-for-Slack) in your workspace (you must be a Slack admin). It should look like this: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`.
+2. Set the `slack-webhook` (from previous step) and `slack-channel` (don't forget to include the `#` character) parameters in this action.
+3. Ready to go!
+
+Since it may be quite annoying to receive a Slack notification everytime someone creates a pull request, it is recommended to configure this action to be executed every while using the `schedule` trigger. For example, every monday at 9am UTC:
+
+```yml
+name: Pull Request Stats
+
+on:
+  schedule:
+    - cron:  '0 9 * * 1'
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run pull request stats
+        uses: flowwer-dev/pull-request-stats@master
+        with:
+          slack-webhook: 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
+          slack-channel: '#mystatschannel'
+```
 
 ## Premium features ✨
 
 This action offers some premium features only for sponsors:
 
 * Disabling telemetry.
-* Slack integration **[Coming soon]**.
+* Slack integration.
 
 No minimum amount is required for now. In the future, a minimum monthly sponsorship will be inforced to access premium features.
 

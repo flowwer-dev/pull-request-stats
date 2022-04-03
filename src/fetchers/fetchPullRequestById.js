@@ -3,7 +3,9 @@ const PR_BY_ID_QUERY = `
     node(id: $id) {
       ... on PullRequest {
         id
+        url
         body
+        number
       }
     }
   }

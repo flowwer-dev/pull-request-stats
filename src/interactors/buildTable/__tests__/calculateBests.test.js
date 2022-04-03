@@ -1,4 +1,4 @@
-const stats = require('./mocks/stats.json');
+const stats = require('../../__tests__/mocks/stats.json');
 const calculateBests = require('../calculateBests');
 
 describe('Interactors | .buildTable | .calculateBests', () => {

@@ -1,14 +1,14 @@
 const UPDATE_PR_MUTATION = `
-mutation($id: ID!, $body: String!) {
-  updatePullRequest(input: {
-    body: $body,
-    pullRequestId: $id
-  }) {
-    pullRequest {
-      id
+  mutation($id: ID!, $body: String!) {
+    updatePullRequest(input: {
+      body: $body,
+      pullRequestId: $id
+    }) {
+      pullRequest {
+        id
+      }
     }
   }
-}
 `;
 
 module.exports = ({

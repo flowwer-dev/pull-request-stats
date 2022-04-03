@@ -1,4 +1,4 @@
-const { t } = require('../../i18n');
+const { TITLES } = require('../../constants');
 const { durationToString, isNil } = require('../../utils');
 
 const NA = '-';
@@ -96,16 +96,8 @@ module.exports = ({
       displayCharts,
     }));
 
-    const titles = {
-      avatar: t('table.columns.avatar'),
-      username: t('table.columns.username'),
-      timeToReview: t('table.columns.timeToReview'),
-      totalReviews: t('table.columns.totalReviews'),
-      totalComments: t('table.columns.totalComments'),
-    };
-
     return [
-      titles,
+      TITLES,
       ...data,
     ];
   };

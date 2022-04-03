@@ -1,5 +1,5 @@
-const statsSum = require('./mocks/statsSum.json');
-const reviewers = require('./mocks/reviewers.json');
+const statsSum = require('../../__tests__/mocks/statsSum.json');
+const reviewers = require('../../__tests__/mocks/reviewers.json');
 const getContributions = require('../getContributions');
 
 const [reviewer] = reviewers;

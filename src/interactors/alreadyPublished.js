@@ -1,8 +1,8 @@
-const { TABLE_TITLE } = require('../constants');
+const { t } = require('../i18n');
 
 module.exports = (pullRequest) => {
   const { body } = pullRequest || {};
 
-  const regexp = new RegExp(`(^|\\n)(${TABLE_TITLE})\\n`);
+  const regexp = new RegExp(`(^|\\n)(## ${t('table.title')})\\n`);
   return regexp.test(body);
 };

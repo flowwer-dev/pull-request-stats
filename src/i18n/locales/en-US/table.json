@@ -1,0 +1,15 @@
+{
+  "title": "Pull reviewers stats",
+  "icon": "https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png",
+  "subtitle": {
+    "one": "Stats for the last day",
+    "other": "Stats for the last {{count}} days"
+  },
+  "columns": {
+    "avatar": "",
+    "username": "User",
+    "timeToReview": "Time to review",
+    "totalReviews": "Total reviews",
+    "totalComments": "Total comments"
+  }
+}

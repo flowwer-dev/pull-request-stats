@@ -36,6 +36,12 @@ inputs:
     description: 'Indicates if the action is allowed to send monitoring data to the developer.'
     required: false
     default: true
+  slack-webhook:
+    description: 'A Slack webhook URL to post resulting stats.'
+    required: false
+  slack-channel:
+    description: 'The Slack channel where stats will be posted. Required when a Slack webhook is configured.'
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.js'
