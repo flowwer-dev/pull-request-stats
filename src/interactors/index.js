@@ -5,6 +5,7 @@ const checkSponsorship = require('./checkSponsorship');
 const getPullRequest = require('./getPullRequest');
 const getPulls = require('./getPulls');
 const getReviewers = require('./getReviewers');
+const setUpReviewers = require('./setUpReviewers');
 const postComment = require('./postComment');
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
   getPullRequest,
   getPulls,
   getReviewers,
+  setUpReviewers,
   postComment,
 };

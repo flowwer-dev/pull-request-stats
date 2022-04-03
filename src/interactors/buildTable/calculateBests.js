@@ -1,4 +1,4 @@
-const { STATS, STATS_OPTIMIZATION } = require('./constants');
+const { STATS, STATS_OPTIMIZATION } = require('../../constants');
 
 const getBest = (values, optimization) => (optimization === 'MAX' ? Math.max(...values) : Math.min(...values));
 

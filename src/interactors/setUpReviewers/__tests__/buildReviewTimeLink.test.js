@@ -1,5 +1,6 @@
 const reviewers = require('./mocks/reviewersWithStats.json');
 const buildReviewTimeLink = require('../buildReviewTimeLink');
+
 const [reviewer] = reviewers;
 
 const SUCCESSFUL_LINK = "https://app.flowwer.dev/charts/review-time/~(u~(i~'1234~n~'user1)~p~30~r~(~(d~'qpvagu~t~'a3)~(d~'qpvn25~t~'3lu)~(d~'qprzn9~t~'84)~(d~'qqqtu5~t~'2vy)))";

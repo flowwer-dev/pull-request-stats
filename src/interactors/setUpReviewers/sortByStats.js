@@ -1,4 +1,4 @@
-const { SORT_KEY, STATS_OPTIMIZATION } = require('./constants');
+const { SORT_KEY, STATS_OPTIMIZATION } = require('../../constants');
 
 const buildSort = (statName) => (a, b) => {
   const { stats: statsA = {} } = a;

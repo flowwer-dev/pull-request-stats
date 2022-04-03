@@ -123,14 +123,4 @@ describe('Interactors | .buildTable | .getTableData', () => {
       expect(response).toEqual(CHARTS_NO_LINKS_RESPONSE);
     });
   });
-
-  describe('when sending limit option', () => {
-    it('limits the results', () => {
-      const limit = 1;
-      const response = getTableData({ reviewers, limit });
-      const titles = SIMPLE_RESPONSE[0];
-      const resultRows = SIMPLE_RESPONSE.slice(1, 1 + limit);
-      expect(response).toEqual([titles, ...resultRows]);
-    });
-  });
 });

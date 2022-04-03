@@ -9,6 +9,7 @@ const {
   getReviewers,
   buildComment,
   getPullRequest,
+  setUpReviewers,
   checkSponsorship,
   alreadyPublished,
 } = require('./interactors');
@@ -38,16 +39,17 @@ const run = async (params) => {
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
 
-  const reviewers = getReviewers(pulls);
-  core.info(`Analyzed stats for ${reviewers.length} pull request reviewers`);
+  const reviewersRaw = getReviewers(pulls);
+  core.info(`Analyzed stats for ${reviewersRaw.length} pull request reviewers`);
 
-  const table = buildTable(reviewers, {
+  const reviewers = setUpReviewers({
     limit,
     sortBy,
-    disableLinks,
     periodLength,
-    displayCharts,
+    reviewers: reviewersRaw,
   });
+
+  const table = buildTable({ reviewers, disableLinks, displayCharts });
   core.debug('Stats table built successfully');
 
   const content = buildComment({ table, periodLength });

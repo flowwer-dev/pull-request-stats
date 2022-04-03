@@ -1,4 +1,4 @@
-const { STATS } = require('./constants');
+const { STATS } = require('../../constants');
 
 const sumStat = (stats, statName) => stats.reduce((a, values) => a + (values[statName] || 0), 0);
 

@@ -1,4 +1,4 @@
-const { SORT_KEY, COLUMNS_ORDER } = require('./constants');
+const { SORT_KEY, COLUMNS_ORDER } = require('../../constants');
 
 const FIXED_COLUMNS = ['avatar', 'username'];
 

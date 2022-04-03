@@ -1,4 +1,4 @@
-const { STATS } = require('./constants');
+const { STATS } = require('../../constants');
 
 const calculatePercentage = (value, total) => {
   if (!total) return 0;

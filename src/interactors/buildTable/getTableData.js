@@ -1,4 +1,4 @@
-const { TITLES } = require('./constants');
+const { TITLES } = require('../../constants');
 const { durationToString, isNil } = require('../../utils');
 
 const NA = '-';
@@ -51,14 +51,11 @@ const addReviewsTimeLink = (text, disable, link) => {
   return addLink ? `[${text}](${link})` : text;
 };
 
-const applyLimit = (data, limit) => (limit > 0 ? data.slice(0, limit) : data);
-
 module.exports = ({
   reviewers,
   bests = {},
   disableLinks = false,
   displayCharts = false,
-  limit = null,
 }) => {
   const printStat = (stats, statName, parser) => {
     const value = stats[statName];
@@ -101,7 +98,7 @@ module.exports = ({
 
     return [
       TITLES,
-      ...applyLimit(data, limit),
+      ...data,
     ];
   };
 
