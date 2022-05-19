@@ -1,5 +1,5 @@
-const { postToSlack } = require('../../fetchers');
 const { t } = require('../../i18n');
+const { postToSlack } = require('../../fetchers');
 const buildSlackMessage = require('./buildSlackMessage');
 
 module.exports = async ({
@@ -32,12 +32,19 @@ module.exports = async ({
     displayCharts,
   });
 
-  await postToSlack({
+  const params = {
     webhook,
     channel,
     message,
     iconUrl: t('table.icon'),
     username: t('table.title'),
+  };
+  core.debug(`Post a Slack message with params: ${JSON.stringify(params, null, 2)}`);
+
+  await postToSlack(params).catch((error) => {
+    core.error(`Error posting Slack message: ${error}`);
+    throw error;
   });
+
   core.debug('Successfully posted to slack');
 };

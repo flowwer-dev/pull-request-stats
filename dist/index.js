@@ -14264,7 +14264,7 @@ module.exports = function bind(fn, thisArg) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.3.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","axios":"^0.26.1","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
+module.exports = {"name":"pull-request-stats","version":"2.3.1","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","axios":"^0.26.1","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
 
 /***/ }),
 
@@ -17618,8 +17618,8 @@ module.exports = require("tty");
 /***/ 878:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { postToSlack } = __webpack_require__(162);
 const { t } = __webpack_require__(781);
+const { postToSlack } = __webpack_require__(162);
 const buildSlackMessage = __webpack_require__(337);
 
 module.exports = async ({
@@ -17652,13 +17652,20 @@ module.exports = async ({
     displayCharts,
   });
 
-  await postToSlack({
+  const params = {
     webhook,
     channel,
     message,
     iconUrl: t('table.icon'),
     username: t('table.title'),
+  };
+  core.debug(`Post a Slack message with params: ${JSON.stringify(params, null, 2)}`);
+
+  await postToSlack(params).catch((error) => {
+    core.error(`Error posting Slack message: ${error}`);
+    throw error;
   });
+
   core.debug('Successfully posted to slack');
 };
 

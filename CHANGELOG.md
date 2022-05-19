@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.3.1] - 2022-05-19
+### Added
+- Logs to debug Slack integration.
+
 ## [2.3.0] - 2022-04-03
 ### Added
 - Slack integration.

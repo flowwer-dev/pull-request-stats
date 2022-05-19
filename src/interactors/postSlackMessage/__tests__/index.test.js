@@ -5,7 +5,7 @@ const postSlackMessage = require('../index');
 
 const MESSAGE = 'MESSAGE';
 
-jest.mock('../../../fetchers', () => ({ postToSlack: jest.fn() }));
+jest.mock('../../../fetchers', () => ({ postToSlack: jest.fn(() => Promise.resolve()) }));
 jest.mock('../buildSlackMessage', () => jest.fn(() => MESSAGE));
 
 describe('Interactors | .postSlackMessage', () => {
