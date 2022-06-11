@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.3.2] - 2022-06-11
+### Fixed
+- [#33](https://github.com/flowwer-dev/pull-request-stats/issues/33) Limits links length to 1,024 characters to prevent `KeyTooLongError` error.
+- [#34](https://github.com/flowwer-dev/pull-request-stats/issues/34) Permits running the action with `schedule` trigger.
+
 ## [2.3.1] - 2022-05-19
 ### Added
 - Logs to debug Slack integration.
