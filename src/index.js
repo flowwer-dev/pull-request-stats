@@ -2,9 +2,6 @@ const get = require('lodash.get');
 const core = require('@actions/core');
 const github = require('@actions/github');
 const execute = require('./execute');
-const { validateEnv } = require('./validation');
-
-const parseBoolean = (value) => value === 'true';
 
 const parseArray = (value) => value.split(',');
 
@@ -31,13 +28,15 @@ const getParams = () => {
     org: core.getInput('organization'),
     repos: getRepositories(currentRepo),
     sortBy: core.getInput('sort-by'),
-    githubToken: core.getInput('token'),
+    publishAs: core.getInput('publish-as'),
+    githubToken: core.getInput('github-token'),
+    personalToken: core.getInput('token'),
     periodLength: getPeriod(),
-    displayCharts: parseBoolean(core.getInput('charts')),
-    disableLinks: parseBoolean(core.getInput('disable-links')),
+    displayCharts: core.getBooleanInput('charts'),
+    disableLinks: core.getBooleanInput('disable-links'),
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),
-    telemetry: parseBoolean(core.getInput('telemetry')),
+    telemetry: core.getBooleanInput('telemetry'),
     slack: {
       webhook: core.getInput('slack-webhook'),
       channel: core.getInput('slack-channel'),
@@ -47,7 +46,6 @@ const getParams = () => {
 
 const run = async () => {
   try {
-    validateEnv(github);
     await execute(getParams());
     core.info('Action successfully executed');
   } catch (error) {

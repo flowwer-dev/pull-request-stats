@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.4.0] - 2022-06-18
+### Added
+- [#24](https://github.com/flowwer-dev/pull-request-stats/issues/24) Adds option `publish-as` to publish the resulting stats in the Pull Request description or as a comment.
+
+### Changed
+- Switching default publication strategy to `COMMENT`.
+
 ## [2.3.2] - 2022-06-11
 ### Fixed
 - [#33](https://github.com/flowwer-dev/pull-request-stats/issues/33) Limits links length to 1,024 characters to prevent `KeyTooLongError` error.

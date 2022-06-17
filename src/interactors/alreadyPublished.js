@@ -1,8 +1,12 @@
 const { t } = require('../i18n');
 
-module.exports = (pullRequest) => {
-  const { body } = pullRequest || {};
+const TITLE_REGEXP = new RegExp(`(^|\\n)(## ${t('table.title')})\\n`);
 
-  const regexp = new RegExp(`(^|\\n)(## ${t('table.title')})\\n`);
-  return regexp.test(body);
+const isActionComment = (body) => body && TITLE_REGEXP.test(body);
+
+module.exports = (pullRequest) => {
+  if (!pullRequest) return false;
+  const { body, comments } = pullRequest || {};
+  const bodies = [body, ...(comments || []).map((c) => c.body)];
+  return bodies.some(isActionComment);
 };

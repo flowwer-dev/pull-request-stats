@@ -1,6 +1,6 @@
 {
   "name": "pull-request-stats",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "description": "Github action to print relevant stats about Pull Request reviewers",
   "main": "dist/index.js",
   "scripts": {

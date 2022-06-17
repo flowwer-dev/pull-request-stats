@@ -2,13 +2,13 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const { subtractDaysToDate } = require('./utils');
 const { Telemetry } = require('./services');
+const { fetchPullRequestById } = require('./fetchers');
 const {
   getPulls,
   buildTable,
   postComment,
   getReviewers,
   buildComment,
-  getPullRequest,
   setUpReviewers,
   checkSponsorship,
   alreadyPublished,
@@ -22,25 +22,27 @@ const run = async (params) => {
     limit,
     sortBy,
     octokit,
+    publishAs,
     periodLength,
     disableLinks,
+    personalToken,
     displayCharts,
     pullRequestId,
   } = params;
 
   const pullRequest = pullRequestId
-    ? await getPullRequest({ octokit, pullRequestId })
+    ? await fetchPullRequestById(octokit, pullRequestId)
     : null;
 
-  if (pullRequest && alreadyPublished(pullRequest)) {
+  if (alreadyPublished(pullRequest)) {
     core.info('Skipping execution because stats are published already');
     return;
   }
 
   const pulls = await getPulls({
-    octokit,
     org,
     repos,
+    octokit: github.getOctokit(personalToken),
     startDate: subtractDaysToDate(new Date(), periodLength),
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
@@ -72,6 +74,7 @@ const run = async (params) => {
   await postComment({
     octokit,
     content,
+    publishAs,
     pullRequestId,
     currentBody: pullRequest.body,
   });

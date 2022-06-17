@@ -43,14 +43,15 @@ The possible inputs for this action are:
 
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
-| `token` | `GITHUB_TOKEN` or a [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with "repo" permission. | `GITHUB_TOKEN` |
+| `token` | A [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with `repo` permissions. Required to calculate stats for an organization or multiple repos. | `GITHUB_TOKEN` |
 | `repositories` | A comma separated list of github repositories to calculate the stats. When specifying other repo(s) **it is mandatory to pass a Personal Access Token** in the `token` parameter. | Current repository |
 | `organization` | If you prefer, you may specify the name of your organization to calculate the stats across all of its repos. When specifying an organization **it is mandatory to pass a Personal Access Token** in the `token` parameter. | `null`|
 | `period` | The length of the period used to calculate the stats, expressed in days. | `30` |
+| `limit` | The maximum number of rows to display in the table. A value of `0` means unlimited. |`0`|
 | `charts` | Whether to add a chart to the start or not. Possible values: `true` or `false`. | `false` |
 | `disable-links` | If `true`, removes the links to the detailed charts. Possible values: `true` or `false`. | `false` |
 | `sort-by` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
-| `limit` | The maximum number of rows to display in the table. A value of `0` means unlimited. |`0`|
+| `publish-as` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`. | `COMMENT` |
 | `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps me improve this action. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`true`|
 | `slack-webhook` | A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`null`|
 | `slack-channel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slack-webhook` is configured. |`null`|
@@ -65,7 +66,9 @@ Add this to the file `.github/workflows/stats.yml` in your repo:
 ```yml
 name: Pull Request Stats
 
-on: pull_request
+on:
+  pull_request:
+    types: [opened]
 
 jobs:
   stats:
@@ -99,7 +102,9 @@ Add this to the file `.github/workflows/stats.yml`:
 ```yml
 name: Pull Request Stats
 
-on: pull_request
+on:
+  pull_request:
+    types: [opened]
 
 jobs:
   stats:
@@ -185,10 +190,17 @@ Suggested sponsorship is $20 usd / month. Thanks for your support! 💙
 
 ## Used by
 
-Used by tens of successful teams like:
+Used by hundreds of successful teams:
 
 | <a href="https://www.sixt.com/"><img src="https://avatars.githubusercontent.com/u/25441140?s=200&v=4" width="64"></a><br/>Sixt | <a href="https://shop.lululemon.com"><img src="https://avatars.githubusercontent.com/u/17386352?s=200&v=4" width="64"></a><br/>Lululemon | <a href="https://www.deliveryhero.com"><img src="https://avatars.githubusercontent.com/u/7225556?s=200&v=4" width="64"></a><br/>Delivery H | <a href="https://jokr.com/"><img src="https://avatars.githubusercontent.com/u/84920342?s=200&v=4" width="64"></a><br/>JOKR | <a href="http://qatalog.com/"><img src="https://avatars.githubusercontent.com/u/56023495?s=200&v=4" width="64"></a><br/>Qatalog | <a href="https://firework.tv/"><img src="https://avatars.githubusercontent.com/u/25275837?s=200&v=4" width="64"></a><br/>LOOP | <a href="https://www.usehatchapp.com/"><img src="https://avatars.githubusercontent.com/u/38331218?s=200&v=4" width="64"></a><br/>Hatch | <a href="https://www.zenfi.mx/"><img src="https://avatars.githubusercontent.com/u/68744962?s=200&v=4" width="64"></a><br/>Zenfi |
-| -- | -- | -- | -- | -- | -- | -- | -- |
+| :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| <a href="https://www.trivago.com/"><img src="https://avatars.githubusercontent.com/u/1481788?s=200&v=4" width="64"></a><br/>**Trivago** | <a href="https://discovery.com"><img src="https://avatars.githubusercontent.com/u/48454976?s=200&v=4" width="64"></a><br/>**Discovery** | <a href="https://www.additionwealth.com/"><img src="https://avatars.githubusercontent.com/u/86253902?s=200&v=4" width="64"></a><br/>**Addition** | <a href="https://fauna.com/"><img src="https://avatars.githubusercontent.com/u/1477000?s=200&v=4" width="64"></a><br/>**Fauna** | <a href="http://open.cdc.gov/"><img src="https://avatars.githubusercontent.com/u/12104975?s=200&v=4" width="64"></a><br/>**CDC** | <a href="https://www.wecasa.fr/"><img src="https://avatars.githubusercontent.com/u/56955553?s=200&v=4" width="64"></a><br/>**Wecasa** | <a href="https://bolt.eu/"><img src="https://avatars.githubusercontent.com/u/37693190?s=200&v=4" width="64"></a><br/>**Bolt** | <a href="https://republic.com/"><img src="https://avatars.githubusercontent.com/u/18252987?s=200&v=4" width="64"></a><br/>**Republic** |
+
+## Author
+
+|<a href="https://github.com/manuelmhtr"><img src="https://avatars.githubusercontent.com/u/1031639?v=4" width="32"></a>|[@manuelmhtr](https://github.com/manuelmhtr)<br/>🇲🇽 Guadalajara, MX|
+| -- | :-- |
+
 
 ## Help
 

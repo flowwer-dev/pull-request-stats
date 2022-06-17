@@ -1108,6 +1108,46 @@ module.exports = ({
 
 /***/ }),
 
+/***/ 105:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const parsePullRequest = __webpack_require__(412);
+
+const PR_BY_ID_QUERY = `
+  query($id: ID!) {
+    node(id: $id) {
+      ... on PullRequest {
+        id
+        url
+        body
+        number
+        comments(last: 100) {
+          nodes {
+            author {
+              login
+            }
+            body
+          }
+        }
+      }
+    }
+  }
+`;
+
+module.exports = (octokit, id) => {
+  const variables = { id };
+  return octokit
+    .graphql(PR_BY_ID_QUERY, variables)
+    .then(parsePullRequest)
+    .catch((error) => {
+      const msg = `Error fetching pull requests with id "${id}"`;
+      throw new Error(`${msg}. Error: ${error}`);
+    });
+};
+
+
+/***/ }),
+
 /***/ 106:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -2042,13 +2082,15 @@ module.exports = (data = {}, pullRequest) => {
 /***/ 162:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const fetchPullRequestById = __webpack_require__(637);
+const commentOnPullRequest = __webpack_require__(335);
+const fetchPullRequestById = __webpack_require__(105);
 const fetchPullRequests = __webpack_require__(593);
 const fetchSponsorships = __webpack_require__(104);
 const postToSlack = __webpack_require__(887);
 const updatePullRequest = __webpack_require__(664);
 
 module.exports = {
+  commentOnPullRequest,
   fetchPullRequestById,
   fetchPullRequests,
   fetchSponsorships,
@@ -2076,7 +2118,7 @@ module.exports = (pulls) => groupReviews(pulls).map(({ author, reviews }) => {
 /***/ 173:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { updatePullRequest } = __webpack_require__(162);
+const { updatePullRequest, commentOnPullRequest } = __webpack_require__(162);
 
 const buildBody = (currentBody, content) => {
   if (!currentBody.trim()) return content;
@@ -2086,13 +2128,24 @@ const buildBody = (currentBody, content) => {
 module.exports = ({
   octokit,
   content,
+  publishAs,
   currentBody,
   pullRequestId,
-}) => updatePullRequest({
-  octokit,
-  id: pullRequestId,
-  body: buildBody(currentBody || '', content),
-});
+}) => {
+  if (publishAs === 'DESCRIPTION') {
+    return updatePullRequest({
+      octokit,
+      id: pullRequestId,
+      body: buildBody(currentBody || '', content),
+    });
+  }
+
+  return commentOnPullRequest({
+    octokit,
+    pullRequestId,
+    body: content,
+  });
+};
 
 
 /***/ }),
@@ -2320,11 +2373,15 @@ module.exports = require("punycode");
 
 const { t } = __webpack_require__(781);
 
-module.exports = (pullRequest) => {
-  const { body } = pullRequest || {};
+const TITLE_REGEXP = new RegExp(`(^|\\n)(## ${t('table.title')})\\n`);
 
-  const regexp = new RegExp(`(^|\\n)(## ${t('table.title')})\\n`);
-  return regexp.test(body);
+const isActionComment = (body) => body && TITLE_REGEXP.test(body);
+
+module.exports = (pullRequest) => {
+  if (!pullRequest) return false;
+  const { body, comments } = pullRequest || {};
+  const bodies = [body, ...(comments || []).map((c) => c.body)];
+  return bodies.some(isActionComment);
 };
 
 
@@ -5585,6 +5642,34 @@ module.exports = function parseHeaders(headers) {
 
 /***/ }),
 
+/***/ 335:
+/***/ (function(module) {
+
+const COMMENT_MUTATION = `
+  mutation($input: AddCommentInput!) {
+    addComment(input: $input) {
+      clientMutationId
+    }
+  }
+`;
+
+module.exports = ({
+  octokit,
+  body,
+  pullRequestId: subjectId,
+}) => {
+  const variables = { input: { body, subjectId } };
+  return octokit
+    .graphql(COMMENT_MUTATION, variables)
+    .catch((error) => {
+      const msg = `Error commenting on the pull request, with variables "${JSON.stringify(variables)}"`;
+      throw new Error(`${msg}. Error: ${error}`);
+    });
+};
+
+
+/***/ }),
+
 /***/ 337:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -7190,6 +7275,23 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 /***/ }),
 
+/***/ 412:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const get = __webpack_require__(854);
+
+const parseComments = (node) => ({
+  ...node,
+});
+
+module.exports = ({ node: data }) => ({
+  ...data,
+  comments: (get(data, 'comments.nodes') || []).map(parseComments),
+});
+
+
+/***/ }),
+
 /***/ 413:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -7927,29 +8029,6 @@ function escapeProperty(s) {
         .replace(/,/g, '%2C');
 }
 //# sourceMappingURL=command.js.map
-
-/***/ }),
-
-/***/ 435:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { fetchPullRequestById } = __webpack_require__(162);
-
-const parsePullRequest = (data) => {
-  const { node } = data;
-  return {
-    id: node.id,
-    url: node.url,
-    body: node.body,
-    number: node.number,
-  };
-};
-
-module.exports = async ({ octokit, pullRequestId }) => {
-  const data = await fetchPullRequestById(octokit, pullRequestId);
-  return parsePullRequest(data);
-};
-
 
 /***/ }),
 
@@ -13431,35 +13510,6 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 637:
-/***/ (function(module) {
-
-const PR_BY_ID_QUERY = `
-  query($id: ID!) {
-    node(id: $id) {
-      ... on PullRequest {
-        id
-        url
-        body
-        number
-      }
-    }
-  }
-`;
-
-module.exports = (octokit, id) => {
-  const variables = { id };
-  return octokit
-    .graphql(PR_BY_ID_QUERY, variables)
-    .catch((error) => {
-      const msg = `Error fetching pull requests with id "${id}"`;
-      throw new Error(`${msg}. Error: ${error}`);
-    });
-};
-
-
-/***/ }),
-
 /***/ 641:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -13631,13 +13681,13 @@ const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const { subtractDaysToDate } = __webpack_require__(353);
 const { Telemetry } = __webpack_require__(530);
+const { fetchPullRequestById } = __webpack_require__(162);
 const {
   getPulls,
   buildTable,
   postComment,
   getReviewers,
   buildComment,
-  getPullRequest,
   setUpReviewers,
   checkSponsorship,
   alreadyPublished,
@@ -13651,25 +13701,27 @@ const run = async (params) => {
     limit,
     sortBy,
     octokit,
+    publishAs,
     periodLength,
     disableLinks,
+    personalToken,
     displayCharts,
     pullRequestId,
   } = params;
 
   const pullRequest = pullRequestId
-    ? await getPullRequest({ octokit, pullRequestId })
+    ? await fetchPullRequestById(octokit, pullRequestId)
     : null;
 
-  if (pullRequest && alreadyPublished(pullRequest)) {
+  if (alreadyPublished(pullRequest)) {
     core.info('Skipping execution because stats are published already');
     return;
   }
 
   const pulls = await getPulls({
-    octokit,
     org,
     repos,
+    octokit: github.getOctokit(personalToken),
     startDate: subtractDaysToDate(new Date(), periodLength),
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
@@ -13701,6 +13753,7 @@ const run = async (params) => {
   await postComment({
     octokit,
     content,
+    publishAs,
     pullRequestId,
     currentBody: pullRequest.body,
   });
@@ -14479,9 +14532,6 @@ const get = __webpack_require__(854);
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const execute = __webpack_require__(662);
-const { validateEnv } = __webpack_require__(809);
-
-const parseBoolean = (value) => value === 'true';
 
 const parseArray = (value) => value.split(',');
 
@@ -14508,13 +14558,15 @@ const getParams = () => {
     org: core.getInput('organization'),
     repos: getRepositories(currentRepo),
     sortBy: core.getInput('sort-by'),
-    githubToken: core.getInput('token'),
+    publishAs: core.getInput('publish-as'),
+    githubToken: core.getInput('github-token'),
+    personalToken: core.getInput('token'),
     periodLength: getPeriod(),
-    displayCharts: parseBoolean(core.getInput('charts')),
-    disableLinks: parseBoolean(core.getInput('disable-links')),
+    displayCharts: core.getBooleanInput('charts'),
+    disableLinks: core.getBooleanInput('disable-links'),
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),
-    telemetry: parseBoolean(core.getInput('telemetry')),
+    telemetry: core.getBooleanInput('telemetry'),
     slack: {
       webhook: core.getInput('slack-webhook'),
       channel: core.getInput('slack-channel'),
@@ -14524,7 +14576,6 @@ const getParams = () => {
 
 const run = async () => {
   try {
-    validateEnv(github);
     await execute(getParams());
     core.info('Action successfully executed');
   } catch (error) {
@@ -14713,7 +14764,7 @@ module.exports = function bind(fn, thisArg) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.3.2","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
+module.exports = {"name":"pull-request-stats","version":"2.4.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
 
 /***/ }),
 
@@ -15619,26 +15670,6 @@ function getUserAgent() {
 
 exports.getUserAgent = getUserAgent;
 //# sourceMappingURL=index.js.map
-
-
-/***/ }),
-
-/***/ 809:
-/***/ (function(module) {
-
-const VALID_EVENT_NAMES = ['pull_request', 'pull_request_target', 'schedule'];
-
-const validateEnv = (github) => {
-  const { eventName } = github.context;
-  if (VALID_EVENT_NAMES.includes(eventName)) return;
-  const validEvents = VALID_EVENT_NAMES.map((e) => `"${e}"`).join(', ');
-  const error = `This action runs only in one of the following events: ${validEvents}. Change the property "on" of your workflow file from "${eventName}" to one of ${validEvents}.`;
-  throw new Error(error);
-};
-
-module.exports = {
-  validateEnv,
-};
 
 
 /***/ }),
@@ -19956,7 +19987,6 @@ const alreadyPublished = __webpack_require__(217);
 const buildTable = __webpack_require__(194);
 const buildComment = __webpack_require__(641);
 const checkSponsorship = __webpack_require__(402);
-const getPullRequest = __webpack_require__(435);
 const getPulls = __webpack_require__(591);
 const getReviewers = __webpack_require__(164);
 const postSlackMessage = __webpack_require__(878);
@@ -19968,7 +19998,6 @@ module.exports = {
   buildTable,
   buildComment,
   checkSponsorship,
-  getPullRequest,
   getPulls,
   getReviewers,
   postSlackMessage,

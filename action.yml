@@ -3,7 +3,10 @@ author: 'Manuel de la Torre'
 description: 'Github action to print relevant stats about Pull Request reviewers'
 inputs:
   token:
-    description: 'The GitHub authentication token'
+    description: 'An optional Personal Access Token with enough permissions to fetch all required pull requests to calculate the stats.'
+    required: false
+  github-token:
+    description: 'The default GitHub Token (secrets.GITHUB_TOKEN), used to publish comments as a bot. No need to assign a value for this input.'
     required: true
     default: ${{ github.token }}
   repositories:
@@ -16,6 +19,10 @@ inputs:
     description: 'The length of the period used to calculate the stats, expressed in days'
     required: false
     default: 30
+  limit:
+    description: 'The maximum number of rows to display in the table. A value of `0` means unlimited.'
+    required: false
+    default: 0
   charts:
     description: 'Whether to add charts to the stats or not. Possible values: "true" or "false"'
     required: false
@@ -24,14 +31,14 @@ inputs:
     description: 'The column used to sort the data. Possible values: "REVIEWS", "TIME" or "COMMENTS"'
     required: false
     default: 'REVIEWS'
+  publish-as:
+    description: 'Where to publish the results. Possible values: "COMMENT" or "DESCRIPTION"'
+    required: false
+    default: 'COMMENT'
   disable-links:
     description: 'Prevents from adding any external links in the stats'
     required: false
     default: false
-  limit:
-    description: 'The maximum number of rows to display in the table. A value of `0` means unlimited.'
-    required: false
-    default: 0
   telemetry:
     description: 'Indicates if the action is allowed to send monitoring data to the developer.'
     required: false

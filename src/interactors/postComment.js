@@ -1,4 +1,4 @@
-const { updatePullRequest } = require('../fetchers');
+const { updatePullRequest, commentOnPullRequest } = require('../fetchers');
 
 const buildBody = (currentBody, content) => {
   if (!currentBody.trim()) return content;
@@ -8,10 +8,21 @@ const buildBody = (currentBody, content) => {
 module.exports = ({
   octokit,
   content,
+  publishAs,
   currentBody,
   pullRequestId,
-}) => updatePullRequest({
-  octokit,
-  id: pullRequestId,
-  body: buildBody(currentBody || '', content),
-});
+}) => {
+  if (publishAs === 'DESCRIPTION') {
+    return updatePullRequest({
+      octokit,
+      id: pullRequestId,
+      body: buildBody(currentBody || '', content),
+    });
+  }
+
+  return commentOnPullRequest({
+    octokit,
+    pullRequestId,
+    body: content,
+  });
+};
