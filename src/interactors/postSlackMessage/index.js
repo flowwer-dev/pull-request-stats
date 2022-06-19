@@ -3,6 +3,8 @@ const { postToSlack } = require('../../fetchers');
 const buildSlackMessage = require('./buildSlackMessage');
 
 module.exports = async ({
+  org,
+  repos,
   core,
   slack,
   isSponsor,
@@ -25,6 +27,8 @@ module.exports = async ({
   }
 
   const message = buildSlackMessage({
+    org,
+    repos,
     reviewers,
     pullRequest,
     periodLength,

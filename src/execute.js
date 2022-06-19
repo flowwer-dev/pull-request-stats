@@ -60,7 +60,9 @@ const run = async (params) => {
   const table = buildTable({ reviewers, disableLinks, displayCharts });
   core.debug('Stats table built successfully');
 
-  const content = buildComment({ table, periodLength });
+  const content = buildComment({
+    table, periodLength, org, repos,
+  });
   core.debug(`Commit content built successfully: ${content}`);
 
   await postSlackMessage({

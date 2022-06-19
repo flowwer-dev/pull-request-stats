@@ -2218,6 +2218,47 @@ exports.checkBypass = checkBypass;
 
 /***/ }),
 
+/***/ 179:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { t } = __webpack_require__(781);
+
+module.exports = ({
+  org,
+  repos,
+  buildGithubLink,
+  limit = 3,
+}) => {
+  const buildLimitedSources = (sources) => {
+    const firsts = sources.slice(0, limit - 1);
+    const othersCount = sources.length - firsts.length;
+    return t('table.sources.andOthers', {
+      firsts: firsts.map(buildGithubLink).join(t('table.sources.separator')),
+      count: othersCount,
+    });
+  };
+
+  const buildFullList = (sources) => {
+    const last = sources.pop();
+    return t('table.sources.fullList', {
+      firsts: sources.map(buildGithubLink).join(t('table.sources.separator')),
+      last: buildGithubLink(last),
+    });
+  };
+
+  const getSources = () => {
+    if (org) return buildGithubLink(org);
+    if (repos.length === 1) return buildGithubLink(repos);
+    if (repos.length > limit) return buildLimitedSources(repos);
+    return buildFullList(repos);
+  };
+
+  return getSources();
+};
+
+
+/***/ }),
+
 /***/ 183:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -5678,6 +5719,8 @@ const buildSubtitle = __webpack_require__(859);
 const buildReviewer = __webpack_require__(183);
 
 module.exports = ({
+  org,
+  repos,
   reviewers,
   pullRequest,
   periodLength,
@@ -5685,7 +5728,13 @@ module.exports = ({
   displayCharts,
 }) => ({
   blocks: [
-    ...buildSubtitle({ t, pullRequest, periodLength }),
+    ...buildSubtitle({
+      t,
+      org,
+      repos,
+      pullRequest,
+      periodLength,
+    }),
 
     ...reviewers.reduce((prev, reviewer, index) => [
       ...prev,
@@ -5772,6 +5821,7 @@ module.exports.default = axios;
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const average = __webpack_require__(553);
+const buildSources = __webpack_require__(179);
 const divide = __webpack_require__(318);
 const durationToString = __webpack_require__(715);
 const isNil = __webpack_require__(125);
@@ -5781,6 +5831,7 @@ const sum = __webpack_require__(358);
 
 module.exports = {
   average,
+  buildSources,
   divide,
   durationToString,
   isNil,
@@ -13514,9 +13565,18 @@ module.exports = require("net");
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const { t } = __webpack_require__(781);
+const { buildSources } = __webpack_require__(353);
 
-module.exports = ({ table, periodLength }) => {
-  const message = t('table.subtitle', { count: periodLength });
+const buildGithubLink = (object) => `[${object}](https://github.com/${object})`;
+
+module.exports = ({
+  table,
+  org,
+  repos,
+  periodLength,
+}) => {
+  const sources = buildSources({ buildGithubLink, org, repos });
+  const message = t('table.subtitle', { sources, count: periodLength });
   return `## ${t('table.title')}\n${message}:\n${table}`;
 };
 
@@ -13739,7 +13799,9 @@ const run = async (params) => {
   const table = buildTable({ reviewers, disableLinks, displayCharts });
   core.debug('Stats table built successfully');
 
-  const content = buildComment({ table, periodLength });
+  const content = buildComment({
+    table, periodLength, org, repos,
+  });
   core.debug(`Commit content built successfully: ${content}`);
 
   await postSlackMessage({
@@ -14593,7 +14655,7 @@ run();
 /***/ 680:
 /***/ (function(module) {
 
-module.exports = {"title":"Pull reviewers stats","icon":"https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png","subtitle":{"one":"Stats for the last day","other":"Stats for the last {{count}} days"},"columns":{"avatar":"","username":"User","timeToReview":"Time to review","totalReviews":"Total reviews","totalComments":"Total comments"}};
+module.exports = {"title":"Pull reviewers stats","icon":"https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png","subtitle":{"one":"Stats of the last day for {{sources}}","other":"Stats of the last {{count}} days for {{sources}}"},"sources":{"separator":", ","fullList":"{{firsts}} and {{last}}","andOthers":"{{firsts}} and {{count}} others"},"columns":{"avatar":"","username":"User","timeToReview":"Time to review","totalReviews":"Total reviews","totalComments":"Total comments"}};
 
 /***/ }),
 
@@ -14764,7 +14826,7 @@ module.exports = function bind(fn, thisArg) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.4.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
+module.exports = {"name":"pull-request-stats","version":"2.4.1","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
 
 /***/ }),
 
@@ -18000,7 +18062,9 @@ module.exports = get;
 /***/ }),
 
 /***/ 859:
-/***/ (function(module) {
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { buildSources } = __webpack_require__(353);
 
 const getPRText = (pullRequest) => {
   const { url, number } = pullRequest || {};
@@ -18008,18 +18072,29 @@ const getPRText = (pullRequest) => {
   return ` (<${url}|#${number}>)`;
 };
 
-module.exports = ({ t, pullRequest, periodLength }) => [
-  {
-    type: 'section',
-    text: {
-      type: 'mrkdwn',
-      text: `${t('table.subtitle', { count: periodLength })}${getPRText(pullRequest)}`,
+const buildGithubLink = (object) => `<https://github.com/${object}|${object}>`;
+
+module.exports = ({
+  t,
+  org,
+  repos,
+  pullRequest,
+  periodLength,
+}) => {
+  const sources = buildSources({ buildGithubLink, org, repos });
+  return [
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `${t('table.subtitle', { sources, count: periodLength })}${getPRText(pullRequest)}`,
+      },
     },
-  },
-  {
-    type: 'divider',
-  },
-];
+    {
+      type: 'divider',
+    },
+  ];
+};
 
 
 /***/ }),
@@ -18126,6 +18201,8 @@ const { postToSlack } = __webpack_require__(162);
 const buildSlackMessage = __webpack_require__(337);
 
 module.exports = async ({
+  org,
+  repos,
   core,
   slack,
   isSponsor,
@@ -18148,6 +18225,8 @@ module.exports = async ({
   }
 
   const message = buildSlackMessage({
+    org,
+    repos,
     reviewers,
     pullRequest,
     periodLength,

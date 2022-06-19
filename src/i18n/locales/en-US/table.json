@@ -2,8 +2,13 @@
   "title": "Pull reviewers stats",
   "icon": "https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png",
   "subtitle": {
-    "one": "Stats for the last day",
-    "other": "Stats for the last {{count}} days"
+    "one": "Stats of the last day for {{sources}}",
+    "other": "Stats of the last {{count}} days for {{sources}}"
+  },
+  "sources": {
+    "separator": ", ",
+    "fullList": "{{firsts}} and {{last}}",
+    "andOthers": "{{firsts}} and {{count}} others"
   },
   "columns": {
     "avatar": "",

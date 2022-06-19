@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.4.1] - 2022-06-19
+### Changed
+- Printing the name and link of the organization or repos that are included on stats calculation.
+
 ## [2.4.0] - 2022-06-18
 ### Added
 - [#24](https://github.com/flowwer-dev/pull-request-stats/issues/24) Adds option `publish-as` to publish the resulting stats in the Pull Request description or as a comment.

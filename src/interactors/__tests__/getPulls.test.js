@@ -26,7 +26,7 @@ describe('Interactors | .getPulls', () => {
     org: null,
     repos: ['org/repo1'],
     startDate: new Date(date),
-    itemsPerPage: 3
+    itemsPerPage: 3,
   };
 
   beforeEach(jest.clearAllMocks);

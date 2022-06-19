@@ -3,6 +3,8 @@ const buildSubtitle = require('./buildSubtitle');
 const buildReviewer = require('./buildReviewer');
 
 module.exports = ({
+  org,
+  repos,
   reviewers,
   pullRequest,
   periodLength,
@@ -10,7 +12,13 @@ module.exports = ({
   displayCharts,
 }) => ({
   blocks: [
-    ...buildSubtitle({ t, pullRequest, periodLength }),
+    ...buildSubtitle({
+      t,
+      org,
+      repos,
+      pullRequest,
+      periodLength,
+    }),
 
     ...reviewers.reduce((prev, reviewer, index) => [
       ...prev,
