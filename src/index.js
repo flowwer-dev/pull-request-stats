@@ -22,15 +22,17 @@ const getParams = () => {
   const { payload } = github.context || {};
   const { repository } = payload || {};
   const currentRepo = repository.full_name;
+  const githubToken = core.getInput('github-token');
+  const personalToken = core.getInput('token') || githubToken;
 
   return {
     currentRepo,
+    githubToken,
+    personalToken,
     org: core.getInput('organization'),
     repos: getRepositories(currentRepo),
     sortBy: core.getInput('sort-by'),
     publishAs: core.getInput('publish-as'),
-    githubToken: core.getInput('github-token'),
-    personalToken: core.getInput('token'),
     periodLength: getPeriod(),
     displayCharts: core.getBooleanInput('charts'),
     disableLinks: core.getBooleanInput('disable-links'),
