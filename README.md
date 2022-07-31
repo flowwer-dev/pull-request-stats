@@ -26,7 +26,7 @@ Or integrate this action with **Slack**:
 ## Privacy
 * **No repository data is collected**, stored or distributed by this GitHub action. This action is **state-less**.
 * Charts data is send over the URL, and never stored or transmitted anywhere else.
-* [Minimal data](/src/services/telemetry/sendStart.js) is send to Mixpanel in order to improve this action. However, you can opt-out using `telemtry` option.
+* [Minimal data](/src/services/telemetry/sendStart.js) is send to Mixpanel in order to improve this action. However, you can opt-out using `telemetry` option.
 
 ## Usage
 
