@@ -1248,9 +1248,15 @@ const getRepoOwner = (repo) => {
   return owner;
 };
 
+const getRepoName = (repo) => {
+  const [, name] = getRepoComponents(repo);
+  return name;
+};
+
 module.exports = {
   getRepoComponents,
   getRepoOwner,
+  getRepoName,
 };
 
 
@@ -2222,6 +2228,7 @@ exports.checkBypass = checkBypass;
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const { t } = __webpack_require__(781);
+const { getRepoComponents } = __webpack_require__(109);
 
 module.exports = ({
   org,
@@ -2229,11 +2236,17 @@ module.exports = ({
   buildGithubLink,
   limit = 3,
 }) => {
+  const buildLink = (path) => {
+    const [owner, name] = getRepoComponents(path);
+    const description = name || owner;
+    return buildGithubLink({ description, path });
+  };
+
   const buildLimitedSources = (sources) => {
     const firsts = sources.slice(0, limit - 1);
     const othersCount = sources.length - firsts.length;
     return t('table.sources.andOthers', {
-      firsts: firsts.map(buildGithubLink).join(t('table.sources.separator')),
+      firsts: firsts.map(buildLink).join(t('table.sources.separator')),
       count: othersCount,
     });
   };
@@ -2241,14 +2254,14 @@ module.exports = ({
   const buildFullList = (sources) => {
     const last = sources.pop();
     return t('table.sources.fullList', {
-      firsts: sources.map(buildGithubLink).join(t('table.sources.separator')),
-      last: buildGithubLink(last),
+      firsts: sources.map(buildLink).join(t('table.sources.separator')),
+      last: buildLink(last),
     });
   };
 
   const getSources = () => {
-    if (org) return buildGithubLink(org);
-    if (repos.length === 1) return buildGithubLink(repos);
+    if (org) return buildLink(org);
+    if (repos.length === 1) return buildLink(repos[0]);
     if (repos.length > limit) return buildLimitedSources(repos);
     return buildFullList(repos);
   };
@@ -5826,10 +5839,12 @@ const divide = __webpack_require__(318);
 const durationToString = __webpack_require__(715);
 const isNil = __webpack_require__(125);
 const median = __webpack_require__(825);
+const repos = __webpack_require__(109);
 const subtractDaysToDate = __webpack_require__(689);
 const sum = __webpack_require__(358);
 
 module.exports = {
+  ...repos,
   average,
   buildSources,
   divide,
@@ -7016,6 +7031,7 @@ module.exports = ({ tracker, timeMs }) => {
 const { fetchSponsorships } = __webpack_require__(162);
 const getLogins = __webpack_require__(379);
 const isSponsoring = __webpack_require__(477);
+const isExternalSponsor = __webpack_require__(581);
 
 module.exports = async ({
   octokit,
@@ -7024,7 +7040,7 @@ module.exports = async ({
 }) => {
   const logins = getLogins({ org, repos });
   const { user } = await fetchSponsorships({ octokit, logins });
-  return isSponsoring(user);
+  return isSponsoring(user) || isExternalSponsor(logins);
 };
 
 
@@ -13211,6 +13227,21 @@ function omit(obj, ...keys) {
 
 /***/ }),
 
+/***/ 581:
+/***/ (function(module) {
+
+// A list of organizations which are sponsoring this project outside Github 💙
+const externalSponsors = new Set([
+  'yotepresto-com',
+  'zenfi',
+]);
+
+module.exports = (logins) => [...(logins || [])]
+  .some((login) => externalSponsors.has(login));
+
+
+/***/ }),
+
 /***/ 587:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -13567,7 +13598,7 @@ module.exports = require("net");
 const { t } = __webpack_require__(781);
 const { buildSources } = __webpack_require__(353);
 
-const buildGithubLink = (object) => `[${object}](https://github.com/${object})`;
+const buildGithubLink = ({ description, path }) => `[${description}](https://github.com/${path})`;
 
 module.exports = ({
   table,
@@ -14611,9 +14642,7 @@ const getRepositories = (currentRepo) => {
 const getPrId = () => get(github, 'context.payload.pull_request.node_id');
 
 const getParams = () => {
-  const { payload } = github.context || {};
-  const { repository } = payload || {};
-  const currentRepo = repository.full_name;
+  const currentRepo = process.env.GITHUB_REPOSITORY;
   const githubToken = core.getInput('github-token');
   const personalToken = core.getInput('token') || githubToken;
 
@@ -14828,7 +14857,7 @@ module.exports = function bind(fn, thisArg) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.4.2","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
+module.exports = {"name":"pull-request-stats","version":"2.4.3","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
 
 /***/ }),
 
@@ -18074,7 +18103,7 @@ const getPRText = (pullRequest) => {
   return ` (<${url}|#${number}>)`;
 };
 
-const buildGithubLink = (object) => `<https://github.com/${object}|${object}>`;
+const buildGithubLink = ({ description, path }) => `<https://github.com/${path}|${description}>`;
 
 module.exports = ({
   t,

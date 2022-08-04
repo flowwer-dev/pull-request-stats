@@ -1,4 +1,5 @@
 const { t } = require('../i18n');
+const { getRepoComponents } = require('./repos');
 
 module.exports = ({
   org,
@@ -6,11 +7,17 @@ module.exports = ({
   buildGithubLink,
   limit = 3,
 }) => {
+  const buildLink = (path) => {
+    const [owner, name] = getRepoComponents(path);
+    const description = name || owner;
+    return buildGithubLink({ description, path });
+  };
+
   const buildLimitedSources = (sources) => {
     const firsts = sources.slice(0, limit - 1);
     const othersCount = sources.length - firsts.length;
     return t('table.sources.andOthers', {
-      firsts: firsts.map(buildGithubLink).join(t('table.sources.separator')),
+      firsts: firsts.map(buildLink).join(t('table.sources.separator')),
       count: othersCount,
     });
   };
@@ -18,14 +25,14 @@ module.exports = ({
   const buildFullList = (sources) => {
     const last = sources.pop();
     return t('table.sources.fullList', {
-      firsts: sources.map(buildGithubLink).join(t('table.sources.separator')),
-      last: buildGithubLink(last),
+      firsts: sources.map(buildLink).join(t('table.sources.separator')),
+      last: buildLink(last),
     });
   };
 
   const getSources = () => {
-    if (org) return buildGithubLink(org);
-    if (repos.length === 1) return buildGithubLink(repos);
+    if (org) return buildLink(org);
+    if (repos.length === 1) return buildLink(repos[0]);
     if (repos.length > limit) return buildLimitedSources(repos);
     return buildFullList(repos);
   };

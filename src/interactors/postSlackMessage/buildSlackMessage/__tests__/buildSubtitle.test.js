@@ -1,4 +1,5 @@
 const { t } = require('../../../../i18n');
+const { getRepoName } = require('../../../../utils');
 const buildSubtitle = require('../buildSubtitle');
 
 const ORG = 'org';
@@ -11,7 +12,9 @@ const pullRequest = {
   url: 'https://github.com/manuelmhtr/pulls/13',
 };
 
-const link = (path) => `<https://github.com/${path}|${path}>`;
+const linkOrg = (org) => `<https://github.com/${org}|${org}>`;
+
+const linkRepo = (repo) => `<https://github.com/${repo}|${getRepoName(repo)}>`;
 
 describe('Interactors | postSlackMessage | .buildSubtitle', () => {
   const baseParams = {
@@ -24,7 +27,7 @@ describe('Interactors | postSlackMessage | .buildSubtitle', () => {
     it('returns a subtitle with no pull request data', () => {
       const response = buildSubtitle({ ...baseParams, pullRequest });
       const prLink = `(<${pullRequest.url}|#${pullRequest.number}>)`;
-      const sources = link(ORG);
+      const sources = linkOrg(ORG);
       expect(response).toEqual([
         {
           type: 'section',
@@ -43,7 +46,7 @@ describe('Interactors | postSlackMessage | .buildSubtitle', () => {
   describe('when not sending a pull request', () => {
     it('returns a subtitle with no pull request data', () => {
       const response = buildSubtitle({ ...baseParams, pullRequest: null });
-      const sources = link(ORG);
+      const sources = linkOrg(ORG);
       expect(response).toEqual([
         {
           type: 'section',
@@ -63,7 +66,7 @@ describe('Interactors | postSlackMessage | .buildSubtitle', () => {
     it('returns a subtitle with no pull request data', () => {
       const repos = [REPO1, REPO2];
       const response = buildSubtitle({ ...baseParams, org: null, repos });
-      const sources = `${link(REPO1)} and ${link(REPO2)}`;
+      const sources = `${linkRepo(REPO1)} and ${linkRepo(REPO2)}`;
       expect(response).toEqual([
         {
           type: 'section',

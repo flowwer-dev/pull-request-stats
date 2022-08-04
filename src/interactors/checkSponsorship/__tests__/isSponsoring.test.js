@@ -17,7 +17,7 @@ describe('Interactors | checkSponsorship | .isSponsoring', () => {
     expect(response).toEqual(expected);
   });
 
-  it('returns false when al least one key is true', () => {
+  it('returns true when al least one key is true', () => {
     const input = {
       sponsor1: false,
       sponsor2: true,

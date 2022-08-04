@@ -1,4 +1,4 @@
-const { getRepoComponents, getRepoOwner } = require('../repos');
+const { getRepoComponents, getRepoOwner, getRepoName } = require('../repos');
 
 const repo = 'org1/repo1';
 
@@ -15,6 +15,14 @@ describe('Utils | repos', () => {
     it('return the name of the repo owner', () => {
       const expected = 'org1';
       const result = getRepoOwner(repo);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('.getRepoName', () => {
+    it('return the name of the repo', () => {
+      const expected = 'repo1';
+      const result = getRepoName(repo);
       expect(result).toEqual(expected);
     });
   });

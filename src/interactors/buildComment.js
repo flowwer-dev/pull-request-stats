@@ -1,7 +1,7 @@
 const { t } = require('../i18n');
 const { buildSources } = require('../utils');
 
-const buildGithubLink = (object) => `[${object}](https://github.com/${object})`;
+const buildGithubLink = ({ description, path }) => `[${description}](https://github.com/${path})`;
 
 module.exports = ({
   table,

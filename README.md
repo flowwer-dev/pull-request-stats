@@ -206,7 +206,7 @@ Used by hundreds of successful teams:
 
 This project is maintained by a single person, considering supporting the project by:
 
-* Sharing your [feedback](https://forms.gle/W18tgBWp5YWt2qYEA).
+* Sharing your [feedback](https://github.com/flowwer-dev/pull-request-stats/discussions/new).
 * Joining the [community](https://discord.gg/SGYbZkac).
 * Becoming a [sponsor](https://github.com/sponsors/manuelmhtr).
 

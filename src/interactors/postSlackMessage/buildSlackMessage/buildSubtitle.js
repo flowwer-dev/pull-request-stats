@@ -6,7 +6,7 @@ const getPRText = (pullRequest) => {
   return ` (<${url}|#${number}>)`;
 };
 
-const buildGithubLink = (object) => `<https://github.com/${object}|${object}>`;
+const buildGithubLink = ({ description, path }) => `<https://github.com/${path}|${description}>`;
 
 module.exports = ({
   t,

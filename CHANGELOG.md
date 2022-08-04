@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.4.3] - 2022-08-03
+### Added
+- Support for external sponsors.
+### Changed
+- Improved description links.
+### Fixed
+- [#44](https://github.com/flowwer-dev/pull-request-stats/issues/44) Fixed problem reading repo when triggered by `schedule` event.
+
 ## [2.4.2] - 2022-06-21
 ### Fixed
 - [#37](https://github.com/flowwer-dev/pull-request-stats/issues/37) Problem causing `token` parameter to be empty.

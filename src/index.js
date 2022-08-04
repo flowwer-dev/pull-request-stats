@@ -19,9 +19,7 @@ const getRepositories = (currentRepo) => {
 const getPrId = () => get(github, 'context.payload.pull_request.node_id');
 
 const getParams = () => {
-  const { payload } = github.context || {};
-  const { repository } = payload || {};
-  const currentRepo = repository.full_name;
+  const currentRepo = process.env.GITHUB_REPOSITORY;
   const githubToken = core.getInput('github-token');
   const personalToken = core.getInput('token') || githubToken;
 
