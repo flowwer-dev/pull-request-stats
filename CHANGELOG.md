@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.4.4] - 2022-08-21
+### Fixed
+- [#46](https://github.com/flowwer-dev/pull-request-stats/issues/46) Filtering reviewers with `undefined` name.
+
 ## [2.4.3] - 2022-08-03
 ### Added
 - Support for external sponsors.

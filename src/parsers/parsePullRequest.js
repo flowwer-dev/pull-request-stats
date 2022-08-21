@@ -2,7 +2,7 @@ const get = require('lodash.get');
 const parseUser = require('./parseUser');
 const parseReview = require('./parseReview');
 
-const filterNullAuthor = ({ author }) => !!author;
+const filterNullAuthor = ({ author }) => !!(author || {}).login;
 
 const getFilteredReviews = (data) => get(data, 'node.reviews.nodes', []).filter(filterNullAuthor);
 
