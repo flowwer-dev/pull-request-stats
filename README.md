@@ -44,7 +44,7 @@ The possible inputs for this action are:
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
 | `token` | A [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with `repo` permissions. Required to calculate stats for an organization or multiple repos. | `GITHUB_TOKEN` |
-| `repositories` | A comma separated list of github repositories to calculate the stats. When specifying other repo(s) **it is mandatory to pass a Personal Access Token** in the `token` parameter. | Current repository |
+| `repositories` | A comma separated list of github repositories to calculate the stats, eg. `username/repo1,username/repo2`. When specifying other repo(s) **it is mandatory to pass a Personal Access Token** in the `token` parameter.| Current repository |
 | `organization` | If you prefer, you may specify the name of your organization to calculate the stats across all of its repos. When specifying an organization **it is mandatory to pass a Personal Access Token** in the `token` parameter. | `null`|
 | `period` | The length of the period used to calculate the stats, expressed in days. | `30` |
 | `limit` | The maximum number of rows to display in the table. A value of `0` means unlimited. |`0`|
@@ -153,7 +153,7 @@ The stats are calculated as following:
 
 To configure the Slack, integration:
 
-1. [Create a webhook](https://slack.com/help/articles/115005265063-Incoming-webhooks-for-Slack) in your workspace (you must be a Slack admin). It should look like this: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`.
+1. [Create a webhook](https://slack.com/help/articles/115005265063-Incoming-webhooks-for-Slack) in your workspace (you must be a Slack admin). It should look like this: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`. Check out [this tutorial](https://www.youtube.com/watch?v=6NJuntZSJVA) if you have questions on how to get the webhook URL.
 2. Set the `slack-webhook` (from previous step) and `slack-channel` (don't forget to include the `#` character) parameters in this action.
 3. Ready to go!
 
@@ -173,9 +173,27 @@ jobs:
       - name: Run pull request stats
         uses: flowwer-dev/pull-request-stats@master
         with:
-          slack-webhook: 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
           slack-channel: '#mystatschannel'
+          slack-webhook: 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
+          # slack-webhook: ${{ secrets.SLACK_WEBHOOK }} You may want to store this value as a secret.
 ```
+
+## Troubleshooting
+
+<details>
+  <summary>The action is printing an empty table.</summary>
+
+  1. Make sure the repositories have pull request reviews during the configured `period`.
+  2. When specifying `repositories` or `organization` paramaters, a [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) is required in the `token` parameter.
+  3. If providing a Personal Access Token, make sure it has the `repo` permission for the projects you want.
+</details>
+
+<details>
+  <summary>I'm a sponsor but still getting the error "...is a premium feature, available to sponsors".</summary>
+
+  1. Check the sponsorship comes from the account that owns the configured repos (usually an organization).
+  2. Make sure the sponsorship is configured as `public`, otherwhise the action cannot access the sponsorship information. If you prefer to keep it `private`, please reach me out to make it works for you that way 😉.
+</details>
 
 ## Premium features ✨
 

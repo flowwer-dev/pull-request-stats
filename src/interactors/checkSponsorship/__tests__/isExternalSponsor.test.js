@@ -15,7 +15,7 @@ describe('Interactors | checkSponsorship | .isExternalSponsor', () => {
   });
 
   it('returns true when al least one user is sponsor', () => {
-    const input = new Set(['noSponsor1', 'zenfi']);
+    const input = new Set(['noSponsor1', 'sponsors']);
     const expected = true;
     const response = isExternalSponsor(input);
     expect(response).toEqual(expected);
