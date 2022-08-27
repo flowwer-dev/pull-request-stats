@@ -10998,6 +10998,18 @@ module.exports = setup;
 
 /***/ }),
 
+/***/ 508:
+/***/ (function(module) {
+
+const getSlackCharsLimit = () => 39000;
+
+module.exports = {
+  getSlackCharsLimit,
+};
+
+
+/***/ }),
+
 /***/ 510:
 /***/ (function(module) {
 
@@ -13047,6 +13059,50 @@ module.exports = function settle(resolve, reject, response) {
 
 /***/ }),
 
+/***/ 569:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { getSlackCharsLimit } = __webpack_require__(508);
+const { median } = __webpack_require__(353);
+
+const CHARS_LIMIT = getSlackCharsLimit();
+
+const getSize = (obj) => JSON.stringify(obj).length;
+
+const getBlockLengths = (blocks) => blocks
+  .filter(({ type }) => type === 'section') // Ignoring "divider" blocks
+  .map((block) => getSize(block));
+
+const getSizePerBlock = (blocks) => Math.round(median(getBlockLengths(blocks)));
+
+module.exports = (message) => {
+  const blockSize = Math.max(1, getSizePerBlock(message.blocks));
+
+  const getBlocksToSplit = (blocks) => {
+    const currentSize = getSize({ blocks });
+    const diff = currentSize - CHARS_LIMIT;
+    if (diff < 0 || blocks.length === 1) return 0;
+
+    const blocksSpace = Math.ceil(diff / blockSize);
+    const blocksCount = Math.max(1, Math.min(blocks.length - 1, blocksSpace));
+    const firsts = blocks.slice(0, blocksCount);
+    return getBlocksToSplit(firsts) || blocksCount;
+  };
+
+  const getChunks = (prev, msg) => {
+    const blocksToSplit = getBlocksToSplit(msg.blocks);
+    if (!blocksToSplit) return [...prev, msg];
+    const blocks = msg.blocks.slice(0, blocksToSplit);
+    const others = msg.blocks.slice(blocksToSplit);
+    return getChunks([...prev, { blocks }], { blocks: others });
+  };
+
+  return getChunks([], message);
+};
+
+
+/***/ }),
+
 /***/ 578:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -14873,7 +14929,7 @@ module.exports = function bind(fn, thisArg) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.4.4","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
+module.exports = {"name":"pull-request-stats","version":"2.4.5","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
 
 /***/ }),
 
@@ -18246,6 +18302,7 @@ module.exports = require("tty");
 const { t } = __webpack_require__(781);
 const { postToSlack } = __webpack_require__(162);
 const buildSlackMessage = __webpack_require__(337);
+const splitInChunks = __webpack_require__(569);
 
 module.exports = async ({
   org,
@@ -18271,7 +18328,19 @@ module.exports = async ({
     return;
   }
 
-  const message = buildSlackMessage({
+  const send = (message) => {
+    const params = {
+      webhook,
+      channel,
+      message,
+      iconUrl: t('table.icon'),
+      username: t('table.title'),
+    };
+    core.debug(`Post a Slack message with params: ${JSON.stringify(params, null, 2)}`);
+    return postToSlack(params);
+  };
+
+  const fullMessage = buildSlackMessage({
     org,
     repos,
     reviewers,
@@ -18281,19 +18350,14 @@ module.exports = async ({
     displayCharts,
   });
 
-  const params = {
-    webhook,
-    channel,
-    message,
-    iconUrl: t('table.icon'),
-    username: t('table.title'),
-  };
-  core.debug(`Post a Slack message with params: ${JSON.stringify(params, null, 2)}`);
-
-  await postToSlack(params).catch((error) => {
-    core.error(`Error posting Slack message: ${error}`);
-    throw error;
-  });
+  const chunks = splitInChunks(fullMessage);
+  await chunks.reduce(async (promise, message) => {
+    await promise;
+    return send(message).catch((error) => {
+      core.error(`Error posting Slack message: ${error}`);
+      throw error;
+    });
+  }, Promise.resolve());
 
   core.debug('Successfully posted to slack');
 };
