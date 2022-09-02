@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/index.js",
-    "test": "yarn run build && jest"
+    "test": "eslint src && yarn run build && jest"
   },
   "keywords": [],
   "author": "Manuel de la Torre",
