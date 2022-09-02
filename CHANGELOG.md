@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.4.6] - 2022-09-01
+### Fixed
+- [#48](https://github.com/flowwer-dev/pull-request-stats/issues/48) Prevent sponsorship query error on Github Enterprise environments.
+
 ## [2.4.5] - 2022-08-27
 ### Fixed
 - [#38](https://github.com/flowwer-dev/pull-request-stats/issues/38#issuecomment-1171087421) Split Slack message to prevent hitting characters limit.

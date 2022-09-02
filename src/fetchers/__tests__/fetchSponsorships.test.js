@@ -6,7 +6,8 @@ const logins = [
 ];
 
 describe('Fetchers | .fetchSponsorships', () => {
-  const graphql = jest.fn(() => Promise.resolve());
+  const data = { user: { login1: true, login2: false } };
+  const graphql = jest.fn(() => Promise.resolve(data));
   const octokit = { graphql };
 
   beforeEach(() => {
@@ -14,10 +15,19 @@ describe('Fetchers | .fetchSponsorships', () => {
   });
 
   it('builds the query and fetches data from Github API', async () => {
-    await fetchSponsorships({ octokit, logins });
+    const response = await fetchSponsorships({ octokit, logins });
+    expect(response).toEqual(data);
     expect(graphql).toHaveBeenCalledTimes(1);
     expect(graphql).toHaveBeenCalledWith(
       expect.stringContaining(`isSponsoredBy(accountLogin: "${logins[0]}")`),
     );
+  });
+
+  it('returns an empty response when request fails', async () => {
+    const error = new Error("Field 'isSponsoredBy' doesn't exist on type 'User'");
+    graphql.mockImplementation(() => Promise.reject(error));
+    const response = await fetchSponsorships({ octokit, logins });
+    expect(graphql).toHaveBeenCalledTimes(1);
+    expect(response).toEqual({ user: {} });
   });
 });

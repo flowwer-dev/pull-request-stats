@@ -644,6 +644,13 @@ module.exports = (reviews) => {
 
 /***/ }),
 
+/***/ 61:
+/***/ (function(module) {
+
+module.exports = {"slack":{"logs":{"notConfigured":"Slack integration is disabled. No webhook or channel configured.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"notSponsor":"Slack integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it configured as public).","requestFailed":"Error posting Slack message: {{error}}"}}};
+
+/***/ }),
+
 /***/ 65:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -1077,9 +1084,12 @@ exports.issueCommand = issueCommand;
 /***/ }),
 
 /***/ 104:
-/***/ (function(module) {
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const core = __webpack_require__(470);
 
 const SPONSORED_ACCOUNT = 'manuelmhtr';
+const DEFAULT_RESPONSE = { user: {} };
 
 const buildQuery = (logins) => {
   const fields = logins.map(
@@ -1102,7 +1112,8 @@ module.exports = ({
   .graphql(buildQuery(logins))
   .catch((error) => {
     const msg = `Error fetching sponsorships with logins: "${JSON.stringify(logins)}"`;
-    throw new Error(`${msg}. Error: ${error}`);
+    core.debug(new Error(`${msg}. Error: ${error}`));
+    return DEFAULT_RESPONSE;
   });
 
 
@@ -10237,9 +10248,11 @@ exports.FetchError = FetchError;
 /***/ 455:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
+const integrations = __webpack_require__(61);
 const table = __webpack_require__(680);
 
 module.exports = {
+  integrations,
   table,
 };
 
@@ -14929,7 +14942,7 @@ module.exports = function bind(fn, thisArg) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.4.5","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
+module.exports = {"name":"pull-request-stats","version":"2.4.6","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
 
 /***/ }),
 
@@ -18319,12 +18332,12 @@ module.exports = async ({
   const { webhook, channel } = slack || {};
 
   if (!webhook || !channel) {
-    core.debug('Slack integration is disabled. No webhook or channel configured.');
+    core.debug(t('integrations.slack.logs.notConfigured'));
     return;
   }
 
   if (!isSponsor) {
-    core.error('Slack integration is a premium feature, available to sponsors.');
+    core.error(t('integrations.slack.errors.notSponsor'));
     return;
   }
 
@@ -18336,7 +18349,9 @@ module.exports = async ({
       iconUrl: t('table.icon'),
       username: t('table.title'),
     };
-    core.debug(`Post a Slack message with params: ${JSON.stringify(params, null, 2)}`);
+    core.debug(t('integrations.slack.logs.posting', {
+      params: JSON.stringify(params, null, 2),
+    }));
     return postToSlack(params);
   };
 
@@ -18354,12 +18369,12 @@ module.exports = async ({
   await chunks.reduce(async (promise, message) => {
     await promise;
     return send(message).catch((error) => {
-      core.error(`Error posting Slack message: ${error}`);
+      core.error(t('integrations.slack.errors.requestFailed', { error }));
       throw error;
     });
   }, Promise.resolve());
 
-  core.debug('Successfully posted to slack');
+  core.debug(t('integrations.slack.logs.success'));
 };
 
 

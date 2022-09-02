@@ -1,0 +1,13 @@
+{
+  "slack": {
+    "logs": {
+      "notConfigured": "Slack integration is disabled. No webhook or channel configured.",
+      "posting": "Post a Slack message with params: {{params}}",
+      "success": "Successfully posted to slack"
+    },
+    "errors": {
+      "notSponsor": "Slack integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it configured as public).",
+      "requestFailed": "Error posting Slack message: {{error}}"
+    }
+  }
+}
