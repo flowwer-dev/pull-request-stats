@@ -8,7 +8,7 @@ jest.mock('../../fetchers', () => ({ fetchPullRequests: jest.fn() }));
 const buildResponse = (items) => {
   const edges = [{ cursor: 'CURSOR', node: { id: 123, author: null } }];
 
-  for (let i = 0; i < items; i++) {
+  for (let i = 0; i < items; i += 1) {
     edges.push({ cursor: 'CURSOR', node: { id: i, author: {} } });
   }
 
