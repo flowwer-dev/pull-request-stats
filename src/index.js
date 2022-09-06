@@ -2,6 +2,7 @@ const get = require('lodash.get');
 const core = require('@actions/core');
 const github = require('@actions/github');
 const execute = require('./execute');
+const { t } = require('./i18n');
 
 const parseArray = (value) => value.split(',');
 
@@ -37,6 +38,7 @@ const getParams = () => {
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),
     telemetry: core.getBooleanInput('telemetry'),
+    webhook: core.getInput('webhook'),
     slack: {
       webhook: core.getInput('slack-webhook'),
       channel: core.getInput('slack-channel'),
@@ -47,9 +49,10 @@ const getParams = () => {
 const run = async () => {
   try {
     await execute(getParams());
-    core.info('Action successfully executed');
+    core.info(t('execution.logs.success'));
+    core.info(t('execution.logs.news'));
   } catch (error) {
-    core.debug(`Execution failed with error: ${error.message}`);
+    core.debug(t('execution.errors.main', error));
     core.debug(error.stack);
     core.setFailed(error.message);
   }

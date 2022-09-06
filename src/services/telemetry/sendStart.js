@@ -10,10 +10,14 @@ module.exports = ({
   currentRepo,
   limit,
   tracker,
+  slack,
+  webhook,
 }) => {
   const owner = getRepoOwner(currentRepo);
   const reposCount = (repos || []).length;
   const orgsCount = org ? 1 : 0;
+  const usingSlack = !!(slack || {}).webhook;
+  const usingWebhook = !!webhook;
 
   tracker.track('run', {
     // Necessary to build the "Used by" section in Readme:
@@ -28,5 +32,7 @@ module.exports = ({
     displayCharts,
     disableLinks,
     limit,
+    usingSlack,
+    usingWebhook,
   });
 };

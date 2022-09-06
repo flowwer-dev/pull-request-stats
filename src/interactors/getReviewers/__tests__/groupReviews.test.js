@@ -28,7 +28,7 @@ describe('Interactors | getReviewers | .groupReviews', () => {
       expect(review).toHaveProperty('submittedAt');
       expect(review).toHaveProperty('commentsCount');
       expect(review).toHaveProperty('timeToReview');
-      expect(review).toHaveProperty('pullId');
+      expect(review).toHaveProperty('pullRequestId');
       expect(review).not.toHaveProperty('isOwnPull');
       expect(review).not.toHaveProperty('author');
     }));

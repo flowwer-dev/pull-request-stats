@@ -4,9 +4,10 @@ const buildComment = require('./buildComment');
 const checkSponsorship = require('./checkSponsorship');
 const getPulls = require('./getPulls');
 const getReviewers = require('./getReviewers');
-const postSlackMessage = require('./postSlackMessage');
-const setUpReviewers = require('./setUpReviewers');
 const postComment = require('./postComment');
+const postSlackMessage = require('./postSlackMessage');
+const postWebhook = require('./postWebhook');
+const setUpReviewers = require('./setUpReviewers');
 
 module.exports = {
   alreadyPublished,
@@ -15,7 +16,8 @@ module.exports = {
   checkSponsorship,
   getPulls,
   getReviewers,
-  postSlackMessage,
-  setUpReviewers,
   postComment,
+  postSlackMessage,
+  postWebhook,
+  setUpReviewers,
 };

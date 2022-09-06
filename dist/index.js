@@ -629,8 +629,8 @@ const { sum, median, divide } = __webpack_require__(353);
 const getProperty = (list, prop) => list.map((el) => el[prop]);
 
 module.exports = (reviews) => {
-  const pullIds = getProperty(reviews, 'pullId');
-  const totalReviews = new Set(pullIds).size;
+  const pullRequestIds = getProperty(reviews, 'pullRequestId');
+  const totalReviews = new Set(pullRequestIds).size;
   const totalComments = sum(getProperty(reviews, 'commentsCount'));
 
   return {
@@ -647,7 +647,7 @@ module.exports = (reviews) => {
 /***/ 61:
 /***/ (function(module) {
 
-module.exports = {"slack":{"logs":{"notConfigured":"Slack integration is disabled. No webhook or channel configured.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"notSponsor":"Slack integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it configured as public).","requestFailed":"Error posting Slack message: {{error}}"}}};
+module.exports = {"slack":{"logs":{"notConfigured":"Slack integration is disabled. No webhook or channel configured.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"notSponsor":"Slack integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it configured as public).","requestFailed":"Error posting Slack message: {{error}}"}},"webhook":{"logs":{"notConfigured":"Webhook integration is disabled.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"requestFailed":"Error posting Webhook: {{error}}"}}};
 
 /***/ }),
 
@@ -1245,6 +1245,28 @@ module.exports = {
   assertOptions: assertOptions,
   validators: validators
 };
+
+
+/***/ }),
+
+/***/ 108:
+/***/ (function(module) {
+
+const parseReviewer = ({ contributions, ...other }) => other;
+
+module.exports = ({
+  org,
+  repos,
+  reviewers,
+  periodLength,
+}) => ({
+  reviewers: reviewers.map(parseReviewer),
+  options: {
+    periodLength,
+    organization: org || null,
+    repositories: org ? null : repos,
+  },
+});
 
 
 /***/ }),
@@ -2104,6 +2126,7 @@ const fetchPullRequestById = __webpack_require__(105);
 const fetchPullRequests = __webpack_require__(593);
 const fetchSponsorships = __webpack_require__(104);
 const postToSlack = __webpack_require__(887);
+const postToWebhook = __webpack_require__(205);
 const updatePullRequest = __webpack_require__(664);
 
 module.exports = {
@@ -2112,6 +2135,7 @@ module.exports = {
   fetchPullRequests,
   fetchSponsorships,
   postToSlack,
+  postToWebhook,
   updatePullRequest,
 };
 
@@ -2415,6 +2439,23 @@ const calculateTotals = (allStats) => STATS.reduce((prev, statName) => ({
 }), {});
 
 module.exports = calculateTotals;
+
+
+/***/ }),
+
+/***/ 205:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const axios = __webpack_require__(53);
+
+module.exports = ({
+  payload,
+  webhook,
+}) => axios({
+  method: 'post',
+  url: webhook,
+  data: payload,
+});
 
 
 /***/ }),
@@ -8356,6 +8397,26 @@ module.exports = createAgent;
 
 /***/ }),
 
+/***/ 445:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { STATS } = __webpack_require__(648);
+
+const calculatePercentage = (value, total) => {
+  if (!total) return 0;
+  return Math.min(1, Math.max(0, value / total));
+};
+
+const getContributions = (reviewer, totals) => STATS.reduce((prev, statsName) => {
+  const percentage = calculatePercentage(reviewer.stats[statsName], totals[statsName]);
+  return { ...prev, [statsName]: percentage };
+}, {});
+
+module.exports = getContributions;
+
+
+/***/ }),
+
 /***/ 448:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -10248,10 +10309,12 @@ exports.FetchError = FetchError;
 /***/ 455:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
+const execution = __webpack_require__(861);
 const integrations = __webpack_require__(61);
 const table = __webpack_require__(680);
 
 module.exports = {
+  execution,
   integrations,
   table,
 };
@@ -13833,19 +13896,43 @@ exports.default = parseProxyResponse;
 /***/ 660:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { STATS } = __webpack_require__(648);
+const { t } = __webpack_require__(781);
+const { postToWebhook } = __webpack_require__(162);
+const buildPayload = __webpack_require__(108);
 
-const calculatePercentage = (value, total) => {
-  if (!total) return 0;
-  return Math.min(1, Math.max(0, value / total));
+module.exports = async ({
+  org,
+  repos,
+  core,
+  webhook,
+  reviewers,
+  periodLength,
+}) => {
+  if (!webhook) {
+    core.debug(t('integrations.webhook.logs.notConfigured'));
+    return;
+  }
+
+  const payload = buildPayload({
+    org,
+    repos,
+    reviewers,
+    periodLength,
+  });
+
+  const params = { payload, webhook };
+
+  core.debug(t('integrations.webhook.logs.posting', {
+    params: JSON.stringify(params, null, 2),
+  }));
+
+  await postToWebhook({ payload, webhook }).catch((error) => {
+    core.error(t('integrations.webhook.errors.requestFailed', { error }));
+    throw error;
+  });
+
+  core.debug(t('integrations.webhook.logs.success'));
 };
-
-const getContributions = (reviewer, totals) => STATS.reduce((prev, statsName) => {
-  const percentage = calculatePercentage(reviewer.stats[statsName], totals[statsName]);
-  return { ...prev, [statsName]: percentage };
-}, {});
-
-module.exports = getContributions;
 
 
 /***/ }),
@@ -13868,6 +13955,7 @@ const {
   checkSponsorship,
   alreadyPublished,
   postSlackMessage,
+  postWebhook,
 } = __webpack_require__(942);
 
 const run = async (params) => {
@@ -13920,6 +14008,7 @@ const run = async (params) => {
   });
   core.debug(`Commit content built successfully: ${content}`);
 
+  await postWebhook({ ...params, core, reviewers });
   await postSlackMessage({
     ...params,
     core,
@@ -14710,6 +14799,7 @@ const get = __webpack_require__(854);
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const execute = __webpack_require__(662);
+const { t } = __webpack_require__(781);
 
 const parseArray = (value) => value.split(',');
 
@@ -14745,6 +14835,7 @@ const getParams = () => {
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),
     telemetry: core.getBooleanInput('telemetry'),
+    webhook: core.getInput('webhook'),
     slack: {
       webhook: core.getInput('slack-webhook'),
       channel: core.getInput('slack-channel'),
@@ -14755,9 +14846,10 @@ const getParams = () => {
 const run = async () => {
   try {
     await execute(getParams());
-    core.info('Action successfully executed');
+    core.info(t('execution.logs.success'));
+    core.info(t('execution.logs.news'));
   } catch (error) {
-    core.debug(`Execution failed with error: ${error.message}`);
+    core.debug(t('execution.errors.main', error));
     core.debug(error.stack);
     core.setFailed(error.message);
   }
@@ -14942,7 +15034,7 @@ module.exports = function bind(fn, thisArg) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.4.6","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"eslint src && yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
+module.exports = {"name":"pull-request-stats","version":"2.5.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"eslint src && yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
 
 /***/ }),
 
@@ -15247,7 +15339,7 @@ module.exports = (pulls) => {
     const reviews = pull.reviews
       .filter(removeOwnPulls)
       .filter(removeWithEmptyId)
-      .map((r) => ({ ...r, pullId: pull.id }));
+      .map((r) => ({ ...r, pullRequestId: pull.id }));
     return acc.concat(reviews);
   }, []);
 
@@ -18215,6 +18307,13 @@ module.exports = ({
 
 /***/ }),
 
+/***/ 861:
+/***/ (function(module) {
+
+module.exports = {"logs":{"success":"Action successfully executed","news":"\n✨ New on v2.5:\n• Slack integration\n• Webhooks integration"},"errors":{"main":"Execution failed with error: {{message}}"}};
+
+/***/ }),
+
 /***/ 864:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -18592,7 +18691,7 @@ module.exports = function () {
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const buildReviewTimeLink = __webpack_require__(922);
-const getContributions = __webpack_require__(660);
+const getContributions = __webpack_require__(445);
 const calculateTotals = __webpack_require__(202);
 const sortByStats = __webpack_require__(914);
 
@@ -18637,10 +18736,14 @@ module.exports = ({
   currentRepo,
   limit,
   tracker,
+  slack,
+  webhook,
 }) => {
   const owner = getRepoOwner(currentRepo);
   const reposCount = (repos || []).length;
   const orgsCount = org ? 1 : 0;
+  const usingSlack = !!(slack || {}).webhook;
+  const usingWebhook = !!webhook;
 
   tracker.track('run', {
     // Necessary to build the "Used by" section in Readme:
@@ -18655,6 +18758,8 @@ module.exports = ({
     displayCharts,
     disableLinks,
     limit,
+    usingSlack,
+    usingWebhook,
   });
 };
 
@@ -20194,9 +20299,10 @@ const buildComment = __webpack_require__(641);
 const checkSponsorship = __webpack_require__(402);
 const getPulls = __webpack_require__(591);
 const getReviewers = __webpack_require__(164);
-const postSlackMessage = __webpack_require__(878);
-const setUpReviewers = __webpack_require__(901);
 const postComment = __webpack_require__(173);
+const postSlackMessage = __webpack_require__(878);
+const postWebhook = __webpack_require__(660);
+const setUpReviewers = __webpack_require__(901);
 
 module.exports = {
   alreadyPublished,
@@ -20205,9 +20311,10 @@ module.exports = {
   checkSponsorship,
   getPulls,
   getReviewers,
-  postSlackMessage,
-  setUpReviewers,
   postComment,
+  postSlackMessage,
+  postWebhook,
+  setUpReviewers,
 };
 
 

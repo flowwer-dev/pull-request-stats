@@ -1,4 +1,3 @@
-// const { getSlackCharsLimit } = require('../../../config');
 const splitInChunks = require('../splitInChunks');
 
 const buildBlock = (str, length) => `${str}`.padEnd(length, '.');

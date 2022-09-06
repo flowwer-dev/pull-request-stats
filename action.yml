@@ -39,6 +39,9 @@ inputs:
     description: 'Prevents from adding any external links in the stats'
     required: false
     default: false
+  webhook:
+    description: 'A webhook URL to post resulting stats.'
+    required: false
   telemetry:
     description: 'Indicates if the action is allowed to send monitoring data to the developer.'
     required: false

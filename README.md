@@ -53,8 +53,9 @@ The possible inputs for this action are:
 | `sort-by` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
 | `publish-as` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`. | `COMMENT` |
 | `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps me improve this action. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`true`|
-| `slack-webhook` | A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`null`|
+| `slack-webhook` | **🔥 New.** A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`null`|
 | `slack-channel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slack-webhook` is configured. |`null`|
+| `webhook` | **🔥 New.** A webhook URL to send the resulting stats as JSON (integrate with Zapier, IFTTT...). See [full documentation here](/docs/webhook.md). |`null`|
 
 
 ## Examples
@@ -201,6 +202,7 @@ This action offers some premium features only for sponsors:
 
 * Disabling telemetry.
 * Slack integration.
+* Comming soon: Microsoft teams and discord integrations.
 
 No minimum amount is required for now. In the future, a minimum monthly sponsorship will be inforced to access premium features.
 

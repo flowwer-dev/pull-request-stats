@@ -9,5 +9,15 @@
       "notSponsor": "Slack integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it configured as public).",
       "requestFailed": "Error posting Slack message: {{error}}"
     }
+  },
+  "webhook": {
+    "logs": {
+      "notConfigured": "Webhook integration is disabled.",
+      "posting": "Post a Slack message with params: {{params}}",
+      "success": "Successfully posted to slack"
+    },
+    "errors": {
+      "requestFailed": "Error posting Webhook: {{error}}"
+    }
   }
 }

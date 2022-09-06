@@ -13,6 +13,7 @@ const {
   checkSponsorship,
   alreadyPublished,
   postSlackMessage,
+  postWebhook,
 } = require('./interactors');
 
 const run = async (params) => {
@@ -65,6 +66,7 @@ const run = async (params) => {
   });
   core.debug(`Commit content built successfully: ${content}`);
 
+  await postWebhook({ ...params, core, reviewers });
   await postSlackMessage({
     ...params,
     core,

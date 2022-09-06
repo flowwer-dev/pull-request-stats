@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.5.0] - 2022-09-05
+### Added
+- Webhooks integration.
+
 ## [2.4.6] - 2022-09-01
 ### Fixed
 - [#48](https://github.com/flowwer-dev/pull-request-stats/issues/48) Prevent sponsorship query error on Github Enterprise environments.

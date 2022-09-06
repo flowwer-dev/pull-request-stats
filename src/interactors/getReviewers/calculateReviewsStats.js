@@ -3,8 +3,8 @@ const { sum, median, divide } = require('../../utils');
 const getProperty = (list, prop) => list.map((el) => el[prop]);
 
 module.exports = (reviews) => {
-  const pullIds = getProperty(reviews, 'pullId');
-  const totalReviews = new Set(pullIds).size;
+  const pullRequestIds = getProperty(reviews, 'pullRequestId');
+  const totalReviews = new Set(pullRequestIds).size;
   const totalComments = sum(getProperty(reviews, 'commentsCount'));
 
   return {

@@ -7,7 +7,7 @@ module.exports = (pulls) => {
     const reviews = pull.reviews
       .filter(removeOwnPulls)
       .filter(removeWithEmptyId)
-      .map((r) => ({ ...r, pullId: pull.id }));
+      .map((r) => ({ ...r, pullRequestId: pull.id }));
     return acc.concat(reviews);
   }, []);
 
