@@ -53,7 +53,7 @@ inputs:
     description: 'The Slack channel where stats will be posted. Required when a Slack webhook is configured.'
     required: false
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
 branding:
   icon: 'award'
