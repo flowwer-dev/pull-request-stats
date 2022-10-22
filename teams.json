@@ -1,0 +1,317 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+      {
+          "type": "Container",
+          "id": "4a4631f4-8373-6aa4-9c42-0eb9be92bea4",
+          "padding": "Small",
+          "items": [
+              {
+                  "type": "TextBlock",
+                  "id": "f41ff117-10ce-4f16-372e-fb2948c18d4f",
+                  "text": "Stats of the last 30 days for [yotepresto.com](yotepresto.com)",
+                  "wrap": true,
+                  "weight": "Lighter"
+              }
+          ]
+      },
+      {
+          "type": "ColumnSet",
+          "columns": [
+              {
+                  "type": "Column",
+                  "id": "113cdbc5-8433-44c1-f3a1-6fe66d17546e",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "TextBlock",
+                          "id": "b55aa3eb-f66f-eef1-245c-7aab642da9eb",
+                          "text": "User",
+                          "wrap": true,
+                          "weight": "Bolder"
+                      }
+                  ],
+                  "verticalContentAlignment": "Center"
+              },
+              {
+                  "type": "Column",
+                  "id": "721acc52-3506-2191-dd77-b083484e5b5a",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "TextBlock",
+                          "id": "a54acfc5-b4f8-838a-532a-f34e5e718a2a",
+                          "text": "Total Reviews",
+                          "wrap": true,
+                          "weight": "Bolder",
+                          "spacing": "None"
+                      }
+                  ],
+                  "spacing": "Small",
+                  "verticalContentAlignment": "Center"
+              },
+              {
+                  "type": "Column",
+                  "id": "6137df23-0b2d-4fec-c485-bd54e9998a7c",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "TextBlock",
+                          "id": "2eb6714c-1961-cbaf-34a4-d995e38d94bd",
+                          "text": "Time to review",
+                          "weight": "Bolder",
+                          "spacing": "None",
+                          "wrap": true
+                      }
+                  ]
+              },
+              {
+                  "type": "Column",
+                  "id": "21555a99-e013-3960-e339-dabec7054e23",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "TextBlock",
+                          "id": "f98783d8-9cc8-87de-cef4-84f5bd24ecd8",
+                          "text": "Total Comments",
+                          "wrap": true,
+                          "weight": "Bolder",
+                          "spacing": "None"
+                      }
+                  ]
+              }
+          ],
+          "padding": "Small",
+          "horizontalAlignment": "Left",
+          "style": "emphasis",
+          "spacing": "Small"
+      },
+      {
+          "type": "ColumnSet",
+          "id": "5115c953-b0b2-085d-6fbe-5d81ef7cd00a",
+          "columns": [
+              {
+                  "type": "Column",
+                  "id": "51db5e00-fe1e-ebed-1616-6386f7073c18",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "ColumnSet",
+                          "columns": [
+                              {
+                                  "type": "Column",
+                                  "id": "96a8f067-a2f6-e174-f1d1-3da66d0a2fc4",
+                                  "padding": "None",
+                                  "width": "auto",
+                                  "items": [
+                                      {
+                                          "type": "Image",
+                                          "id": "7d45cce0-2eba-65c7-57f6-aef6aed8ffd6",
+                                          "url": "https://avatars.githubusercontent.com/u/1031639?v=4",
+                                          "altText": "manuelmhtr",
+                                          "size": "Small",
+                                          "style": "Person",
+                                          "spacing": "None",
+                                          "horizontalAlignment": "Left",
+                                          "width": "32px",
+                                          "height": "32px"
+                                      }
+                                  ]
+                              },
+                              {
+                                  "type": "Column",
+                                  "id": "fb74a656-e79a-4b16-bc09-d97036ac70a9",
+                                  "padding": "None",
+                                  "width": "stretch",
+                                  "items": [
+                                      {
+                                          "type": "TextBlock",
+                                          "id": "c8e5ba18-cf6c-c1fb-266b-e68b5559864b",
+                                          "text": "manuelmhtr",
+                                          "wrap": true,
+                                          "horizontalAlignment": "Left",
+                                          "spacing": "Small"
+                                      }
+                                  ],
+                                  "verticalContentAlignment": "Center"
+                              }
+                          ],
+                          "padding": "None"
+                      }
+                  ],
+                  "spacing": "Small",
+                  "separator": true
+              },
+              {
+                  "type": "Column",
+                  "id": "1532842e-9571-35ac-feb8-37b7614ad65a",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "TextBlock",
+                          "id": "e7362ead-4f46-416e-e16e-4bfe38900ae0",
+                          "text": "41",
+                          "wrap": true
+                      }
+                  ],
+                  "spacing": "Small",
+                  "verticalContentAlignment": "Center"
+              },
+              {
+                  "type": "Column",
+                  "id": "077ece93-16c7-bd1e-286f-b8cfd4fed044",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "TextBlock",
+                          "id": "ef977db3-dee4-0e13-d633-9ec58ea55dc2",
+                          "text": "26m",
+                          "wrap": true
+                      }
+                  ],
+                  "spacing": "Small",
+                  "verticalContentAlignment": "Center"
+              },
+              {
+                  "type": "Column",
+                  "id": "5fce2ab1-9ff0-ba9c-3963-e724f406f68b",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "TextBlock",
+                          "id": "a71484b4-ed4b-cbdc-a5d1-d13fd997645e",
+                          "text": "30",
+                          "wrap": true
+                      }
+                  ],
+                  "spacing": "Small",
+                  "verticalContentAlignment": "Center"
+              }
+          ],
+          "padding": "Small",
+          "spacing": "None",
+          "separator": true
+      },
+      {
+          "type": "ColumnSet",
+          "id": "11b3ecc6-e834-c99a-a5b9-c84ca3507c4a",
+          "columns": [
+              {
+                  "type": "Column",
+                  "id": "20f0a3a0-5d46-7493-4636-a6527693cf23",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "ColumnSet",
+                          "columns": [
+                              {
+                                  "type": "Column",
+                                  "id": "00ec6ca4-b5b5-9434-8725-e321d47eacc4",
+                                  "padding": "None",
+                                  "width": "auto",
+                                  "items": [
+                                      {
+                                          "type": "Image",
+                                          "id": "c2316c8e-eaae-1694-1952-616c98b42a9c",
+                                          "url": "https://avatars.githubusercontent.com/u/1031639?v=4",
+                                          "altText": "manuelmhtr",
+                                          "size": "Small",
+                                          "style": "Person",
+                                          "spacing": "None",
+                                          "horizontalAlignment": "Left",
+                                          "width": "32px",
+                                          "height": "32px"
+                                      }
+                                  ]
+                              },
+                              {
+                                  "type": "Column",
+                                  "id": "b1d7f9d7-b700-fe81-176a-5c58af24ebdb",
+                                  "padding": "None",
+                                  "width": "stretch",
+                                  "items": [
+                                      {
+                                          "type": "TextBlock",
+                                          "id": "3fa75c88-1ac3-fff9-2abf-89452726348a",
+                                          "text": "manuelmhtr",
+                                          "wrap": true,
+                                          "horizontalAlignment": "Left",
+                                          "spacing": "Small"
+                                      }
+                                  ],
+                                  "verticalContentAlignment": "Center"
+                              }
+                          ],
+                          "padding": "None"
+                      }
+                  ],
+                  "spacing": "Small",
+                  "separator": true
+              },
+              {
+                  "type": "Column",
+                  "id": "1df09895-48ee-334b-234d-c90a2a8cd2fb",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "TextBlock",
+                          "id": "88d2edad-e4ef-bf68-b0f6-e3d2bf92e547",
+                          "text": "41",
+                          "wrap": true
+                      }
+                  ],
+                  "spacing": "Small",
+                  "verticalContentAlignment": "Center"
+              },
+              {
+                  "type": "Column",
+                  "id": "85ff8d1a-5d51-08f3-847a-155ee08995d7",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "TextBlock",
+                          "id": "1d8ac7fb-1f7a-c3fe-691d-948bc89aceb3",
+                          "text": "26m",
+                          "wrap": true
+                      }
+                  ],
+                  "spacing": "Small",
+                  "verticalContentAlignment": "Center"
+              },
+              {
+                  "type": "Column",
+                  "id": "331d9331-f649-787a-da70-1dcd36da1ee8",
+                  "padding": "None",
+                  "width": "stretch",
+                  "items": [
+                      {
+                          "type": "TextBlock",
+                          "id": "9c390215-e6a3-1b12-8ecc-056cbe4b1551",
+                          "text": "30",
+                          "wrap": true
+                      }
+                  ],
+                  "spacing": "Small",
+                  "verticalContentAlignment": "Center"
+              }
+          ],
+          "padding": "Small",
+          "spacing": "None",
+          "separator": true
+      }
+  ],
+  "padding": "None"
+}
