@@ -9,7 +9,9 @@ class BaseSplitter {
   }
 
   get blockSize() {
-    if (!this.blockSizeMemo) this.blockSizeMemo = Math.max(1, this.getSizePerBlock());
+    if (!this.blockSizeMemo) {
+      this.blockSizeMemo = Math.max(1, this.constructor.calculateSizePerBlock(this.message));
+    }
     return this.blockSizeMemo;
   }
 
@@ -18,26 +20,38 @@ class BaseSplitter {
     return this.chunksMemo;
   }
 
-  static split(prev, message) {
+  split(prev, message) {
     const blocksToSplit = this.calculateBlocksToSplit(message);
     if (!blocksToSplit) return [...prev, message];
-    const [first, last] = this.splitBlocks(message, blocksToSplit);
+    const [first, last] = this.constructor.splitBlocks(message, blocksToSplit);
     return this.split([...prev, first], last);
   }
 
-  static calculateBlocksToSplit(msg) {
-    const blocksCount = this.getBlocksCount(msg);
-    const currentSize = this.calculateSize(msg);
+  calculateBlocksToSplit(message) {
+    const blocksCount = this.constructor.getBlocksCount(message);
+    const currentSize = this.constructor.calculateSize(message);
     const diff = currentSize - this.limit;
     if (diff < 0 || blocksCount === 1) return 0;
 
     const blocksSpace = Math.ceil(diff / this.blockSize);
     const blocksToSplit = Math.max(1, Math.min(blocksCount - 1, blocksSpace));
-    const [firsts] = this.splitBlocks(msg, blocksToSplit);
+    const [firsts] = this.constructor.splitBlocks(message, blocksToSplit);
     return this.calculateBlocksToSplit(firsts) || blocksToSplit;
   }
 
-  static splitBlocks(...) {
+  static splitBlocks() {
+    throw new Error('Not implemented');
+  }
+
+  static calculateSize() {
+    throw new Error('Not implemented');
+  }
+
+  static getBlocksCount() {
+    throw new Error('Not implemented');
+  }
+
+  static calculateSizePerBlock() {
     throw new Error('Not implemented');
   }
 }
