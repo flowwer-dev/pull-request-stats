@@ -70,6 +70,7 @@ describe('Services | Splitter | SlackSplitter', () => {
   describe('.calculateSize', () => {
     it('returns the length of the message parsed to JSON', () => {
       const result = SlackSplitter.calculateSize(message);
+      expect(result > 0).toEqual(true);
       expect(result).toEqual(JSON.stringify(message).length);
     });
   });

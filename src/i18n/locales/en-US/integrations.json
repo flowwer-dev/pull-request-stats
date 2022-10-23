@@ -6,8 +6,19 @@
       "success": "Successfully posted to slack"
     },
     "errors": {
-      "notSponsor": "Slack integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it configured as public).",
+      "notSponsor": "Slack integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it is configured as public).",
       "requestFailed": "Error posting Slack message: {{error}}"
+    }
+  },
+  "teams": {
+    "logs": {
+      "notConfigured": "Microsoft Teams integration is disabled. No webhook configured.",
+      "posting": "Post a MS Teams message with params: {{params}}",
+      "success": "Successfully posted to MS Teams"
+    },
+    "errors": {
+      "notSponsor": "Microsoft Teams integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it is configured as public).",
+      "requestFailed": "Error posting MS Teams message: {{error}}"
     }
   },
   "webhook": {

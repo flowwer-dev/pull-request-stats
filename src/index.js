@@ -43,6 +43,9 @@ const getParams = () => {
       webhook: core.getInput('slack-webhook'),
       channel: core.getInput('slack-channel'),
     },
+    teams: {
+      webhook: core.getInput('teams-webhook'),
+    },
   };
 };
 

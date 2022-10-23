@@ -1,4 +1,4 @@
-const buildSlackMessage = require('../index');
+const buildMessage = require('../index');
 const buildSubtitle = require('../buildSubtitle');
 const buildReviewer = require('../buildReviewer');
 
@@ -16,14 +16,14 @@ const defaultOptions = {
   displayCharts: 'DISPLAY CHARTS',
 };
 
-describe('Interactors | postSlackMessage | .buildSlackMessage', () => {
+describe('Interactors | postSlackMessage | .buildMessage', () => {
   beforeEach(() => {
     buildSubtitle.mockClear();
     buildReviewer.mockClear();
   });
 
   it('returns the expected structure', () => {
-    const response = buildSlackMessage({ ...defaultOptions });
+    const response = buildMessage({ ...defaultOptions });
     expect(response).toEqual({
       blocks: [
         SUBTITLE,
@@ -33,7 +33,7 @@ describe('Interactors | postSlackMessage | .buildSlackMessage', () => {
   });
 
   it('calls builders with the correct parameters', () => {
-    buildSlackMessage({ ...defaultOptions });
+    buildMessage({ ...defaultOptions });
     expect(buildSubtitle).toHaveBeenCalledWith({
       t: expect.anything(),
       pullRequest: defaultOptions.pullRequest,
@@ -50,7 +50,7 @@ describe('Interactors | postSlackMessage | .buildSlackMessage', () => {
 
   it('builds a reviewers per each passed', () => {
     const reviewers = ['REVIEWER 1', 'REVIEWER 2', 'REVIEWER 3'];
-    buildSlackMessage({ ...defaultOptions, reviewers });
+    buildMessage({ ...defaultOptions, reviewers });
     expect(buildReviewer).toHaveBeenCalledTimes(reviewers.length);
   });
 });

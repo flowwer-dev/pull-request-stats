@@ -1,7 +1,7 @@
 const { t } = require('../../i18n');
 const { postToSlack } = require('../../fetchers');
 const { SlackSplitter } = require('../../services/splitter');
-const buildSlackMessage = require('./buildSlackMessage');
+const buildMessage = require('./buildMessage');
 
 module.exports = async ({
   org,
@@ -41,7 +41,7 @@ module.exports = async ({
     return postToSlack(params);
   };
 
-  const fullMessage = buildSlackMessage({
+  const fullMessage = buildMessage({
     org,
     repos,
     reviewers,
