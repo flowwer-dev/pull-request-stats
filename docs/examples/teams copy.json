@@ -1,0 +1,29 @@
+{
+    "type": "message",
+    "attachments": [
+        {
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "type": "AdaptiveCard",
+            "version": "1.0",
+            "msteams": {
+                "width": "Full"
+            },
+            "body": [
+                {
+                    "type": "Container",
+                    "id": "4a4631f4-8373-6aa4-9c42-0eb9be92bea4",
+                    "padding": "Medium",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "id": "f41ff117-10ce-4f16-372e-fb2948c18d4f",
+                            "text": "Stats of the last 30 days for [myorganization](yotepresto.com)",
+                            "wrap": true,
+                            "weight": "Lighter"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

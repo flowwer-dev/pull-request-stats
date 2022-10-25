@@ -13,6 +13,7 @@ const {
   checkSponsorship,
   alreadyPublished,
   postSlackMessage,
+  postTeamsMessage,
   postWebhook,
 } = require('./interactors');
 
@@ -66,13 +67,10 @@ const run = async (params) => {
   });
   core.debug(`Commit content built successfully: ${content}`);
 
-  await postWebhook({ ...params, core, reviewers });
-  await postSlackMessage({
-    ...params,
-    core,
-    reviewers,
-    pullRequest,
-  });
+  const whParams = { ...params, core, reviewers };
+  await postWebhook(whParams);
+  await postSlackMessage({ ...whParams, pullRequest });
+  await postTeamsMessage({ ...whParams, pullRequest });
 
   if (!pullRequestId) return;
   await postComment({

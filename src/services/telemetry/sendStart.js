@@ -11,12 +11,14 @@ module.exports = ({
   limit,
   tracker,
   slack,
+  teams,
   webhook,
 }) => {
   const owner = getRepoOwner(currentRepo);
   const reposCount = (repos || []).length;
   const orgsCount = org ? 1 : 0;
   const usingSlack = !!(slack || {}).webhook;
+  const usingTeams = !!(teams || {}).webhook;
   const usingWebhook = !!webhook;
 
   tracker.track('run', {
@@ -33,6 +35,7 @@ module.exports = ({
     disableLinks,
     limit,
     usingSlack,
+    usingTeams,
     usingWebhook,
   });
 };

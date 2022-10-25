@@ -9,7 +9,7 @@ The objective of this action is to:
 
 * Reduce the time taken to review the pull requests.
 * Encourage quality on reviews.
-* Help deciding which people to assign as reviewers.
+* Help to decide which people to assign as reviewers.
 
 Running this action will add a section at the bottom of your pull requests description:
 
@@ -19,9 +19,11 @@ Each reviewer has a link pointing to their [historical behavior](https://app.flo
 
 ![](/assets/historical.png)
 
-Or integrate this action with **Slack**:
+Or send the data to your favorite tools by using the integrations available:
 
-![](/assets/slack.png)
+| <a href="/docs/slack.md"><img src="/assets/slack-logo.jpg" width="64"></a><br/>[Slack](/docs/slack.md) | <a href="/docs/teams.md"><img src="/assets/teams-logo.jpg" width="64"></a><br/>[MS Teams](/docs/teams.md) | <a href="/docs/webhook.md"><img src="/assets/webhook-logo.jpg" width="64"></a><br/>[Webhooks](/docs/webhook.md) |
+| :--: | :--: | :--: |
+
 
 ## Privacy
 * **No repository data is collected**, stored or distributed by this GitHub action. This action is **state-less**.
@@ -53,8 +55,9 @@ The possible inputs for this action are:
 | `sort-by` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
 | `publish-as` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`. | `COMMENT` |
 | `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps me improve this action. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`true`|
-| `slack-webhook` | **🔥 New.** A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`null`|
+| `slack-webhook` | **🔥 New.** A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/slack.md).  |`null`|
 | `slack-channel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slack-webhook` is configured. |`null`|
+| `teams-webhook` | **🔥 New.** A Microsoft Teams webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/teams.md).  |`null`|
 | `webhook` | **🔥 New.** A webhook URL to send the resulting stats as JSON (integrate with Zapier, IFTTT...). See [full documentation here](/docs/webhook.md). |`null`|
 
 
@@ -150,34 +153,13 @@ The stats are calculated as following:
 * **Total reviews:** It is the count of all Pull Requests reviewed by a person in the period.
 * **Total comments:** It is the count of all the comments while reviewing other user's Pull Requests in the period (comments in own PRs don't count).
 
-## Slack integration
+## Integrations 🔌
 
-To configure the Slack, integration:
+Check the guide for the tool you want to integrate:
 
-1. [Create a webhook](https://slack.com/help/articles/115005265063-Incoming-webhooks-for-Slack) in your workspace (you must be a Slack admin). It should look like this: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`. Check out [this tutorial](https://www.youtube.com/watch?v=6NJuntZSJVA) if you have questions on how to get the webhook URL.
-2. Set the `slack-webhook` (from previous step) and `slack-channel` (don't forget to include the `#` character) parameters in this action.
-3. Ready to go!
-
-Since it may be quite annoying to receive a Slack notification everytime someone creates a pull request, it is recommended to configure this action to be executed every while using the `schedule` trigger. For example, every monday at 9am UTC:
-
-```yml
-name: Pull Request Stats
-
-on:
-  schedule:
-    - cron:  '0 9 * * 1'
-
-jobs:
-  stats:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@master
-        with:
-          slack-channel: '#mystatschannel'
-          slack-webhook: 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
-          # slack-webhook: ${{ secrets.SLACK_WEBHOOK }} You may want to store this value as a secret.
-```
+* [Slack](/docs/slack.md)
+* [Microsoft Teams](/docs/teams.md)
+* [Webhooks](/docs/webhook.md)
 
 ## Troubleshooting
 
@@ -202,17 +184,18 @@ This action offers some premium features only for sponsors:
 
 * Disabling telemetry.
 * Slack integration.
-* Comming soon: Microsoft teams and discord integrations.
+* Microsoft Teams integration.
+* Comming soon: Discord integration, web version.
 
 No minimum amount is required for now. In the future, a minimum monthly sponsorship will be inforced to access premium features.
 
-Suggested sponsorship is $20 usd / month. Thanks for your support! 💙
+The minimum suggested sponsorship is $20 usd / month. Thanks for your support! 💙
 
 ## Used by
 
 Used by hundreds of successful teams:
 
-| <a href="https://www.sixt.com/"><img src="https://avatars.githubusercontent.com/u/25441140?s=200&v=4" width="64"></a><br/>Sixt | <a href="https://shop.lululemon.com"><img src="https://avatars.githubusercontent.com/u/17386352?s=200&v=4" width="64"></a><br/>Lululemon | <a href="https://www.deliveryhero.com"><img src="https://avatars.githubusercontent.com/u/7225556?s=200&v=4" width="64"></a><br/>Delivery H | <a href="https://jokr.com/"><img src="https://avatars.githubusercontent.com/u/84920342?s=200&v=4" width="64"></a><br/>JOKR | <a href="http://qatalog.com/"><img src="https://avatars.githubusercontent.com/u/56023495?s=200&v=4" width="64"></a><br/>Qatalog | <a href="https://firework.tv/"><img src="https://avatars.githubusercontent.com/u/25275837?s=200&v=4" width="64"></a><br/>LOOP | <a href="https://www.usehatchapp.com/"><img src="https://avatars.githubusercontent.com/u/38331218?s=200&v=4" width="64"></a><br/>Hatch | <a href="https://www.zenfi.mx/"><img src="https://avatars.githubusercontent.com/u/68744962?s=200&v=4" width="64"></a><br/>Zenfi |
+| <a href="https://www.sixt.com/"><img src="https://avatars.githubusercontent.com/u/25441140?s=200&v=4" width="64"></a><br/>Sixt | <a href="https://shop.lululemon.com"><img src="https://avatars.githubusercontent.com/u/17386352?s=200&v=4" width="64"></a><br/>Lululemon | <a href="https://www.deliveryhero.com"><img src="https://avatars.githubusercontent.com/u/7225556?s=200&v=4" width="64"></a><br/>Delivery H | <a href="https://jokr.com"><img src="https://avatars.githubusercontent.com/u/84920342?s=200&v=4" width="64"></a><br/>JOKR | <a href="https://lego.com"><img src="https://avatars.githubusercontent.com/u/4530164?s=200&v=4" width="64"></a><br/>Lego | <a href="https://firework.tv/"><img src="https://avatars.githubusercontent.com/u/25275837?s=200&v=4" width="64"></a><br/>LOOP | <a href="https://www.usehatchapp.com/"><img src="https://avatars.githubusercontent.com/u/38331218?s=200&v=4" width="64"></a><br/>Hatch | <a href="https://www.zenfi.mx/"><img src="https://avatars.githubusercontent.com/u/68744962?s=200&v=4" width="64"></a><br/>Zenfi |
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
 | <a href="https://www.trivago.com/"><img src="https://avatars.githubusercontent.com/u/1481788?s=200&v=4" width="64"></a><br/>**Trivago** | <a href="https://discovery.com"><img src="https://avatars.githubusercontent.com/u/48454976?s=200&v=4" width="64"></a><br/>**Discovery** | <a href="https://www.additionwealth.com/"><img src="https://avatars.githubusercontent.com/u/86253902?s=200&v=4" width="64"></a><br/>**Addition** | <a href="https://fauna.com/"><img src="https://avatars.githubusercontent.com/u/1477000?s=200&v=4" width="64"></a><br/>**Fauna** | <a href="http://open.cdc.gov/"><img src="https://avatars.githubusercontent.com/u/12104975?s=200&v=4" width="64"></a><br/>**CDC** | <a href="https://www.wecasa.fr/"><img src="https://avatars.githubusercontent.com/u/56955553?s=200&v=4" width="64"></a><br/>**Wecasa** | <a href="https://bolt.eu/"><img src="https://avatars.githubusercontent.com/u/37693190?s=200&v=4" width="64"></a><br/>**Bolt** | <a href="https://republic.com/"><img src="https://avatars.githubusercontent.com/u/18252987?s=200&v=4" width="64"></a><br/>**Republic** |
 

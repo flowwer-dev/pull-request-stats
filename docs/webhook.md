@@ -1,6 +1,8 @@
-# Posting stats to a webhook
+# Posting stats to a Webhook
 
-This action can also send the results to a webhook of your preference. This way you can send them to [Zapier](https://zapier.com/), [IFTTT](https://ifttt.com/), [Automate.io](https://automate.io/) and more, to take actions based on the results.
+> 🔥 This integration does **not** require a sponsorship. Enjoy!
+
+This action can also send the results to a webhook of your preference. This way, you can send them to [Zapier](https://zapier.com/), [IFTTT](https://ifttt.com/), [Automate.io](https://automate.io/) and more, to take actions based on the results.
 
 Just send a URL in the `webhook` parameter. For example:
 
@@ -23,7 +25,7 @@ jobs:
           # webhook: ${{ secrets.WEBHOOK_URL }} You may want to store this value as a secret.
 ```
 
-This action will calculate the pull request reviewers stats for the repos `piedpiper/repo1` and `piedpiper/repo2`, each Friday at 14pm, and send the results to the webhook using a `POST` request.
+This action will calculate the pull request reviewers' stats for the repos `piedpiper/repo1` and `piedpiper/repo2`, each Friday at 14pm and send the results to the webhook using a `POST` request.
 
 ## Webhook content
 
@@ -104,6 +106,6 @@ The webhook payload will include:
 
 ## What's next?
 
-I'm building other integrations for this actions, [I'd love to hear](https://github.com/flowwer-dev/pull-request-stats/discussions/new) which integration you want and how are you planning to use webhooks.
+I'm building other integrations for this action, [I'd love to hear](https://github.com/flowwer-dev/pull-request-stats/discussions/new) which integration you want and how you are planning to use webhooks.
 
 Support this project by becoming a [sponsor](https://github.com/sponsors/manuelmhtr) 💙

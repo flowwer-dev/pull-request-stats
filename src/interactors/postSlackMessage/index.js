@@ -1,7 +1,7 @@
 const { t } = require('../../i18n');
 const { postToSlack } = require('../../fetchers');
-const buildSlackMessage = require('./buildSlackMessage');
-const splitInChunks = require('./splitInChunks');
+const { SlackSplitter } = require('../../services/splitter');
+const buildMessage = require('./buildMessage');
 
 module.exports = async ({
   org,
@@ -41,7 +41,7 @@ module.exports = async ({
     return postToSlack(params);
   };
 
-  const fullMessage = buildSlackMessage({
+  const fullMessage = buildMessage({
     org,
     repos,
     reviewers,
@@ -51,7 +51,7 @@ module.exports = async ({
     displayCharts,
   });
 
-  const chunks = splitInChunks(fullMessage);
+  const { chunks } = new SlackSplitter({ message: fullMessage });
   await chunks.reduce(async (promise, message) => {
     await promise;
     return send(message).catch((error) => {
