@@ -182,6 +182,46 @@ module.exports = eval("require")("encoding");
 
 /***/ }),
 
+/***/ 22:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { getTeamsBytesLimit } = __webpack_require__(508);
+const { median } = __webpack_require__(353);
+const BaseSplitter = __webpack_require__(583);
+
+class TeamsSplitter extends BaseSplitter {
+  static defaultLimit() {
+    return getTeamsBytesLimit();
+  }
+
+  static splitBlocks(body, count) {
+    const firsts = body.slice(0, count);
+    const lasts = body.slice(count);
+    return [firsts, lasts];
+  }
+
+  static calculateSize(body) {
+    return Buffer.byteLength(JSON.stringify(body));
+  }
+
+  static getBlocksCount(body) {
+    return body.length;
+  }
+
+  static calculateSizePerBlock(body) {
+    const blockLengths = body
+      .filter(({ type }) => type === 'ColumnSet')
+      .map((block) => this.calculateSize(block));
+
+    return Math.ceil(median(blockLengths));
+  }
+}
+
+module.exports = TeamsSplitter;
+
+
+/***/ }),
+
 /***/ 26:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -565,6 +605,20 @@ module.exports = {
 
 /***/ }),
 
+/***/ 40:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const SlackSplitter = __webpack_require__(681);
+const TeamsSplitter = __webpack_require__(22);
+
+module.exports = {
+  SlackSplitter,
+  TeamsSplitter,
+};
+
+
+/***/ }),
+
 /***/ 49:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -647,7 +701,7 @@ module.exports = (reviews) => {
 /***/ 61:
 /***/ (function(module) {
 
-module.exports = {"slack":{"logs":{"notConfigured":"Slack integration is disabled. No webhook or channel configured.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"notSponsor":"Slack integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it configured as public).","requestFailed":"Error posting Slack message: {{error}}"}},"webhook":{"logs":{"notConfigured":"Webhook integration is disabled.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"requestFailed":"Error posting Webhook: {{error}}"}}};
+module.exports = {"slack":{"logs":{"notConfigured":"Slack integration is disabled. No webhook or channel configured.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"notSponsor":"Slack integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it is configured as public).","requestFailed":"Error posting Slack message: {{error}}"}},"teams":{"logs":{"notConfigured":"Microsoft Teams integration is disabled. No webhook configured.","posting":"Post a MS Teams message with params: {{params}}","success":"Successfully posted to MS Teams"},"errors":{"notSponsor":"Microsoft Teams integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it is configured as public).","requestFailed":"Error posting MS Teams message: {{error}}"}},"webhook":{"logs":{"notConfigured":"Webhook integration is disabled.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"requestFailed":"Error posting Webhook: {{error}}"}}};
 
 /***/ }),
 
@@ -2303,85 +2357,6 @@ module.exports = ({
 
   return getSources();
 };
-
-
-/***/ }),
-
-/***/ 183:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { durationToString } = __webpack_require__(353);
-
-const MEDALS = [
-  ':first_place_medal:',
-  ':second_place_medal:',
-  ':third_place_medal:',
-]; /* 🥇🥈🥉 */
-
-const getUsername = ({ index, reviewer, displayCharts }) => {
-  const { login, avatarUrl } = reviewer.author;
-
-  const medal = displayCharts ? MEDALS[index] : null;
-  const suffix = medal ? ` ${medal}` : '';
-
-  return {
-    type: 'context',
-    elements: [
-      {
-        type: 'image',
-        image_url: avatarUrl,
-        alt_text: login,
-      },
-      {
-        emoji: true,
-        type: 'plain_text',
-        text: `${login}${suffix}`,
-      },
-    ],
-  };
-};
-
-const getStats = ({ t, reviewer, disableLinks }) => {
-  const { stats, urls } = reviewer;
-  const timeToReviewStr = durationToString(stats.timeToReview);
-  const timeToReview = disableLinks
-    ? timeToReviewStr
-    : `<${urls.timeToReview}|${timeToReviewStr}>`;
-
-  return {
-    type: 'section',
-    fields: [
-      {
-        type: 'mrkdwn',
-        text: `*${t('table.columns.totalReviews')}:* ${stats.totalReviews}`,
-      },
-      {
-        type: 'mrkdwn',
-        text: `*${t('table.columns.totalComments')}:* ${stats.totalComments}`,
-      },
-      {
-        type: 'mrkdwn',
-        text: `*${t('table.columns.timeToReview')}:* ${timeToReview}`,
-      },
-    ],
-  };
-};
-
-const getDivider = () => ({
-  type: 'divider',
-});
-
-module.exports = ({
-  t,
-  index,
-  reviewer,
-  disableLinks,
-  displayCharts,
-}) => [
-  getUsername({ index, reviewer, displayCharts }),
-  getStats({ t, reviewer, disableLinks }),
-  getDivider(),
-];
 
 
 /***/ }),
@@ -5776,47 +5751,6 @@ module.exports = ({
 
 /***/ }),
 
-/***/ 337:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { t } = __webpack_require__(781);
-const buildSubtitle = __webpack_require__(859);
-const buildReviewer = __webpack_require__(183);
-
-module.exports = ({
-  org,
-  repos,
-  reviewers,
-  pullRequest,
-  periodLength,
-  disableLinks,
-  displayCharts,
-}) => ({
-  blocks: [
-    ...buildSubtitle({
-      t,
-      org,
-      repos,
-      pullRequest,
-      periodLength,
-    }),
-
-    ...reviewers.reduce((prev, reviewer, index) => [
-      ...prev,
-      ...buildReviewer({
-        t,
-        index,
-        reviewer,
-        disableLinks,
-        displayCharts,
-      })],
-    []),
-  ],
-});
-
-
-/***/ }),
-
 /***/ 352:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -5906,6 +5840,129 @@ module.exports = {
   subtractDaysToDate,
   sum,
 };
+
+
+/***/ }),
+
+/***/ 354:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { durationToString } = __webpack_require__(353);
+
+const MEDALS = [
+  '🥇',
+  '🥈',
+  '🥉',
+];
+
+const wrapUsername = ({
+  avatarUrl,
+  login,
+}) => ({
+  type: 'Column',
+  padding: 'None',
+  width: 'stretch',
+  spacing: 'Small',
+  separator: true,
+  items: [
+    {
+      type: 'ColumnSet',
+      padding: 'None',
+      columns: [
+        {
+          type: 'Column',
+          padding: 'None',
+          width: 'auto',
+          items: [
+            {
+              type: 'Image',
+              url: avatarUrl,
+              altText: login,
+              size: 'Small',
+              style: 'Person',
+              spacing: 'None',
+              horizontalAlignment: 'Left',
+              width: '32px',
+              height: '32px',
+            },
+          ],
+        },
+        {
+          type: 'Column',
+          padding: 'None',
+          width: 'stretch',
+          verticalContentAlignment: 'Center',
+          items: [
+            {
+              type: 'TextBlock',
+              text: login,
+              wrap: true,
+              horizontalAlignment: 'Left',
+              spacing: 'Small',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+});
+
+const wrapStat = (text) => ({
+  type: 'Column',
+  padding: 'None',
+  width: 'stretch',
+  spacing: 'Small',
+  verticalContentAlignment: 'Center',
+  items: [
+    {
+      text,
+      type: 'TextBlock',
+      wrap: true,
+    },
+  ],
+});
+
+const getUsername = ({ index, reviewer, displayCharts }) => {
+  const { login, avatarUrl } = reviewer.author;
+
+  const medal = displayCharts ? MEDALS[index] : null;
+  const suffix = medal ? ` ${medal}` : '';
+
+  return wrapUsername({
+    avatarUrl,
+    login: `${login}${suffix}`,
+  });
+};
+
+const getStats = ({ reviewer, disableLinks }) => {
+  const { stats, urls } = reviewer;
+  const timeToReviewStr = durationToString(stats.timeToReview);
+  const timeToReview = disableLinks
+    ? timeToReviewStr
+    : `[${timeToReviewStr}](${urls.timeToReview})`;
+
+  return [
+    wrapStat(timeToReview),
+    wrapStat(stats.totalReviews),
+    wrapStat(stats.totalComments),
+  ];
+};
+
+module.exports = ({
+  index,
+  reviewer,
+  disableLinks,
+  displayCharts,
+}) => ({
+  type: 'ColumnSet',
+  padding: 'Small',
+  spacing: 'None',
+  separator: true,
+  columns: [
+    getUsername({ index, reviewer, displayCharts }),
+    ...getStats({ reviewer, disableLinks }),
+  ],
+});
 
 
 /***/ }),
@@ -6303,6 +6360,44 @@ module.exports = function enhanceError(error, config, code, request, response) {
     };
   };
   return error;
+};
+
+
+/***/ }),
+
+/***/ 375:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { buildSources } = __webpack_require__(353);
+
+const getPRText = (pullRequest) => {
+  const { url, number } = pullRequest || {};
+  if (!url || !number) return '';
+  return ` ([#${number}](${url}))`;
+};
+
+const buildGithubLink = ({ description, path }) => `[${description}](https://github.com/${path})`;
+
+module.exports = ({
+  t,
+  org,
+  repos,
+  pullRequest,
+  periodLength,
+}) => {
+  const sources = buildSources({ buildGithubLink, org, repos });
+  return {
+    type: 'Container',
+    padding: 'Small',
+    items: [
+      {
+        type: 'TextBlock',
+        weight: 'Lighter',
+        wrap: true,
+        text: `${t('table.subtitle', { sources, count: periodLength })}${getPRText(pullRequest)}`,
+      },
+    ],
+  };
 };
 
 
@@ -8397,26 +8492,6 @@ module.exports = createAgent;
 
 /***/ }),
 
-/***/ 445:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { STATS } = __webpack_require__(648);
-
-const calculatePercentage = (value, total) => {
-  if (!total) return 0;
-  return Math.min(1, Math.max(0, value / total));
-};
-
-const getContributions = (reviewer, totals) => STATS.reduce((prev, statsName) => {
-  const percentage = calculatePercentage(reviewer.stats[statsName], totals[statsName]);
-  return { ...prev, [statsName]: percentage };
-}, {});
-
-module.exports = getContributions;
-
-
-/***/ }),
-
 /***/ 448:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -10404,6 +10479,31 @@ exports.RequestError = RequestError;
 
 /***/ }),
 
+/***/ 466:
+/***/ (function(module) {
+
+module.exports = (body) => ({
+  type: 'message',
+  attachments: [
+    {
+      contentType: 'application/vnd.microsoft.card.adaptive',
+      contentUrl: null,
+      content: {
+        body,
+        $schema: 'http://adaptivecards.io/schemas/adaptive-card.json',
+        type: 'AdaptiveCard',
+        version: '1.0',
+        msteams: {
+          width: 'Full',
+        },
+      },
+    },
+  ],
+});
+
+
+/***/ }),
+
 /***/ 469:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -11078,9 +11178,11 @@ module.exports = setup;
 /***/ (function(module) {
 
 const getSlackCharsLimit = () => 39000;
+const getTeamsBytesLimit = () => 27000;
 
 module.exports = {
   getSlackCharsLimit,
+  getTeamsBytesLimit,
 };
 
 
@@ -11135,6 +11237,44 @@ function addHook(state, kind, name, hook) {
     orig: orig,
   });
 }
+
+
+/***/ }),
+
+/***/ 513:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { buildSources } = __webpack_require__(353);
+
+const getPRText = (pullRequest) => {
+  const { url, number } = pullRequest || {};
+  if (!url || !number) return '';
+  return ` (<${url}|#${number}>)`;
+};
+
+const buildGithubLink = ({ description, path }) => `<https://github.com/${path}|${description}>`;
+
+module.exports = ({
+  t,
+  org,
+  repos,
+  pullRequest,
+  periodLength,
+}) => {
+  const sources = buildSources({ buildGithubLink, org, repos });
+  return [
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `${t('table.subtitle', { sources, count: periodLength })}${getPRText(pullRequest)}`,
+      },
+    },
+    {
+      type: 'divider',
+    },
+  ];
+};
 
 
 /***/ }),
@@ -13135,45 +13275,45 @@ module.exports = function settle(resolve, reject, response) {
 
 /***/ }),
 
-/***/ 569:
+/***/ 570:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { getSlackCharsLimit } = __webpack_require__(508);
-const { median } = __webpack_require__(353);
+const { t } = __webpack_require__(781);
+const { postToWebhook } = __webpack_require__(162);
+const buildPayload = __webpack_require__(108);
 
-const CHARS_LIMIT = getSlackCharsLimit();
+module.exports = async ({
+  org,
+  repos,
+  core,
+  webhook,
+  reviewers,
+  periodLength,
+}) => {
+  if (!webhook) {
+    core.debug(t('integrations.webhook.logs.notConfigured'));
+    return;
+  }
 
-const getSize = (obj) => JSON.stringify(obj).length;
+  const payload = buildPayload({
+    org,
+    repos,
+    reviewers,
+    periodLength,
+  });
 
-const getBlockLengths = (blocks) => blocks
-  .filter(({ type }) => type === 'section') // Ignoring "divider" blocks
-  .map((block) => getSize(block));
+  const params = { payload, webhook };
 
-const getSizePerBlock = (blocks) => Math.round(median(getBlockLengths(blocks)));
+  core.debug(t('integrations.webhook.logs.posting', {
+    params: JSON.stringify(params, null, 2),
+  }));
 
-module.exports = (message) => {
-  const blockSize = Math.max(1, getSizePerBlock(message.blocks));
+  await postToWebhook({ payload, webhook }).catch((error) => {
+    core.error(t('integrations.webhook.errors.requestFailed', { error }));
+    throw error;
+  });
 
-  const getBlocksToSplit = (blocks) => {
-    const currentSize = getSize({ blocks });
-    const diff = currentSize - CHARS_LIMIT;
-    if (diff < 0 || blocks.length === 1) return 0;
-
-    const blocksSpace = Math.ceil(diff / blockSize);
-    const blocksCount = Math.max(1, Math.min(blocks.length - 1, blocksSpace));
-    const firsts = blocks.slice(0, blocksCount);
-    return getBlocksToSplit(firsts) || blocksCount;
-  };
-
-  const getChunks = (prev, msg) => {
-    const blocksToSplit = getBlocksToSplit(msg.blocks);
-    if (!blocksToSplit) return [...prev, msg];
-    const blocks = msg.blocks.slice(0, blocksToSplit);
-    const others = msg.blocks.slice(blocksToSplit);
-    return getChunks([...prev, { blocks }], { blocks: others });
-  };
-
-  return getChunks([], message);
+  core.debug(t('integrations.webhook.logs.success'));
 };
 
 
@@ -13386,6 +13526,72 @@ const getHash = (str) => crypto
 
 module.exports = (logins) => [...(logins || [])]
   .some((login) => externalSponsors.has(getHash(login)));
+
+
+/***/ }),
+
+/***/ 583:
+/***/ (function(module) {
+
+class BaseSplitter {
+  constructor({ message, limit = null }) {
+    this.limit = limit || this.constructor.defaultLimit();
+    this.message = message;
+  }
+
+  static defaultLimit() {
+    return Infinity;
+  }
+
+  get blockSize() {
+    if (!this.blockSizeMemo) {
+      this.blockSizeMemo = Math.max(1, this.constructor.calculateSizePerBlock(this.message));
+    }
+    return this.blockSizeMemo;
+  }
+
+  get chunks() {
+    if (!this.chunksMemo) this.chunksMemo = this.split([], this.message);
+    return this.chunksMemo;
+  }
+
+  split(prev, message) {
+    const blocksToSplit = this.calculateBlocksToSplit(message);
+    if (!blocksToSplit) return [...prev, message];
+    const [first, last] = this.constructor.splitBlocks(message, blocksToSplit);
+    return this.split([...prev, first], last);
+  }
+
+  calculateBlocksToSplit(message) {
+    const blocksCount = this.constructor.getBlocksCount(message);
+    const currentSize = this.constructor.calculateSize(message);
+    const diff = currentSize - this.limit;
+    if (diff < 0 || blocksCount === 1) return 0;
+
+    const blocksSpace = Math.ceil(diff / this.blockSize);
+    const blocksToSplit = Math.max(1, Math.min(blocksCount - 1, blocksSpace));
+    const [firsts] = this.constructor.splitBlocks(message, blocksToSplit);
+    return this.calculateBlocksToSplit(firsts) || blocksToSplit;
+  }
+
+  static splitBlocks() {
+    throw new Error('Not implemented');
+  }
+
+  static calculateSize() {
+    throw new Error('Not implemented');
+  }
+
+  static getBlocksCount() {
+    throw new Error('Not implemented');
+  }
+
+  static calculateSizePerBlock() {
+    throw new Error('Not implemented');
+  }
+}
+
+module.exports = BaseSplitter;
 
 
 /***/ }),
@@ -13719,6 +13925,80 @@ exports.ensure_timestamp = function(time) {
 
 /***/ }),
 
+/***/ 612:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { t } = __webpack_require__(781);
+const { postToWebhook } = __webpack_require__(162);
+const { TeamsSplitter } = __webpack_require__(40);
+const buildMessage = __webpack_require__(750);
+const buildPayload = __webpack_require__(466);
+
+const DELAY = 500;
+
+module.exports = async ({
+  org,
+  repos,
+  core,
+  teams,
+  isSponsor,
+  reviewers,
+  periodLength,
+  disableLinks,
+  displayCharts,
+  pullRequest = null,
+}) => {
+  const { webhook } = teams || {};
+
+  if (!webhook) {
+    core.debug(t('integrations.teams.logs.notConfigured'));
+    return;
+  }
+
+  if (!isSponsor) {
+    core.error(t('integrations.teams.errors.notSponsor'));
+    return;
+  }
+
+  const send = (body) => {
+    const params = {
+      webhook,
+      payload: buildPayload(body),
+    };
+    core.debug(t('integrations.teams.logs.posting', {
+      params: JSON.stringify(params, null, 2),
+    }));
+    return postToWebhook(params);
+  };
+
+  const fullMessage = buildMessage({
+    org,
+    repos,
+    reviewers,
+    pullRequest,
+    periodLength,
+    disableLinks,
+    displayCharts,
+  });
+
+  const { chunks } = new TeamsSplitter({ message: fullMessage });
+  await chunks.reduce(async (promise, message) => {
+    await promise;
+    await send(message).catch((error) => {
+      core.error(t('integrations.teams.errors.requestFailed', { error }));
+      throw error;
+    });
+    // Delaying between requests to prevent rate limiting
+    // https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using?tabs=cURL#rate-limiting-for-connectors
+    await new Promise((resolve) => setTimeout(resolve, DELAY));
+  }, Promise.resolve());
+
+  core.debug(t('integrations.teams.logs.success'));
+};
+
+
+/***/ }),
+
 /***/ 614:
 /***/ (function(module) {
 
@@ -13896,43 +14176,19 @@ exports.default = parseProxyResponse;
 /***/ 660:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { t } = __webpack_require__(781);
-const { postToWebhook } = __webpack_require__(162);
-const buildPayload = __webpack_require__(108);
+const { STATS } = __webpack_require__(648);
 
-module.exports = async ({
-  org,
-  repos,
-  core,
-  webhook,
-  reviewers,
-  periodLength,
-}) => {
-  if (!webhook) {
-    core.debug(t('integrations.webhook.logs.notConfigured'));
-    return;
-  }
-
-  const payload = buildPayload({
-    org,
-    repos,
-    reviewers,
-    periodLength,
-  });
-
-  const params = { payload, webhook };
-
-  core.debug(t('integrations.webhook.logs.posting', {
-    params: JSON.stringify(params, null, 2),
-  }));
-
-  await postToWebhook({ payload, webhook }).catch((error) => {
-    core.error(t('integrations.webhook.errors.requestFailed', { error }));
-    throw error;
-  });
-
-  core.debug(t('integrations.webhook.logs.success'));
+const calculatePercentage = (value, total) => {
+  if (!total) return 0;
+  return Math.min(1, Math.max(0, value / total));
 };
+
+const getContributions = (reviewer, totals) => STATS.reduce((prev, statsName) => {
+  const percentage = calculatePercentage(reviewer.stats[statsName], totals[statsName]);
+  return { ...prev, [statsName]: percentage };
+}, {});
+
+module.exports = getContributions;
 
 
 /***/ }),
@@ -13955,6 +14211,7 @@ const {
   checkSponsorship,
   alreadyPublished,
   postSlackMessage,
+  postTeamsMessage,
   postWebhook,
 } = __webpack_require__(942);
 
@@ -14008,13 +14265,10 @@ const run = async (params) => {
   });
   core.debug(`Commit content built successfully: ${content}`);
 
-  await postWebhook({ ...params, core, reviewers });
-  await postSlackMessage({
-    ...params,
-    core,
-    reviewers,
-    pullRequest,
-  });
+  const whParams = { ...params, core, reviewers };
+  await postWebhook(whParams);
+  await postSlackMessage({ ...whParams, pullRequest });
+  await postTeamsMessage({ ...whParams, pullRequest });
 
   if (!pullRequestId) return;
   await postComment({
@@ -14840,6 +15094,9 @@ const getParams = () => {
       webhook: core.getInput('slack-webhook'),
       channel: core.getInput('slack-channel'),
     },
+    teams: {
+      webhook: core.getInput('teams-webhook'),
+    },
   };
 };
 
@@ -14864,6 +15121,48 @@ run();
 /***/ (function(module) {
 
 module.exports = {"title":"Pull reviewers stats","icon":"https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png","subtitle":{"one":"Stats of the last day for {{sources}}","other":"Stats of the last {{count}} days for {{sources}}"},"sources":{"separator":", ","fullList":"{{firsts}} and {{last}}","andOthers":"{{firsts}} and {{count}} others"},"columns":{"avatar":"","username":"User","timeToReview":"Time to review","totalReviews":"Total reviews","totalComments":"Total comments"}};
+
+/***/ }),
+
+/***/ 681:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { getSlackCharsLimit } = __webpack_require__(508);
+const { median } = __webpack_require__(353);
+const BaseSplitter = __webpack_require__(583);
+
+class SlackSplitter extends BaseSplitter {
+  static defaultLimit() {
+    return getSlackCharsLimit();
+  }
+
+  static splitBlocks(message, count) {
+    const { blocks } = message;
+    const firsts = blocks.slice(0, count);
+    const lasts = blocks.slice(count);
+    return [{ blocks: firsts }, { blocks: lasts }];
+  }
+
+  static calculateSize(message) {
+    return JSON.stringify(message).length;
+  }
+
+  static getBlocksCount(message) {
+    return message.blocks.length;
+  }
+
+  static calculateSizePerBlock(message) {
+    const blockLengths = message
+      .blocks
+      .filter(({ type }) => type === 'section')
+      .map((block) => this.calculateSize(block));
+
+    return Math.ceil(median(blockLengths));
+  }
+}
+
+module.exports = SlackSplitter;
+
 
 /***/ }),
 
@@ -15012,6 +15311,85 @@ module.exports = (value) => parser(value, {
 
 /***/ }),
 
+/***/ 721:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { durationToString } = __webpack_require__(353);
+
+const MEDALS = [
+  ':first_place_medal:',
+  ':second_place_medal:',
+  ':third_place_medal:',
+]; /* 🥇🥈🥉 */
+
+const getUsername = ({ index, reviewer, displayCharts }) => {
+  const { login, avatarUrl } = reviewer.author;
+
+  const medal = displayCharts ? MEDALS[index] : null;
+  const suffix = medal ? ` ${medal}` : '';
+
+  return {
+    type: 'context',
+    elements: [
+      {
+        type: 'image',
+        image_url: avatarUrl,
+        alt_text: login,
+      },
+      {
+        emoji: true,
+        type: 'plain_text',
+        text: `${login}${suffix}`,
+      },
+    ],
+  };
+};
+
+const getStats = ({ t, reviewer, disableLinks }) => {
+  const { stats, urls } = reviewer;
+  const timeToReviewStr = durationToString(stats.timeToReview);
+  const timeToReview = disableLinks
+    ? timeToReviewStr
+    : `<${urls.timeToReview}|${timeToReviewStr}>`;
+
+  return {
+    type: 'section',
+    fields: [
+      {
+        type: 'mrkdwn',
+        text: `*${t('table.columns.totalReviews')}:* ${stats.totalReviews}`,
+      },
+      {
+        type: 'mrkdwn',
+        text: `*${t('table.columns.totalComments')}:* ${stats.totalComments}`,
+      },
+      {
+        type: 'mrkdwn',
+        text: `*${t('table.columns.timeToReview')}:* ${timeToReview}`,
+      },
+    ],
+  };
+};
+
+const getDivider = () => ({
+  type: 'divider',
+});
+
+module.exports = ({
+  t,
+  index,
+  reviewer,
+  disableLinks,
+  displayCharts,
+}) => [
+  getUsername({ index, reviewer, displayCharts }),
+  getStats({ t, reviewer, disableLinks }),
+  getDivider(),
+];
+
+
+/***/ }),
+
 /***/ 727:
 /***/ (function(module) {
 
@@ -15034,7 +15412,7 @@ module.exports = function bind(fn, thisArg) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.5.1","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"ncc build src/index.js","test":"eslint src && yarn run build && jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
+module.exports = {"name":"pull-request-stats","version":"2.6.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"eslint src && ncc build src/index.js","test":"jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
 
 /***/ }),
 
@@ -15047,6 +15425,47 @@ module.exports = {"name":"pull-request-stats","version":"2.5.1","description":"G
 module.exports = function isCancel(value) {
   return !!(value && value.__CANCEL__);
 };
+
+
+/***/ }),
+
+/***/ 741:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { t } = __webpack_require__(781);
+const buildSubtitle = __webpack_require__(513);
+const buildReviewer = __webpack_require__(721);
+
+module.exports = ({
+  org,
+  repos,
+  reviewers,
+  pullRequest,
+  periodLength,
+  disableLinks,
+  displayCharts,
+}) => ({
+  blocks: [
+    ...buildSubtitle({
+      t,
+      org,
+      repos,
+      pullRequest,
+      periodLength,
+    }),
+
+    ...reviewers.reduce((prev, reviewer, index) => [
+      ...prev,
+      ...buildReviewer({
+        t,
+        index,
+        reviewer,
+        disableLinks,
+        displayCharts,
+      })],
+    []),
+  ],
+});
 
 
 /***/ }),
@@ -15139,6 +15558,44 @@ exports.OidcClient = OidcClient;
 /***/ (function(module) {
 
 module.exports = require("fs");
+
+/***/ }),
+
+/***/ 750:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { t } = __webpack_require__(781);
+const buildHeaders = __webpack_require__(814);
+const buildSubtitle = __webpack_require__(375);
+const buildReviewer = __webpack_require__(354);
+
+module.exports = ({
+  org,
+  repos,
+  reviewers,
+  pullRequest,
+  periodLength,
+  disableLinks,
+  displayCharts,
+}) => ([
+  buildSubtitle({
+    t,
+    org,
+    repos,
+    pullRequest,
+    periodLength,
+  }),
+
+  buildHeaders({ t }),
+
+  ...reviewers.map((reviewer, index) => buildReviewer({
+    index,
+    reviewer,
+    disableLinks,
+    displayCharts,
+  })),
+]);
+
 
 /***/ }),
 
@@ -16003,6 +16460,41 @@ const createTokenAuth = function createTokenAuth(token) {
 
 exports.createTokenAuth = createTokenAuth;
 //# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
+/***/ 814:
+/***/ (function(module) {
+
+const wrapHeader = (text) => ({
+  type: 'Column',
+  padding: 'None',
+  width: 'stretch',
+  verticalContentAlignment: 'Center',
+  items: [
+    {
+      text,
+      type: 'TextBlock',
+      wrap: true,
+      weight: 'Bolder',
+    },
+  ],
+});
+
+module.exports = ({ t }) => ({
+  type: 'ColumnSet',
+  padding: 'Small',
+  horizontalAlignment: 'Left',
+  style: 'emphasis',
+  spacing: 'Small',
+  columns: [
+    wrapHeader(t('table.columns.username')),
+    wrapHeader(t('table.columns.timeToReview')),
+    wrapHeader(t('table.columns.totalReviews')),
+    wrapHeader(t('table.columns.totalComments')),
+  ],
+});
 
 
 /***/ }),
@@ -18269,48 +18761,10 @@ module.exports = get;
 
 /***/ }),
 
-/***/ 859:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { buildSources } = __webpack_require__(353);
-
-const getPRText = (pullRequest) => {
-  const { url, number } = pullRequest || {};
-  if (!url || !number) return '';
-  return ` (<${url}|#${number}>)`;
-};
-
-const buildGithubLink = ({ description, path }) => `<https://github.com/${path}|${description}>`;
-
-module.exports = ({
-  t,
-  org,
-  repos,
-  pullRequest,
-  periodLength,
-}) => {
-  const sources = buildSources({ buildGithubLink, org, repos });
-  return [
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: `${t('table.subtitle', { sources, count: periodLength })}${getPRText(pullRequest)}`,
-      },
-    },
-    {
-      type: 'divider',
-    },
-  ];
-};
-
-
-/***/ }),
-
 /***/ 861:
 /***/ (function(module) {
 
-module.exports = {"logs":{"success":"Action successfully executed","news":"\n✨ New on v2.5:\n• Slack integration\n• Webhooks integration"},"errors":{"main":"Execution failed with error: {{message}}"}};
+module.exports = {"logs":{"success":"Action successfully executed","news":"\n✨ New on v2.6:\n• Microsoft Teams integration\n• Slack integration\n• Webhooks integration"},"errors":{"main":"Execution failed with error: {{message}}"}};
 
 /***/ }),
 
@@ -18413,8 +18867,8 @@ module.exports = require("tty");
 
 const { t } = __webpack_require__(781);
 const { postToSlack } = __webpack_require__(162);
-const buildSlackMessage = __webpack_require__(337);
-const splitInChunks = __webpack_require__(569);
+const { SlackSplitter } = __webpack_require__(40);
+const buildMessage = __webpack_require__(741);
 
 module.exports = async ({
   org,
@@ -18454,7 +18908,7 @@ module.exports = async ({
     return postToSlack(params);
   };
 
-  const fullMessage = buildSlackMessage({
+  const fullMessage = buildMessage({
     org,
     repos,
     reviewers,
@@ -18464,7 +18918,7 @@ module.exports = async ({
     displayCharts,
   });
 
-  const chunks = splitInChunks(fullMessage);
+  const { chunks } = new SlackSplitter({ message: fullMessage });
   await chunks.reduce(async (promise, message) => {
     await promise;
     return send(message).catch((error) => {
@@ -18691,7 +19145,7 @@ module.exports = function () {
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const buildReviewTimeLink = __webpack_require__(922);
-const getContributions = __webpack_require__(445);
+const getContributions = __webpack_require__(660);
 const calculateTotals = __webpack_require__(202);
 const sortByStats = __webpack_require__(914);
 
@@ -18737,12 +19191,14 @@ module.exports = ({
   limit,
   tracker,
   slack,
+  teams,
   webhook,
 }) => {
   const owner = getRepoOwner(currentRepo);
   const reposCount = (repos || []).length;
   const orgsCount = org ? 1 : 0;
   const usingSlack = !!(slack || {}).webhook;
+  const usingTeams = !!(teams || {}).webhook;
   const usingWebhook = !!webhook;
 
   tracker.track('run', {
@@ -18759,6 +19215,7 @@ module.exports = ({
     disableLinks,
     limit,
     usingSlack,
+    usingTeams,
     usingWebhook,
   });
 };
@@ -20300,9 +20757,10 @@ const checkSponsorship = __webpack_require__(402);
 const getPulls = __webpack_require__(591);
 const getReviewers = __webpack_require__(164);
 const postComment = __webpack_require__(173);
-const postSlackMessage = __webpack_require__(878);
-const postWebhook = __webpack_require__(660);
 const setUpReviewers = __webpack_require__(901);
+const postSlackMessage = __webpack_require__(878);
+const postTeamsMessage = __webpack_require__(612);
+const postWebhook = __webpack_require__(570);
 
 module.exports = {
   alreadyPublished,
@@ -20312,9 +20770,10 @@ module.exports = {
   getPulls,
   getReviewers,
   postComment,
-  postSlackMessage,
-  postWebhook,
   setUpReviewers,
+  postSlackMessage,
+  postTeamsMessage,
+  postWebhook,
 };
 
 
