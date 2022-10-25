@@ -1,0 +1,703 @@
+{
+    "type": "message",
+    "attachments": [
+        {
+            "contentType": "application/vnd.microsoft.card.adaptive",
+            "contentUrl": null,
+            "content": {
+              "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+              "type": "AdaptiveCard",
+              "version": "1.0",
+              "msteams": {
+                "width": "Full"
+              },
+              "body": [
+                {
+                    "type": "Container",
+                    "id": "4a4631f4-8373-6aa4-9c42-0eb9be92bea4",
+                    "padding": "Medium",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "id": "f41ff117-10ce-4f16-372e-fb2948c18d4f",
+                            "text": "Stats of the last 30 days for [myorganization](yotepresto.com)",
+                            "wrap": true,
+                            "weight": "Lighter"
+                        }
+                    ]
+                },
+                {
+                    "type": "ColumnSet",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "id": "113cdbc5-8433-44c1-f3a1-6fe66d17546e",
+                            "padding": "None",
+                            "width": "stretch",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "id": "b55aa3eb-f66f-eef1-245c-7aab642da9eb",
+                                    "text": "User",
+                                    "wrap": true,
+                                    "weight": "Bolder"
+                                }
+                            ],
+                            "verticalContentAlignment": "Center"
+                        },
+                        {
+                            "type": "Column",
+                            "id": "721acc52-3506-2191-dd77-b083484e5b5a",
+                            "padding": "None",
+                            "width": "stretch",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "id": "a54acfc5-b4f8-838a-532a-f34e5e718a2a",
+                                    "text": "Time to review",
+                                    "wrap": true,
+                                    "weight": "Bolder",
+                                    "spacing": "None"
+                                }
+                            ],
+                            "spacing": "Small",
+                            "verticalContentAlignment": "Center"
+                        },
+                        {
+                            "type": "Column",
+                            "id": "6137df23-0b2d-4fec-c485-bd54e9998a7c",
+                            "padding": "None",
+                            "width": "stretch",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "id": "2eb6714c-1961-cbaf-34a4-d995e38d94bd",
+                                    "text": "Total reviews",
+                                    "weight": "Bolder",
+                                    "spacing": "None",
+                                    "wrap": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "id": "21555a99-e013-3960-e339-dabec7054e23",
+                            "padding": "None",
+                            "width": "stretch",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "id": "f98783d8-9cc8-87de-cef4-84f5bd24ecd8",
+                                    "text": "Total Comments",
+                                    "wrap": true,
+                                    "weight": "Bolder",
+                                    "spacing": "None"
+                                }
+                            ]
+                        }
+                    ],
+                    "padding": "Small",
+                    "horizontalAlignment": "Left",
+                    "style": "emphasis",
+                    "spacing": "None"
+                },
+                {
+                    "type": "Container",
+                    "id": "5f89be35-7dbc-235d-33af-bbd764a2b3fd",
+                    "padding": "None",
+                    "items": [
+                        {
+                            "type": "ColumnSet",
+                            "id": "5115c953-b0b2-085d-6fbe-5d81ef7cd00a",
+                            "columns": [
+                                {
+                                    "type": "Column",
+                                    "id": "51db5e00-fe1e-ebed-1616-6386f7073c18",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "ColumnSet",
+                                            "columns": [
+                                                {
+                                                    "type": "Column",
+                                                    "id": "96a8f067-a2f6-e174-f1d1-3da66d0a2fc4",
+                                                    "padding": "None",
+                                                    "width": "auto",
+                                                    "items": [
+                                                        {
+                                                            "type": "Image",
+                                                            "id": "7d45cce0-2eba-65c7-57f6-aef6aed8ffd6",
+                                                            "url": "https://avatars.githubusercontent.com/u/8755542?v=4",
+                                                            "altText": "manuelmhtr",
+                                                            "size": "Small",
+                                                            "horizontalAlignment": "Left",
+                                                            "width": "32px",
+                                                            "spacing": "ExtraLarge",
+                                                            "style": "Person",
+                                                            "height": "32px"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Column",
+                                                    "id": "fb74a656-e79a-4b16-bc09-d97036ac70a9",
+                                                    "padding": "Small",
+                                                    "width": "stretch",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "id": "c8e5ba18-cf6c-c1fb-266b-e68b5559864b",
+                                                            "text": "jartmez",
+                                                            "wrap": true,
+                                                            "horizontalAlignment": "Left",
+                                                            "spacing": "Small"
+                                                        }
+                                                    ],
+                                                    "verticalContentAlignment": "Center",
+                                                    "spacing": "Small"
+                                                }
+                                            ],
+                                            "padding": "None"
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "separator": true
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "1532842e-9571-35ac-feb8-37b7614ad65a",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "e7362ead-4f46-416e-e16e-4bfe38900ae0",
+                                            "text": "[22m](link.com)",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "077ece93-16c7-bd1e-286f-b8cfd4fed044",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "ef977db3-dee4-0e13-d633-9ec58ea55dc2",
+                                            "text": "37",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "5fce2ab1-9ff0-ba9c-3963-e724f406f68b",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "a71484b4-ed4b-cbdc-a5d1-d13fd997645e",
+                                            "text": "13",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                }
+                            ],
+                            "padding": "Small",
+                            "spacing": "None",
+                            "style": "default"
+                        }
+                    ],
+                    "spacing": "None"
+                },
+                {
+                    "type": "Container",
+                    "id": "cfbcc72d-4d9a-33a3-7934-6ad70541ce3c",
+                    "padding": "None",
+                    "items": [
+                        {
+                            "type": "ColumnSet",
+                            "id": "608e71e4-c7a4-a922-8a76-33f9f061a918",
+                            "columns": [
+                                {
+                                    "type": "Column",
+                                    "id": "3e35b85f-7b6f-a966-c971-92236266082f",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "ColumnSet",
+                                            "columns": [
+                                                {
+                                                    "type": "Column",
+                                                    "id": "9643f41f-ca19-720a-371e-28724ff86fb6",
+                                                    "padding": "None",
+                                                    "width": "auto",
+                                                    "items": [
+                                                        {
+                                                            "type": "Image",
+                                                            "id": "ae348904-e9ad-a64d-cbcd-8c2e71e597f0",
+                                                            "url": "https://avatars.githubusercontent.com/u/2009676?v=4",
+                                                            "altText": "manuelmhtr",
+                                                            "size": "Small",
+                                                            "horizontalAlignment": "Left",
+                                                            "width": "32px",
+                                                            "spacing": "ExtraLarge",
+                                                            "style": "Person",
+                                                            "height": "32px"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Column",
+                                                    "id": "94ff1fae-2c83-557f-129b-5343f1298a45",
+                                                    "padding": "Small",
+                                                    "width": "stretch",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "id": "bb1c228e-a0a6-5f38-308e-e8a87e48ff12",
+                                                            "text": "javierbyte",
+                                                            "wrap": true,
+                                                            "horizontalAlignment": "Left",
+                                                            "spacing": "Small"
+                                                        }
+                                                    ],
+                                                    "verticalContentAlignment": "Center",
+                                                    "spacing": "Small"
+                                                }
+                                            ],
+                                            "padding": "None"
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "separator": true
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "70648543-acbe-a14d-5301-faf4ba3e9d49",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "26f0d6b4-2be1-2fa4-7759-b9f53e53f2ac",
+                                            "text": "[30m](link.com)",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "c86b6afb-359c-2d17-8f42-aedc9aa0b042",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "fdd6a8a7-33b0-cfd8-bd03-060562bcf087",
+                                            "text": "12",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "4e744aaf-d2a8-82fb-7ba0-bf723931e694",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "8313c930-1dd7-c6ff-54be-bf7dbab9287e",
+                                            "text": "0",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                }
+                            ],
+                            "padding": "Small",
+                            "spacing": "None",
+                            "style": "default"
+                        }
+                    ],
+                    "spacing": "None"
+                },
+                {
+                    "type": "Container",
+                    "id": "5022d3c1-e639-ad9f-674a-5d6301b77b00",
+                    "padding": "None",
+                    "items": [
+                        {
+                            "type": "ColumnSet",
+                            "id": "799b5797-0d65-4c43-f858-f44ef798291a",
+                            "columns": [
+                                {
+                                    "type": "Column",
+                                    "id": "7a34a918-cbf3-2b55-c367-00f9ce19cc89",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "ColumnSet",
+                                            "columns": [
+                                                {
+                                                    "type": "Column",
+                                                    "id": "8504e303-b96b-c95e-7711-5ee92d3d0c64",
+                                                    "padding": "None",
+                                                    "width": "auto",
+                                                    "items": [
+                                                        {
+                                                            "type": "Image",
+                                                            "id": "42c1a511-43f8-3e9e-ec82-9d681f76f900",
+                                                            "url": "https://avatars.githubusercontent.com/u/8495952?v=4",
+                                                            "altText": "manuelmhtr",
+                                                            "size": "Small",
+                                                            "horizontalAlignment": "Left",
+                                                            "width": "32px",
+                                                            "spacing": "ExtraLarge",
+                                                            "style": "Person",
+                                                            "height": "32px"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Column",
+                                                    "id": "a20d311d-31d3-82ec-0590-8efc570156fa",
+                                                    "padding": "Small",
+                                                    "width": "stretch",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "id": "599dac04-f76b-292e-3d60-edb266cd1bda",
+                                                            "text": "Phaze1D",
+                                                            "wrap": true,
+                                                            "horizontalAlignment": "Left",
+                                                            "spacing": "Small"
+                                                        }
+                                                    ],
+                                                    "verticalContentAlignment": "Center",
+                                                    "spacing": "Small"
+                                                }
+                                            ],
+                                            "padding": "None"
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "separator": true
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "6dfcacbe-29aa-1200-d61c-695cce75b10d",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "18395a85-3298-8182-9be7-a5f643e9c946",
+                                            "text": "[34m](link.com)",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "41ec654d-2952-a71b-7fa8-ad07dad92bf9",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "358e8e56-3a58-2cbe-df31-95db82e9ac51",
+                                            "text": "4",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "adde4fc4-3612-c9af-9f4d-8ec9d9594493",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "23e450c7-87bf-c631-4f8c-401121cde7b9",
+                                            "text": "1",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                }
+                            ],
+                            "padding": "Small",
+                            "spacing": "None",
+                            "style": "default"
+                        }
+                    ],
+                    "spacing": "None"
+                },
+                {
+                    "type": "Container",
+                    "id": "eab3841c-402c-fd21-687d-bd90c8ca541c",
+                    "padding": "None",
+                    "items": [
+                        {
+                            "type": "ColumnSet",
+                            "id": "6d5f1dd5-aeae-1a89-cd86-ad7f879edab0",
+                            "columns": [
+                                {
+                                    "type": "Column",
+                                    "id": "d8be2b4f-8e50-1670-d901-2e87ddd2f8f6",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "ColumnSet",
+                                            "columns": [
+                                                {
+                                                    "type": "Column",
+                                                    "id": "746512f5-7bc5-1850-ed0c-517f9ea30bce",
+                                                    "padding": "None",
+                                                    "width": "auto",
+                                                    "items": [
+                                                        {
+                                                            "type": "Image",
+                                                            "id": "ac8d8b76-1ee3-571f-e522-aa5e03774b96",
+                                                            "url": "https://avatars.githubusercontent.com/u/1031639?v=4",
+                                                            "altText": "manuelmhtr",
+                                                            "size": "Small",
+                                                            "horizontalAlignment": "Left",
+                                                            "width": "32px",
+                                                            "spacing": "ExtraLarge",
+                                                            "style": "Person",
+                                                            "height": "32px"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Column",
+                                                    "id": "1ffc4353-720c-d14d-2c77-4afc9a63b397",
+                                                    "padding": "Small",
+                                                    "width": "stretch",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "id": "d2284cb9-859a-0a4f-6e92-261105cce4af",
+                                                            "text": "manuelmhtr",
+                                                            "wrap": true,
+                                                            "horizontalAlignment": "Left",
+                                                            "spacing": "Small"
+                                                        }
+                                                    ],
+                                                    "verticalContentAlignment": "Center",
+                                                    "spacing": "Small"
+                                                }
+                                            ],
+                                            "padding": "None"
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "separator": true
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "c6134a8f-8c71-8d51-7809-8b401141f3be",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "98c88f5f-0352-e37a-dad3-c4819fe828a1",
+                                            "text": "[48m](link.com)",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "56b3d94f-def6-206d-3ec4-11c86626bbb7",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "66d7c7f4-f7ed-5858-a751-cb7498998f7b",
+                                            "text": "35",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "44aa64cf-f35b-a75c-ef95-dc5cf71fe603",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "2469c719-00ee-4bbe-457b-c39344c97462",
+                                            "text": "96",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                }
+                            ],
+                            "padding": "Small",
+                            "spacing": "None",
+                            "style": "default"
+                        }
+                    ],
+                    "spacing": "None"
+                },
+                {
+                    "type": "Container",
+                    "id": "84c88128-0057-5a88-7de5-345aaa78b177",
+                    "padding": "None",
+                    "items": [
+                        {
+                            "type": "ColumnSet",
+                            "id": "d11a0337-ea08-e6a4-42d6-8799d2877577",
+                            "columns": [
+                                {
+                                    "type": "Column",
+                                    "id": "f85bc19d-d4a6-d29b-4f74-1158c4ac62c2",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "ColumnSet",
+                                            "columns": [
+                                                {
+                                                    "type": "Column",
+                                                    "id": "a087693a-e851-9c10-c198-5059a1f8ca57",
+                                                    "padding": "None",
+                                                    "width": "auto",
+                                                    "items": [
+                                                        {
+                                                            "type": "Image",
+                                                            "id": "ac29b435-5e8a-1f0f-8dd1-7eea9f5a8948",
+                                                            "url": "https://avatars.githubusercontent.com/u/33379285?v=4",
+                                                            "altText": "manuelmhtr",
+                                                            "size": "Small",
+                                                            "horizontalAlignment": "Left",
+                                                            "width": "32px",
+                                                            "spacing": "ExtraLarge",
+                                                            "style": "Person",
+                                                            "height": "32px"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Column",
+                                                    "id": "93a0d50e-03b0-165f-c92e-635854a5c4d6",
+                                                    "padding": "Small",
+                                                    "width": "stretch",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "id": "eef8f4a2-7597-679c-f317-09091a77bfc6",
+                                                            "text": "ernestognw",
+                                                            "wrap": true,
+                                                            "horizontalAlignment": "Left",
+                                                            "spacing": "Small"
+                                                        }
+                                                    ],
+                                                    "verticalContentAlignment": "Center",
+                                                    "spacing": "Small"
+                                                }
+                                            ],
+                                            "padding": "None"
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "separator": true
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "220752f1-0f10-a9e7-92ce-99f0cb938b26",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "fa605740-956b-da57-547a-1cf435cc0953",
+                                            "text": "[1h 27m](link.com)",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "39c62e4e-3a78-fcf4-ce3f-e33bd0dd9d2b",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "94d720e5-ab91-312d-aeaf-32223456ed3d",
+                                            "text": "25",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "Column",
+                                    "id": "3d37e3c6-5df7-970f-a5ef-c27525dc4172",
+                                    "padding": "None",
+                                    "width": "stretch",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "id": "f304c4e2-1f6a-c486-f836-b79a40938292",
+                                            "text": "63",
+                                            "wrap": true
+                                        }
+                                    ],
+                                    "spacing": "Small",
+                                    "verticalContentAlignment": "Center"
+                                }
+                            ],
+                            "padding": "Small",
+                            "spacing": "None",
+                            "style": "default"
+                        }
+                    ],
+                    "spacing": "None"
+                }
+            ]
+            }
+        }
+    ]
+}

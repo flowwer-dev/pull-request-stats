@@ -1,7 +1,7 @@
 {
   "logs": {
     "success": "Action successfully executed",
-    "news": "\n✨ New on v2.5:\n• Slack integration\n• Webhooks integration"
+    "news": "\n✨ New on v2.6:\n• Microsoft Teams integration\n• Slack integration\n• Webhooks integration"
   },
   "errors": {
     "main": "Execution failed with error: {{message}}"
