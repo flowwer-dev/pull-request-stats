@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.6.1] - 2022-10-28
+### Added
+- A new private sponsor 💙
+
 ## [2.6.0] - 2022-10-24
 ### Added
 - Microsoft Teams integration.
