@@ -29,6 +29,7 @@ const run = async (params) => {
     personalToken,
     displayCharts,
     pullRequestId,
+    team,
   } = params;
 
   const pullRequest = pullRequestId
@@ -45,6 +46,7 @@ const run = async (params) => {
     repos,
     octokit: github.getOctokit(personalToken),
     startDate: subtractDaysToDate(new Date(), periodLength),
+    team,
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
 
@@ -62,7 +64,10 @@ const run = async (params) => {
   core.debug('Stats table built successfully');
 
   const content = buildComment({
-    table, periodLength, org, repos,
+    table,
+    periodLength,
+    org,
+    repos,
   });
   core.debug(`Commit content built successfully: ${content}`);
 
@@ -88,7 +93,11 @@ module.exports = async (params) => {
   const { githubToken } = params;
   const octokit = github.getOctokit(githubToken);
   const isSponsor = true;
-  const telemetry = new Telemetry({ core, isSponsor, telemetry: params.telemetry });
+  const telemetry = new Telemetry({
+    core,
+    isSponsor,
+    telemetry: params.telemetry,
+  });
   if (isSponsor) core.info('Thanks for sponsoring this project! 💙');
 
   try {

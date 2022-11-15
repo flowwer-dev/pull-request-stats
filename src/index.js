@@ -28,6 +28,7 @@ const getParams = () => {
     currentRepo,
     githubToken,
     personalToken,
+    team: JSON.parse(core.getInput('team')),
     org: core.getInput('organization'),
     repos: getRepositories(currentRepo),
     sortBy: core.getInput('sort-by'),

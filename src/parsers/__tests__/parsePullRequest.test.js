@@ -3,7 +3,7 @@ const parsePullRequest = require('../parsePullRequest');
 
 describe('Parsers | .parsePullRequest', () => {
   it('parses the main fields of the pull request', () => {
-    const response = parsePullRequest(input);
+    const response = parsePullRequest(input, {});
 
     expect(response).toHaveProperty('id', 12345);
     expect(response).toHaveProperty('cursor', 'Y3Vyc29yOjQ=');

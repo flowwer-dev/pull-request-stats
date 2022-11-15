@@ -6,8 +6,8 @@ const filterNullAuthor = ({ author }) => !!(author || {}).login;
 
 const getFilteredReviews = (data) => get(data, 'node.reviews.nodes', []).filter(filterNullAuthor);
 
-module.exports = (data = {}) => {
-  const author = parseUser(get(data, 'node.author'));
+module.exports = (data = {}, { team }) => {
+  const author = parseUser(get(data, 'node.author'), team);
   const publishedAt = new Date(get(data, 'node.publishedAt'));
   const handleReviews = (review) => parseReview(review, { publishedAt, authorLogin: author.login });
 
