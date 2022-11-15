@@ -10,7 +10,6 @@ const {
   getReviewers,
   buildComment,
   setUpReviewers,
-  checkSponsorship,
   alreadyPublished,
   postSlackMessage,
   postTeamsMessage,
@@ -86,9 +85,9 @@ const run = async (params) => {
 module.exports = async (params) => {
   core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
 
-  const { githubToken, org, repos } = params;
+  const { githubToken } = params;
   const octokit = github.getOctokit(githubToken);
-  const isSponsor = true || await checkSponsorship({ octokit, org, repos });
+  const isSponsor = true;
   const telemetry = new Telemetry({ core, isSponsor, telemetry: params.telemetry });
   if (isSponsor) core.info('Thanks for sponsoring this project! 💙');
 
