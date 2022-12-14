@@ -2341,9 +2341,10 @@ module.exports = ({
   };
 
   const buildFullList = (sources) => {
-    const last = sources.pop();
+    const firsts = sources.slice(0, sources.length - 1);
+    const last = sources[sources.length - 1];
     return t('table.sources.fullList', {
-      firsts: sources.map(buildLink).join(t('table.sources.separator')),
+      firsts: firsts.map(buildLink).join(t('table.sources.separator')),
       last: buildLink(last),
     });
   };
