@@ -45,11 +45,13 @@ describe('Interactors | .sources', () => {
 
   describe('when sending 3 repos', () => {
     const repos = [REPO1, REPO2, REPO3];
+    const expectedLength = repos.length;
     const expected = `${linkRepo(REPO1)}, ${linkRepo(REPO2)} and ${linkRepo(REPO3)}`;
 
     it('builds the message in singular', () => {
       const response = buildSources({ buildGithubLink, repos });
       expect(response).toEqual(expected);
+      expect(repos.length).toEqual(expectedLength);
     });
   });
 
