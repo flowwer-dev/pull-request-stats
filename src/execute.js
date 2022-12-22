@@ -67,6 +67,13 @@ const run = async (params) => {
   });
   core.debug(`Commit content built successfully: ${content}`);
 
+  if (publishAs === 'SUMMARY') {
+    await core.summary
+      .addRaw(`\n${content}`)
+      .write();
+    return;
+  }
+
   const whParams = { ...params, core, reviewers };
   await postWebhook(whParams);
   await postSlackMessage({ ...whParams, pullRequest });
