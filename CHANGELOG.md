@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.7.0] - 2022-12-22
+### Added
+- [#61](https://github.com/flowwer-dev/pull-request-stats/pull/61) Post results in the Action Summary (By [Petar Alilovic](https://github.com/runmael)).
+
 ## [2.6.2] - 2022-12-14
 ### Fixed
 - [#60](https://github.com/flowwer-dev/pull-request-stats/pull/60) Display last repository in slack and teams message body (By [Daeeun Kim](https://github.com/eodmsabc)).

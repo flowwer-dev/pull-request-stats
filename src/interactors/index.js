@@ -7,6 +7,7 @@ const getReviewers = require('./getReviewers');
 const postComment = require('./postComment');
 const setUpReviewers = require('./setUpReviewers');
 const postSlackMessage = require('./postSlackMessage');
+const postSummary = require('./postSummary');
 const postTeamsMessage = require('./postTeamsMessage');
 const postWebhook = require('./postWebhook');
 
@@ -20,6 +21,7 @@ module.exports = {
   postComment,
   setUpReviewers,
   postSlackMessage,
+  postSummary,
   postTeamsMessage,
   postWebhook,
 };
