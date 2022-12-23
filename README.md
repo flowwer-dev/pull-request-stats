@@ -172,6 +172,24 @@ Check the guide for the tool you want to integrate:
 </details>
 
 <details>
+  <summary>I get the error "Error commenting on the pull request...".</summary>
+
+  This error happens when the action's permissions are configured as `read` by the organization. To fix it, overwrite them by adding a [`permissions`](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs) configuration in the workflow file. The minimum required permissions are `contents: read` and `pull-requests: write`:
+
+  ```yml
+  jobs:
+  stats:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Run pull request stats
+        uses: flowwer-dev/pull-request-stats@master
+  ```
+</details>
+
+<details>
   <summary>I'm a sponsor but still getting the error "...is a premium feature, available to sponsors".</summary>
 
   1. Check the sponsorship comes from the account that owns the configured repos (usually an organization).
