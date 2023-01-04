@@ -1201,7 +1201,7 @@ module.exports = ({
 /***/ 105:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const parsePullRequest = __webpack_require__(412);
+const parsePullRequest = __webpack_require__(293);
 
 const PR_BY_ID_QUERY = `
   query($id: ID!) {
@@ -1369,18 +1369,6 @@ module.exports = {
   getRepoComponents,
   getRepoOwner,
   getRepoName,
-};
-
-
-/***/ }),
-
-/***/ 111:
-/***/ (function(module) {
-
-module.exports = ({ tracker, error }) => {
-  const { message } = error || {};
-
-  tracker.track('error', { message });
 };
 
 
@@ -1661,34 +1649,6 @@ CancelToken.source = function source() {
 };
 
 module.exports = CancelToken;
-
-
-/***/ }),
-
-/***/ 138:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-"use strict";
-
-
-var isAbsoluteURL = __webpack_require__(590);
-var combineURLs = __webpack_require__(785);
-
-/**
- * Creates a new URL by combining the baseURL with the requestedURL,
- * only when the requestedURL is not already an absolute URL.
- * If the requestURL is absolute, this function returns the requestedURL untouched.
- *
- * @param {string} baseURL The base URL
- * @param {string} requestedURL Absolute or relative URL to combine
- * @returns {string} The combined full path
- */
-module.exports = function buildFullPath(baseURL, requestedURL) {
-  if (baseURL && !isAbsoluteURL(requestedURL)) {
-    return combineURLs(baseURL, requestedURL);
-  }
-  return requestedURL;
-};
 
 
 /***/ }),
@@ -2197,30 +2157,6 @@ module.exports = (data = {}, pullRequest) => {
 
 /***/ }),
 
-/***/ 162:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const commentOnPullRequest = __webpack_require__(335);
-const fetchPullRequestById = __webpack_require__(105);
-const fetchPullRequests = __webpack_require__(593);
-const fetchSponsorships = __webpack_require__(104);
-const postToSlack = __webpack_require__(887);
-const postToWebhook = __webpack_require__(205);
-const updatePullRequest = __webpack_require__(664);
-
-module.exports = {
-  commentOnPullRequest,
-  fetchPullRequestById,
-  fetchPullRequests,
-  fetchSponsorships,
-  postToSlack,
-  postToWebhook,
-  updatePullRequest,
-};
-
-
-/***/ }),
-
 /***/ 164:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -2238,7 +2174,7 @@ module.exports = (pulls) => groupReviews(pulls).map(({ author, reviews }) => {
 /***/ 173:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { updatePullRequest, commentOnPullRequest } = __webpack_require__(162);
+const { updatePullRequest, commentOnPullRequest } = __webpack_require__(443);
 
 const buildBody = (currentBody, content) => {
   if (!currentBody.trim()) return content;
@@ -2387,13 +2323,6 @@ module.exports = ({
 
 /***/ }),
 
-/***/ 191:
-/***/ (function(module) {
-
-module.exports = require("querystring");
-
-/***/ }),
-
 /***/ 194:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -2423,23 +2352,6 @@ module.exports = ({
 
   return execute();
 };
-
-
-/***/ }),
-
-/***/ 202:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { STATS } = __webpack_require__(648);
-
-const sumStat = (stats, statName) => stats.reduce((a, values) => a + (values[statName] || 0), 0);
-
-const calculateTotals = (allStats) => STATS.reduce((prev, statName) => ({
-  ...prev,
-  [statName]: sumStat(allStats, statName),
-}), {});
-
-module.exports = calculateTotals;
 
 
 /***/ }),
@@ -2504,7 +2416,7 @@ var utils = __webpack_require__(35);
 var settle = __webpack_require__(564);
 var cookies = __webpack_require__(864);
 var buildURL = __webpack_require__(133);
-var buildFullPath = __webpack_require__(138);
+var buildFullPath = __webpack_require__(960);
 var parseHeaders = __webpack_require__(333);
 var isURLSameOrigin = __webpack_require__(688);
 var createError = __webpack_require__(26);
@@ -2904,121 +2816,6 @@ module.exports = calculateBests;
 	}
 
 })( true ? exports : (undefined));
-
-
-/***/ }),
-
-/***/ 242:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-/**
- * Group profile methods. Learn more: https://help.mixpanel.com/hc/en-us/articles/360025333632
- */
-
-const {ProfileHelpers} = __webpack_require__(851);
-
-class MixpanelGroups extends ProfileHelpers() {
-    constructor(mp_instance) {
-        super();
-        this.mixpanel = mp_instance;
-        this.endpoint = '/groups';
-    }
-
-    /** groups.set_once(group_key, group_id, prop, to, modifiers, callback)
-        ---
-        The same as groups.set, but adds a property value to a group only if it has not been set before.
-    */
-    set_once(group_key, group_id, prop, to, modifiers, callback) {
-        const identifiers = {$group_key: group_key, $group_id: group_id};
-        this._set(prop, to, modifiers, callback, {identifiers, set_once: true});
-    }
-
-    /**
-        groups.set(group_key, group_id, prop, to, modifiers, callback)
-        ---
-        set properties on a group profile
-
-        usage:
-
-            mixpanel.groups.set('company', 'Acme Inc.', '$name', 'Acme Inc.');
-
-            mixpanel.groups.set('company', 'Acme Inc.', {
-                'Industry': 'widgets',
-                '$name': 'Acme Inc.',
-            });
-    */
-    set(group_key, group_id, prop, to, modifiers, callback) {
-        const identifiers = {$group_key: group_key, $group_id: group_id};
-        this._set(prop, to, modifiers, callback, {identifiers});
-    }
-
-    /**
-     groups.delete_group(group_key, group_id, modifiers, callback)
-        ---
-        delete a group profile permanently
-
-        usage:
-
-        mixpanel.groups.delete_group('company', 'Acme Inc.');
-        */
-    delete_group(group_key, group_id, modifiers, callback) {
-        const identifiers = {$group_key: group_key, $group_id: group_id};
-        this._delete_profile({identifiers, modifiers, callback});
-    }
-
-    /**
-     groups.remove(group_key, group_id, data, modifiers, callback)
-        ---
-        remove a value from a list-valued group profile property.
-
-        usage:
-
-        mixpanel.groups.remove('company', 'Acme Inc.', {'products': 'anvil'});
-
-        mixpanel.groups.remove('company', 'Acme Inc.', {
-            'products': 'anvil',
-            'customer segments': 'coyotes'
-        });
-        */
-    remove(group_key, group_id, data, modifiers, callback) {
-        const identifiers = {$group_key: group_key, $group_id: group_id};
-        this._remove({identifiers, data, modifiers, callback});
-    }
-
-    /**
-     groups.union(group_key, group_id, data, modifiers, callback)
-        ---
-        merge value(s) into a list-valued group profile property.
-
-        usage:
-
-        mixpanel.groups.union('company', 'Acme Inc.', {'products': 'anvil'});
-
-        mixpanel.groups.union('company', 'Acme Inc.', {'products': ['anvil'], 'customer segments': ['coyotes']});
-        */
-    union(group_key, group_id, data, modifiers, callback) {
-        const identifiers = {$group_key: group_key, $group_id: group_id};
-        this._union({identifiers, data, modifiers, callback})
-    }
-
-    /**
-     groups.unset(group_key, group_id, prop, modifiers, callback)
-        ---
-        delete a property on a group profile
-
-        usage:
-
-        mixpanel.groups.unset('company', 'Acme Inc.', 'products');
-
-        mixpanel.groups.unset('company', 'Acme Inc.', ['products', 'customer segments']);
-        */
-    unset(group_key, group_id, prop, modifiers, callback) {
-        const identifiers = {$group_key: group_key, $group_id: group_id};
-        this._unset({identifiers, prop, modifiers, callback})
-    }
-}
-
-exports.MixpanelGroups = MixpanelGroups;
 
 
 /***/ }),
@@ -5270,16 +5067,19 @@ module.exports = InterceptorManager;
 /***/ }),
 
 /***/ 293:
-/***/ (function(module) {
-
-module.exports = require("buffer");
-
-/***/ }),
-
-/***/ 297:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = __webpack_require__(241);
+const get = __webpack_require__(854);
+
+const parseComments = (node) => ({
+  ...node,
+});
+
+module.exports = ({ node: data }) => ({
+  ...data,
+  comments: (get(data, 'comments.nodes') || []).map(parseComments),
+});
+
 
 /***/ }),
 
@@ -6429,360 +6229,6 @@ module.exports = ({
 
 /***/ }),
 
-/***/ 379:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { getRepoOwner } = __webpack_require__(109);
-
-module.exports = ({ org, repos } = {}) => {
-  const logins = new Set();
-  if (org) logins.add(org);
-  (repos || []).forEach((repo) => logins.add(getRepoOwner(repo)));
-  return [...logins];
-};
-
-
-/***/ }),
-
-/***/ 380:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-const {merge_modifiers, ProfileHelpers} = __webpack_require__(851);
-
-class MixpanelPeople extends ProfileHelpers() {
-    constructor(mp_instance) {
-        super();
-        this.mixpanel = mp_instance;
-        this.endpoint = '/engage';
-    }
-
-    /** people.set_once(distinct_id, prop, to, modifiers, callback)
-        ---
-        The same as people.set but in the words of mixpanel:
-        mixpanel.people.set_once
-
-        " This method allows you to set a user attribute, only if
-            it is not currently set. It can be called multiple times
-            safely, so is perfect for storing things like the first date
-            you saw a user, or the referrer that brought them to your
-            website for the first time. "
-
-    */
-    set_once(distinct_id, prop, to, modifiers, callback) {
-        const identifiers = {$distinct_id: distinct_id};
-        this._set(prop, to, modifiers, callback, {identifiers, set_once: true});
-    }
-
-    /**
-        people.set(distinct_id, prop, to, modifiers, callback)
-        ---
-        set properties on an user record in engage
-
-        usage:
-
-            mixpanel.people.set('bob', 'gender', 'm');
-
-            mixpanel.people.set('joe', {
-                'company': 'acme',
-                'plan': 'premium'
-            });
-    */
-    set(distinct_id, prop, to, modifiers, callback) {
-        const identifiers = {$distinct_id: distinct_id};
-        this._set(prop, to, modifiers, callback, {identifiers});
-    }
-
-    /**
-        people.increment(distinct_id, prop, by, modifiers, callback)
-        ---
-        increment/decrement properties on an user record in engage
-
-        usage:
-
-            mixpanel.people.increment('bob', 'page_views', 1);
-
-            // or, for convenience, if you're just incrementing a counter by 1, you can
-            // simply do
-            mixpanel.people.increment('bob', 'page_views');
-
-            // to decrement a counter, pass a negative number
-            mixpanel.people.increment('bob', 'credits_left', -1);
-
-            // like mixpanel.people.set(), you can increment multiple properties at once:
-            mixpanel.people.increment('bob', {
-                counter1: 1,
-                counter2: 3,
-                counter3: -2
-            });
-    */
-    increment(distinct_id, prop, by, modifiers, callback) {
-        // TODO extract to ProfileHelpers
-
-        var $add = {};
-
-        if (typeof(prop) === 'object') {
-            if (typeof(by) === 'object') {
-                callback = modifiers;
-                modifiers = by;
-            } else {
-                callback = by;
-            }
-            for (const [key, val] of Object.entries(prop)) {
-                if (isNaN(parseFloat(val))) {
-                    if (this.mixpanel.config.debug) {
-                        console.error("Invalid increment value passed to mixpanel.people.increment - must be a number");
-                        console.error("Passed " + key + ":" + val);
-                    }
-                } else {
-                    $add[key] = val;
-                }
-            };
-        } else {
-            if (typeof(by) === 'number' || !by) {
-                by = by || 1;
-                $add[prop] = by;
-                if (typeof(modifiers) === 'function') {
-                    callback = modifiers;
-                }
-            } else if (typeof(by) === 'function') {
-                callback = by;
-                $add[prop] = 1;
-            } else {
-                callback = modifiers;
-                modifiers = (typeof(by) === 'object') ? by : {};
-                $add[prop] = 1;
-            }
-        }
-
-        var data = {
-            '$add': $add,
-            '$token': this.mixpanel.token,
-            '$distinct_id': distinct_id
-        };
-
-        data = merge_modifiers(data, modifiers);
-
-        if (this.mixpanel.config.debug) {
-            console.log("Sending the following data to Mixpanel (Engage):");
-            console.log(data);
-        }
-
-        this.mixpanel.send_request({ method: "GET", endpoint: "/engage", data: data }, callback);
-    }
-
-    /**
-        people.append(distinct_id, prop, value, modifiers, callback)
-        ---
-        Append a value to a list-valued people analytics property.
-
-        usage:
-
-            // append a value to a list, creating it if needed
-            mixpanel.people.append('bob', 'pages_visited', 'homepage');
-
-            // like mixpanel.people.set(), you can append multiple properties at once:
-            mixpanel.people.append('bob', {
-                list1: 'bob',
-                list2: 123
-            });
-    */
-    append(distinct_id, prop, value, modifiers, callback) {
-        // TODO extract to ProfileHelpers
-
-        var $append = {};
-
-        if (typeof(prop) === 'object') {
-            if (typeof(value) === 'object') {
-                callback = modifiers;
-                modifiers = value;
-            } else {
-                callback = value;
-            }
-            Object.keys(prop).forEach(function(key) {
-                $append[key] = prop[key];
-            });
-        } else {
-            $append[prop] = value;
-            if (typeof(modifiers) === 'function') {
-                callback = modifiers;
-            }
-        }
-
-        var data = {
-            '$append': $append,
-            '$token': this.mixpanel.token,
-            '$distinct_id': distinct_id
-        };
-
-        data = merge_modifiers(data, modifiers);
-
-        if (this.mixpanel.config.debug) {
-            console.log("Sending the following data to Mixpanel (Engage):");
-            console.log(data);
-        }
-
-        this.mixpanel.send_request({ method: "GET", endpoint: "/engage", data: data }, callback);
-    }
-
-    /**
-        people.track_charge(distinct_id, amount, properties, modifiers, callback)
-        ---
-        Record that you have charged the current user a certain
-        amount of money.
-
-        usage:
-
-            // charge a user $29.99
-            mixpanel.people.track_charge('bob', 29.99);
-
-            // charge a user $19 on the 1st of february
-            mixpanel.people.track_charge('bob', 19, { '$time': new Date('feb 1 2012') });
-    */
-    track_charge(distinct_id, amount, properties, modifiers, callback) {
-        if (typeof(properties) === 'function' || !properties) {
-            callback = properties || function() {};
-            properties = {};
-        } else {
-            if (typeof(modifiers) === 'function' || !modifiers) {
-                callback = modifiers || function() {};
-                if (properties.$ignore_time || properties.hasOwnProperty("$ip")) {
-                    modifiers = {};
-                    Object.keys(properties).forEach(function(key) {
-                        modifiers[key] = properties[key];
-                        delete properties[key];
-                    });
-                }
-            }
-        }
-
-        if (typeof(amount) !== 'number') {
-            amount = parseFloat(amount);
-            if (isNaN(amount)) {
-                console.error("Invalid value passed to mixpanel.people.track_charge - must be a number");
-                return;
-            }
-        }
-
-        properties.$amount = amount;
-
-        if (properties.hasOwnProperty('$time')) {
-            var time = properties.$time;
-            if (Object.prototype.toString.call(time) === '[object Date]') {
-                properties.$time = time.toISOString();
-            }
-        }
-
-        var data = {
-            '$append': { '$transactions': properties },
-            '$token': this.mixpanel.token,
-            '$distinct_id': distinct_id
-        };
-
-        data = merge_modifiers(data, modifiers);
-
-        if (this.mixpanel.config.debug) {
-            console.log("Sending the following data to Mixpanel (Engage):");
-            console.log(data);
-        }
-
-        this.mixpanel.send_request({ method: "GET", endpoint: "/engage", data: data }, callback);
-    }
-
-    /**
-        people.clear_charges(distinct_id, modifiers, callback)
-        ---
-        Clear all the current user's transactions.
-
-        usage:
-
-            mixpanel.people.clear_charges('bob');
-    */
-    clear_charges(distinct_id, modifiers, callback) {
-        var data = {
-            '$set': { '$transactions': [] },
-            '$token': this.mixpanel.token,
-            '$distinct_id': distinct_id
-        };
-
-        if (typeof(modifiers) === 'function') { callback = modifiers; }
-
-        data = merge_modifiers(data, modifiers);
-
-        if (this.mixpanel.config.debug) {
-            console.log("Clearing this user's charges:", distinct_id);
-        }
-
-        this.mixpanel.send_request({ method: "GET", endpoint: "/engage", data: data }, callback);
-    }
-
-    /**
-        people.delete_user(distinct_id, modifiers, callback)
-        ---
-        delete an user record in engage
-
-        usage:
-
-            mixpanel.people.delete_user('bob');
-    */
-    delete_user(distinct_id, modifiers, callback) {
-        const identifiers = {$distinct_id: distinct_id};
-        this._delete_profile({identifiers, modifiers, callback});
-    }
-
-    /**
-        people.remove(distinct_id, data, modifiers, callback)
-        ---
-        remove a value from a list-valued user profile property.
-
-        usage:
-
-            mixpanel.people.remove('bob', {'browsers': 'firefox'});
-
-            mixpanel.people.remove('bob', {'browsers': 'chrome', 'os': 'linux'});
-    */
-    remove(distinct_id, data, modifiers, callback) {
-        const identifiers = {'$distinct_id': distinct_id};
-        this._remove({identifiers, data, modifiers, callback})
-    }
-
-    /**
-        people.union(distinct_id, data, modifiers, callback)
-        ---
-        merge value(s) into a list-valued people analytics property.
-
-        usage:
-
-            mixpanel.people.union('bob', {'browsers': 'firefox'});
-
-            mixpanel.people.union('bob', {'browsers': ['chrome'], os: ['linux']});
-    */
-    union(distinct_id, data, modifiers, callback) {
-        const identifiers = {$distinct_id: distinct_id};
-        this._union({identifiers, data, modifiers, callback});
-    }
-
-    /**
-        people.unset(distinct_id, prop, modifiers, callback)
-        ---
-        delete a property on an user record in engage
-
-        usage:
-
-            mixpanel.people.unset('bob', 'page_views');
-
-            mixpanel.people.unset('bob', ['page_views', 'last_login']);
-    */
-    unset(distinct_id, prop, modifiers, callback) {
-        const identifiers = {$distinct_id: distinct_id};
-        this._unset({identifiers, prop, modifiers, callback});
-    }
-};
-
-exports.MixpanelPeople = MixpanelPeople;
-
-
-/***/ }),
-
 /***/ 385:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -7182,18 +6628,18 @@ exports.endpoint = endpoint;
 /***/ }),
 
 /***/ 389:
-/***/ (function(module) {
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = ({ tracker, timeMs }) => {
-  const timeSec = Math.floor(timeMs / 1000);
-  const timeMin = Math.floor(timeMs / 60000);
+const { STATS } = __webpack_require__(648);
 
-  tracker.track('success', {
-    timeMs,
-    timeSec,
-    timeMin,
-  });
-};
+const sumStat = (stats, statName) => stats.reduce((a, values) => a + (values[statName] || 0), 0);
+
+const calculateTotals = (allStats) => STATS.reduce((prev, statName) => ({
+  ...prev,
+  [statName]: sumStat(allStats, statName),
+}), {});
+
+module.exports = calculateTotals;
 
 
 /***/ }),
@@ -7201,21 +6647,7 @@ module.exports = ({ tracker, timeMs }) => {
 /***/ 402:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { fetchSponsorships } = __webpack_require__(162);
-const getLogins = __webpack_require__(379);
-const isSponsoring = __webpack_require__(477);
-const isExternalSponsor = __webpack_require__(581);
-
-module.exports = async ({
-  octokit,
-  org,
-  repos,
-}) => {
-  const logins = getLogins({ org, repos });
-  const { user } = await fetchSponsorships({ octokit, logins });
-  return isSponsoring(user) || isExternalSponsor(logins);
-};
-
+module.exports = __webpack_require__(241);
 
 /***/ }),
 
@@ -7515,56 +6947,11 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 /***/ }),
 
-/***/ 412:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const get = __webpack_require__(854);
-
-const parseComments = (node) => ({
-  ...node,
-});
-
-module.exports = ({ node: data }) => ({
-  ...data,
-  comments: (get(data, 'comments.nodes') || []).map(parseComments),
-});
-
-
-/***/ }),
-
 /***/ 413:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = __webpack_require__(141);
 
-
-/***/ }),
-
-/***/ 414:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-const agent_1 = __importDefault(__webpack_require__(578));
-function createHttpsProxyAgent(opts) {
-    return new agent_1.default(opts);
-}
-(function (createHttpsProxyAgent) {
-    createHttpsProxyAgent.HttpsProxyAgent = agent_1.default;
-    createHttpsProxyAgent.prototype = agent_1.default.prototype;
-})(createHttpsProxyAgent || (createHttpsProxyAgent = {}));
-module.exports = createHttpsProxyAgent;
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ 417:
-/***/ (function(module) {
-
-module.exports = require("crypto");
 
 /***/ }),
 
@@ -8279,242 +7666,27 @@ function escapeProperty(s) {
 
 /***/ }),
 
-/***/ 438:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const Mixpanel = __webpack_require__(960);
-const project = __webpack_require__(731);
-
-const MIXPANEL_TOKEN = '6a91c23a5c49e341a337954443e1f2a0';
-
-const getContext = () => ({ version: project.version });
-
-const buildTracker = () => {
-  const mixpanel = Mixpanel.init(MIXPANEL_TOKEN);
-  const context = getContext();
-
-  const track = (event, properties) => mixpanel.track(event, {
-    ...context,
-    ...properties,
-  });
-
-  return {
-    track,
-  };
-};
-
-module.exports = buildTracker;
-
-
-/***/ }),
-
 /***/ 443:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-"use strict";
+const commentOnPullRequest = __webpack_require__(335);
+const fetchPullRequestById = __webpack_require__(105);
+const fetchPullRequests = __webpack_require__(593);
+const fetchSponsorships = __webpack_require__(104);
+const postToSlack = __webpack_require__(887);
+const postToWebhook = __webpack_require__(205);
+const updatePullRequest = __webpack_require__(664);
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+module.exports = {
+  commentOnPullRequest,
+  fetchPullRequestById,
+  fetchPullRequests,
+  fetchSponsorships,
+  postToSlack,
+  postToWebhook,
+  updatePullRequest,
 };
-const events_1 = __webpack_require__(614);
-const debug_1 = __importDefault(__webpack_require__(784));
-const promisify_1 = __importDefault(__webpack_require__(537));
-const debug = debug_1.default('agent-base');
-function isAgent(v) {
-    return Boolean(v) && typeof v.addRequest === 'function';
-}
-function isSecureEndpoint() {
-    const { stack } = new Error();
-    if (typeof stack !== 'string')
-        return false;
-    return stack.split('\n').some(l => l.indexOf('(https.js:') !== -1 || l.indexOf('node:https:') !== -1);
-}
-function createAgent(callback, opts) {
-    return new createAgent.Agent(callback, opts);
-}
-(function (createAgent) {
-    /**
-     * Base `http.Agent` implementation.
-     * No pooling/keep-alive is implemented by default.
-     *
-     * @param {Function} callback
-     * @api public
-     */
-    class Agent extends events_1.EventEmitter {
-        constructor(callback, _opts) {
-            super();
-            let opts = _opts;
-            if (typeof callback === 'function') {
-                this.callback = callback;
-            }
-            else if (callback) {
-                opts = callback;
-            }
-            // Timeout for the socket to be returned from the callback
-            this.timeout = null;
-            if (opts && typeof opts.timeout === 'number') {
-                this.timeout = opts.timeout;
-            }
-            // These aren't actually used by `agent-base`, but are required
-            // for the TypeScript definition files in `@types/node` :/
-            this.maxFreeSockets = 1;
-            this.maxSockets = 1;
-            this.maxTotalSockets = Infinity;
-            this.sockets = {};
-            this.freeSockets = {};
-            this.requests = {};
-            this.options = {};
-        }
-        get defaultPort() {
-            if (typeof this.explicitDefaultPort === 'number') {
-                return this.explicitDefaultPort;
-            }
-            return isSecureEndpoint() ? 443 : 80;
-        }
-        set defaultPort(v) {
-            this.explicitDefaultPort = v;
-        }
-        get protocol() {
-            if (typeof this.explicitProtocol === 'string') {
-                return this.explicitProtocol;
-            }
-            return isSecureEndpoint() ? 'https:' : 'http:';
-        }
-        set protocol(v) {
-            this.explicitProtocol = v;
-        }
-        callback(req, opts, fn) {
-            throw new Error('"agent-base" has no default implementation, you must subclass and override `callback()`');
-        }
-        /**
-         * Called by node-core's "_http_client.js" module when creating
-         * a new HTTP request with this Agent instance.
-         *
-         * @api public
-         */
-        addRequest(req, _opts) {
-            const opts = Object.assign({}, _opts);
-            if (typeof opts.secureEndpoint !== 'boolean') {
-                opts.secureEndpoint = isSecureEndpoint();
-            }
-            if (opts.host == null) {
-                opts.host = 'localhost';
-            }
-            if (opts.port == null) {
-                opts.port = opts.secureEndpoint ? 443 : 80;
-            }
-            if (opts.protocol == null) {
-                opts.protocol = opts.secureEndpoint ? 'https:' : 'http:';
-            }
-            if (opts.host && opts.path) {
-                // If both a `host` and `path` are specified then it's most
-                // likely the result of a `url.parse()` call... we need to
-                // remove the `path` portion so that `net.connect()` doesn't
-                // attempt to open that as a unix socket file.
-                delete opts.path;
-            }
-            delete opts.agent;
-            delete opts.hostname;
-            delete opts._defaultAgent;
-            delete opts.defaultPort;
-            delete opts.createConnection;
-            // Hint to use "Connection: close"
-            // XXX: non-documented `http` module API :(
-            req._last = true;
-            req.shouldKeepAlive = false;
-            let timedOut = false;
-            let timeoutId = null;
-            const timeoutMs = opts.timeout || this.timeout;
-            const onerror = (err) => {
-                if (req._hadError)
-                    return;
-                req.emit('error', err);
-                // For Safety. Some additional errors might fire later on
-                // and we need to make sure we don't double-fire the error event.
-                req._hadError = true;
-            };
-            const ontimeout = () => {
-                timeoutId = null;
-                timedOut = true;
-                const err = new Error(`A "socket" was not created for HTTP request before ${timeoutMs}ms`);
-                err.code = 'ETIMEOUT';
-                onerror(err);
-            };
-            const callbackError = (err) => {
-                if (timedOut)
-                    return;
-                if (timeoutId !== null) {
-                    clearTimeout(timeoutId);
-                    timeoutId = null;
-                }
-                onerror(err);
-            };
-            const onsocket = (socket) => {
-                if (timedOut)
-                    return;
-                if (timeoutId != null) {
-                    clearTimeout(timeoutId);
-                    timeoutId = null;
-                }
-                if (isAgent(socket)) {
-                    // `socket` is actually an `http.Agent` instance, so
-                    // relinquish responsibility for this `req` to the Agent
-                    // from here on
-                    debug('Callback returned another Agent instance %o', socket.constructor.name);
-                    socket.addRequest(req, opts);
-                    return;
-                }
-                if (socket) {
-                    socket.once('free', () => {
-                        this.freeSocket(socket, opts);
-                    });
-                    req.onSocket(socket);
-                    return;
-                }
-                const err = new Error(`no Duplex stream was returned to agent-base for \`${req.method} ${req.path}\``);
-                onerror(err);
-            };
-            if (typeof this.callback !== 'function') {
-                onerror(new Error('`callback` is not defined'));
-                return;
-            }
-            if (!this.promisifiedCallback) {
-                if (this.callback.length >= 3) {
-                    debug('Converting legacy callback function to promise');
-                    this.promisifiedCallback = promisify_1.default(this.callback);
-                }
-                else {
-                    this.promisifiedCallback = this.callback;
-                }
-            }
-            if (typeof timeoutMs === 'number' && timeoutMs > 0) {
-                timeoutId = setTimeout(ontimeout, timeoutMs);
-            }
-            if ('port' in opts && typeof opts.port !== 'number') {
-                opts.port = Number(opts.port);
-            }
-            try {
-                debug('Resolving socket for %o request: %o', opts.protocol, `${req.method} ${req.path}`);
-                Promise.resolve(this.promisifiedCallback(req, opts)).then(onsocket, callbackError);
-            }
-            catch (err) {
-                Promise.reject(err).catch(callbackError);
-            }
-        }
-        freeSocket(socket, opts) {
-            debug('Freeing socket %o %o', socket.constructor.name, opts);
-            socket.destroy();
-        }
-        destroy() {
-            debug('Destroying agent %o', this.constructor.name);
-        }
-    }
-    createAgent.Agent = Agent;
-    // So that `instanceof` works correctly
-    createAgent.prototype = createAgent.Agent.prototype;
-})(createAgent || (createAgent = {}));
-module.exports = createAgent;
-//# sourceMappingURL=index.js.map
+
 
 /***/ }),
 
@@ -10902,16 +10074,6 @@ Object.defineProperty(exports, "markdownSummary", { enumerable: true, get: funct
 
 /***/ }),
 
-/***/ 477:
-/***/ (function(module) {
-
-module.exports = (list = {}) => Object
-  .values(list)
-  .some((value) => value === true);
-
-
-/***/ }),
-
 /***/ 482:
 /***/ (function(module) {
 
@@ -12532,43 +11694,6 @@ module.exports.Collection = Hook.Collection
 
 /***/ }),
 
-/***/ 530:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const Telemetry = __webpack_require__(954);
-
-module.exports = {
-  Telemetry,
-};
-
-
-/***/ }),
-
-/***/ 537:
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-function promisify(fn) {
-    return function (req, opts) {
-        return new Promise((resolve, reject) => {
-            fn.call(this, req, opts, (err, rtn) => {
-                if (err) {
-                    reject(err);
-                }
-                else {
-                    resolve(rtn);
-                }
-            });
-        });
-    };
-}
-exports.default = promisify;
-//# sourceMappingURL=promisify.js.map
-
-/***/ }),
-
 /***/ 549:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -13305,7 +12430,7 @@ module.exports = function settle(resolve, reject, response) {
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const { t } = __webpack_require__(781);
-const { postToWebhook } = __webpack_require__(162);
+const { postToWebhook } = __webpack_require__(443);
 const buildPayload = __webpack_require__(108);
 
 module.exports = async ({
@@ -13341,218 +12466,6 @@ module.exports = async ({
 
   core.debug(t('integrations.webhook.logs.success'));
 };
-
-
-/***/ }),
-
-/***/ 578:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const net_1 = __importDefault(__webpack_require__(631));
-const tls_1 = __importDefault(__webpack_require__(16));
-const url_1 = __importDefault(__webpack_require__(835));
-const assert_1 = __importDefault(__webpack_require__(357));
-const debug_1 = __importDefault(__webpack_require__(784));
-const agent_base_1 = __webpack_require__(443);
-const parse_proxy_response_1 = __importDefault(__webpack_require__(658));
-const debug = debug_1.default('https-proxy-agent:agent');
-/**
- * The `HttpsProxyAgent` implements an HTTP Agent subclass that connects to
- * the specified "HTTP(s) proxy server" in order to proxy HTTPS requests.
- *
- * Outgoing HTTP requests are first tunneled through the proxy server using the
- * `CONNECT` HTTP request method to establish a connection to the proxy server,
- * and then the proxy server connects to the destination target and issues the
- * HTTP request from the proxy server.
- *
- * `https:` requests have their socket connection upgraded to TLS once
- * the connection to the proxy server has been established.
- *
- * @api public
- */
-class HttpsProxyAgent extends agent_base_1.Agent {
-    constructor(_opts) {
-        let opts;
-        if (typeof _opts === 'string') {
-            opts = url_1.default.parse(_opts);
-        }
-        else {
-            opts = _opts;
-        }
-        if (!opts) {
-            throw new Error('an HTTP(S) proxy server `host` and `port` must be specified!');
-        }
-        debug('creating new HttpsProxyAgent instance: %o', opts);
-        super(opts);
-        const proxy = Object.assign({}, opts);
-        // If `true`, then connect to the proxy server over TLS.
-        // Defaults to `false`.
-        this.secureProxy = opts.secureProxy || isHTTPS(proxy.protocol);
-        // Prefer `hostname` over `host`, and set the `port` if needed.
-        proxy.host = proxy.hostname || proxy.host;
-        if (typeof proxy.port === 'string') {
-            proxy.port = parseInt(proxy.port, 10);
-        }
-        if (!proxy.port && proxy.host) {
-            proxy.port = this.secureProxy ? 443 : 80;
-        }
-        // ALPN is supported by Node.js >= v5.
-        // attempt to negotiate http/1.1 for proxy servers that support http/2
-        if (this.secureProxy && !('ALPNProtocols' in proxy)) {
-            proxy.ALPNProtocols = ['http 1.1'];
-        }
-        if (proxy.host && proxy.path) {
-            // If both a `host` and `path` are specified then it's most likely
-            // the result of a `url.parse()` call... we need to remove the
-            // `path` portion so that `net.connect()` doesn't attempt to open
-            // that as a Unix socket file.
-            delete proxy.path;
-            delete proxy.pathname;
-        }
-        this.proxy = proxy;
-    }
-    /**
-     * Called when the node-core HTTP client library is creating a
-     * new HTTP request.
-     *
-     * @api protected
-     */
-    callback(req, opts) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { proxy, secureProxy } = this;
-            // Create a socket connection to the proxy server.
-            let socket;
-            if (secureProxy) {
-                debug('Creating `tls.Socket`: %o', proxy);
-                socket = tls_1.default.connect(proxy);
-            }
-            else {
-                debug('Creating `net.Socket`: %o', proxy);
-                socket = net_1.default.connect(proxy);
-            }
-            const headers = Object.assign({}, proxy.headers);
-            const hostname = `${opts.host}:${opts.port}`;
-            let payload = `CONNECT ${hostname} HTTP/1.1\r\n`;
-            // Inject the `Proxy-Authorization` header if necessary.
-            if (proxy.auth) {
-                headers['Proxy-Authorization'] = `Basic ${Buffer.from(proxy.auth).toString('base64')}`;
-            }
-            // The `Host` header should only include the port
-            // number when it is not the default port.
-            let { host, port, secureEndpoint } = opts;
-            if (!isDefaultPort(port, secureEndpoint)) {
-                host += `:${port}`;
-            }
-            headers.Host = host;
-            headers.Connection = 'close';
-            for (const name of Object.keys(headers)) {
-                payload += `${name}: ${headers[name]}\r\n`;
-            }
-            const proxyResponsePromise = parse_proxy_response_1.default(socket);
-            socket.write(`${payload}\r\n`);
-            const { statusCode, buffered } = yield proxyResponsePromise;
-            if (statusCode === 200) {
-                req.once('socket', resume);
-                if (opts.secureEndpoint) {
-                    const servername = opts.servername || opts.host;
-                    if (!servername) {
-                        throw new Error('Could not determine "servername"');
-                    }
-                    // The proxy is connecting to a TLS server, so upgrade
-                    // this socket connection to a TLS connection.
-                    debug('Upgrading socket connection to TLS');
-                    return tls_1.default.connect(Object.assign(Object.assign({}, omit(opts, 'host', 'hostname', 'path', 'port')), { socket,
-                        servername }));
-                }
-                return socket;
-            }
-            // Some other status code that's not 200... need to re-play the HTTP
-            // header "data" events onto the socket once the HTTP machinery is
-            // attached so that the node core `http` can parse and handle the
-            // error status code.
-            // Close the original socket, and a new "fake" socket is returned
-            // instead, so that the proxy doesn't get the HTTP request
-            // written to it (which may contain `Authorization` headers or other
-            // sensitive data).
-            //
-            // See: https://hackerone.com/reports/541502
-            socket.destroy();
-            const fakeSocket = new net_1.default.Socket();
-            fakeSocket.readable = true;
-            // Need to wait for the "socket" event to re-play the "data" events.
-            req.once('socket', (s) => {
-                debug('replaying proxy buffer for failed request');
-                assert_1.default(s.listenerCount('data') > 0);
-                // Replay the "buffered" Buffer onto the fake `socket`, since at
-                // this point the HTTP module machinery has been hooked up for
-                // the user.
-                s.push(buffered);
-                s.push(null);
-            });
-            return fakeSocket;
-        });
-    }
-}
-exports.default = HttpsProxyAgent;
-function resume(socket) {
-    socket.resume();
-}
-function isDefaultPort(port, secure) {
-    return Boolean((!secure && port === 80) || (secure && port === 443));
-}
-function isHTTPS(protocol) {
-    return typeof protocol === 'string' ? /^https:?$/i.test(protocol) : false;
-}
-function omit(obj, ...keys) {
-    const ret = {};
-    let key;
-    for (key in obj) {
-        if (!keys.includes(key)) {
-            ret[key] = obj[key];
-        }
-    }
-    return ret;
-}
-//# sourceMappingURL=agent.js.map
-
-/***/ }),
-
-/***/ 581:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const crypto = __webpack_require__(417);
-
-// A list of organizations which are sponsoring this project outside Github 💙
-// (hashed to keep them private)
-const externalSponsors = new Set([
-  '4cf2d30b6327df1b462663c7611de22f',
-  'cf681c59a1d2b1817befafc0d9482ba1',
-  'b9cf4cc40150a529e71058bd59f0ed0b',
-  '9d711ff8c0d5639289cdebfe92b11ecb',
-]);
-
-const getHash = (str) => crypto
-  .createHash('md5')
-  .update(str.toLowerCase())
-  .digest('hex');
-
-module.exports = (logins) => [...(logins || [])]
-  .some((login) => externalSponsors.has(getHash(login)));
 
 
 /***/ }),
@@ -13799,7 +12712,7 @@ module.exports = function isAbsoluteURL(url) {
 /***/ 591:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { fetchPullRequests } = __webpack_require__(162);
+const { fetchPullRequests } = __webpack_require__(443);
 const { parsePullRequest } = __webpack_require__(120);
 
 const filterNullAuthor = ({ node }) => !!node.author;
@@ -13902,61 +12815,11 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 609:
-/***/ (function(__unusedmodule, exports) {
-
-/**
- * helper to wait for all callbacks to complete; similar to `Promise.all`
- * exposed to metrics object for unit tests
- * @param {Array} requests
- * @param {Function} handler
- * @param {Function} callback
- */
-exports.async_all = function(requests, handler, callback) {
-    var total = requests.length,
-        errors = null,
-        results = [],
-        done = function (err, result) {
-            if (err) {
-                // errors are `null` unless there is an error, which allows for promisification
-                errors = errors || [];
-                errors.push(err);
-            }
-            results.push(result);
-            if (--total === 0) {
-                callback(errors, results)
-            }
-        };
-
-    if (total === 0) {
-        callback(errors, results);
-    } else {
-        for(var i = 0, l = requests.length; i < l; i++) {
-            handler(requests[i], done);
-        }
-    }
-};
-
-/**
- * Validate type of time property, and convert to Unix timestamp if necessary
- * @param {Date|number} time - value to check
- * @returns {number} Unix timestamp
- */
-exports.ensure_timestamp = function(time) {
-    if (!(time instanceof Date || typeof time === "number")) {
-        throw new Error("`time` property must be a Date or Unix timestamp and is only required for `import` endpoint");
-    }
-    return time instanceof Date ? Math.floor(time.getTime() / 1000) : time;
-};
-
-
-/***/ }),
-
 /***/ 612:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const { t } = __webpack_require__(781);
-const { postToWebhook } = __webpack_require__(162);
+const { postToWebhook } = __webpack_require__(443);
 const { TeamsSplitter } = __webpack_require__(40);
 const buildMessage = __webpack_require__(750);
 const buildPayload = __webpack_require__(466);
@@ -13968,7 +12831,6 @@ module.exports = async ({
   repos,
   core,
   teams,
-  isSponsor,
   reviewers,
   periodLength,
   disableLinks,
@@ -13979,11 +12841,6 @@ module.exports = async ({
 
   if (!webhook) {
     core.debug(t('integrations.teams.logs.notConfigured'));
-    return;
-  }
-
-  if (!isSponsor) {
-    core.error(t('integrations.teams.errors.notSponsor'));
     return;
   }
 
@@ -14127,79 +12984,6 @@ module.exports.implForWrapper = function (wrapper) {
 
 /***/ }),
 
-/***/ 658:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const debug_1 = __importDefault(__webpack_require__(784));
-const debug = debug_1.default('https-proxy-agent:parse-proxy-response');
-function parseProxyResponse(socket) {
-    return new Promise((resolve, reject) => {
-        // we need to buffer any HTTP traffic that happens with the proxy before we get
-        // the CONNECT response, so that if the response is anything other than an "200"
-        // response code, then we can re-play the "data" events on the socket once the
-        // HTTP parser is hooked up...
-        let buffersLength = 0;
-        const buffers = [];
-        function read() {
-            const b = socket.read();
-            if (b)
-                ondata(b);
-            else
-                socket.once('readable', read);
-        }
-        function cleanup() {
-            socket.removeListener('end', onend);
-            socket.removeListener('error', onerror);
-            socket.removeListener('close', onclose);
-            socket.removeListener('readable', read);
-        }
-        function onclose(err) {
-            debug('onclose had error %o', err);
-        }
-        function onend() {
-            debug('onend');
-        }
-        function onerror(err) {
-            cleanup();
-            debug('onerror %o', err);
-            reject(err);
-        }
-        function ondata(b) {
-            buffers.push(b);
-            buffersLength += b.length;
-            const buffered = Buffer.concat(buffers, buffersLength);
-            const endOfHeaders = buffered.indexOf('\r\n\r\n');
-            if (endOfHeaders === -1) {
-                // keep buffering
-                debug('have not received end of HTTP headers yet...');
-                read();
-                return;
-            }
-            const firstLine = buffered.toString('ascii', 0, buffered.indexOf('\r\n'));
-            const statusCode = +firstLine.split(' ')[1];
-            debug('got proxy server response: %o', firstLine);
-            resolve({
-                statusCode,
-                buffered
-            });
-        }
-        socket.on('error', onerror);
-        socket.on('close', onclose);
-        socket.on('end', onend);
-        read();
-    });
-}
-exports.default = parseProxyResponse;
-//# sourceMappingURL=parse-proxy-response.js.map
-
-/***/ }),
-
 /***/ 660:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -14226,8 +13010,7 @@ module.exports = getContributions;
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const { subtractDaysToDate } = __webpack_require__(353);
-const { Telemetry } = __webpack_require__(530);
-const { fetchPullRequestById } = __webpack_require__(162);
+const { fetchPullRequestById } = __webpack_require__(443);
 const {
   getPulls,
   buildTable,
@@ -14235,7 +13018,6 @@ const {
   getReviewers,
   buildComment,
   setUpReviewers,
-  checkSponsorship,
   alreadyPublished,
   postSlackMessage,
   postSummary,
@@ -14313,20 +13095,10 @@ const run = async (params) => {
 module.exports = async (params) => {
   core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
 
-  const { githubToken, org, repos } = params;
+  const { githubToken } = params;
   const octokit = github.getOctokit(githubToken);
-  const isSponsor = await checkSponsorship({ octokit, org, repos });
-  const telemetry = new Telemetry({ core, isSponsor, telemetry: params.telemetry });
-  if (isSponsor) core.info('Thanks for sponsoring this project! 💙');
 
-  try {
-    telemetry.start(params);
-    await run({ ...params, isSponsor, octokit });
-    telemetry.success();
-  } catch (error) {
-    telemetry.error(error);
-    throw error;
-  }
+  await run({ ...params, octokit });
 };
 
 
@@ -14671,7 +13443,7 @@ module.exports = require("util");
 
 var utils = __webpack_require__(35);
 var settle = __webpack_require__(564);
-var buildFullPath = __webpack_require__(138);
+var buildFullPath = __webpack_require__(960);
 var buildURL = __webpack_require__(133);
 var http = __webpack_require__(605);
 var https = __webpack_require__(211);
@@ -15435,13 +14207,6 @@ module.exports = function bind(fn, thisArg) {
   };
 };
 
-
-/***/ }),
-
-/***/ 731:
-/***/ (function(module) {
-
-module.exports = {"name":"pull-request-stats","version":"2.7.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"eslint src && ncc build src/index.js","test":"jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
 
 /***/ }),
 
@@ -17613,245 +16378,6 @@ exports.restEndpointMethods = restEndpointMethods;
 
 /***/ }),
 
-/***/ 851:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-/**
- * Mixin with profile-related helpers (for people and groups)
- */
-
-const util = __webpack_require__(669);
-const {ensure_timestamp} = __webpack_require__(609);
-
-function merge_modifiers(data, modifiers) {
-    if (modifiers) {
-        if (modifiers.$ignore_alias) {
-            data.$ignore_alias = modifiers.$ignore_alias;
-        }
-        if (modifiers.$ignore_time) {
-            data.$ignore_time = modifiers.$ignore_time;
-        }
-        if (modifiers.hasOwnProperty("$ip")) {
-            data.$ip = modifiers.$ip;
-        }
-        if (modifiers.hasOwnProperty("$time")) {
-            data.$time = ensure_timestamp(modifiers.$time);
-        }
-    }
-    return data;
-};
-exports.merge_modifiers = merge_modifiers;
-
-exports.ProfileHelpers = (Base = Object) => class extends Base {
-    get token() {
-        return this.mixpanel.token;
-    }
-
-    get config() {
-        return this.mixpanel.config;
-    }
-
-    _set(prop, to, modifiers, callback, {identifiers, set_once = false}) {
-        let $set = {};
-
-        if (typeof(prop) === 'object') {
-            if (typeof(to) === 'object') {
-                callback = modifiers;
-                modifiers = to;
-            } else {
-                callback = to;
-            }
-            $set = prop;
-        } else {
-            $set[prop] = to;
-            if (typeof(modifiers) === 'function' || !modifiers) {
-                callback = modifiers;
-            }
-        }
-
-        let data = {
-            '$token': this.token,
-            ...identifiers,
-        };
-
-        const set_key = set_once ? "$set_once" : "$set";
-        data[set_key] = $set;
-
-        if ('ip' in $set) {
-            data.$ip = $set.ip;
-            delete $set.ip;
-        }
-
-        if ($set.$ignore_time) {
-            data.$ignore_time = $set.$ignore_time;
-            delete $set.$ignore_time;
-        }
-
-        data = merge_modifiers(data, modifiers);
-
-        if (this.config.debug) {
-            console.log(`Sending the following data to Mixpanel (${this.endpoint}):`);
-            console.log(data);
-        }
-
-        this.mixpanel.send_request({ method: "GET", endpoint: this.endpoint, data }, callback);
-    }
-
-    _delete_profile({identifiers, modifiers, callback}){
-        let data = {
-            '$delete': '',
-            '$token': this.token,
-            ...identifiers,
-        };
-
-        if (typeof(modifiers) === 'function') { callback = modifiers; }
-
-        data = merge_modifiers(data, modifiers);
-
-        if (this.config.debug) {
-            console.log(`Deleting profile ${JSON.stringify(identifiers)}`);
-        }
-
-        this.mixpanel.send_request({ method: "GET", endpoint: this.endpoint, data }, callback);
-    }
-
-    _remove({identifiers, data, modifiers, callback}) {
-        let $remove = {};
-
-        if (typeof(data) !== 'object' || util.isArray(data)) {
-            if (this.config.debug) {
-                console.error("Invalid value passed to #remove - data must be an object with scalar values");
-            }
-            return;
-        }
-
-        for (const [key, val] of Object.entries(data)) {
-            if (typeof(val) === 'string' || typeof(val) === 'number') {
-                $remove[key] = val;
-            } else {
-                if (this.config.debug) {
-                    console.error("Invalid argument passed to #remove - values must be scalar");
-                    console.error("Passed " + key + ':', val);
-                }
-                return;
-            }
-        }
-
-        if (Object.keys($remove).length === 0) {
-            return;
-        }
-
-        data = {
-            '$remove': $remove,
-            '$token': this.token,
-            ...identifiers
-        };
-
-        if (typeof(modifiers) === 'function') {
-            callback = modifiers;
-        }
-
-        data = merge_modifiers(data, modifiers);
-
-        if (this.config.debug) {
-            console.log(`Sending the following data to Mixpanel (${this.endpoint}):`);
-            console.log(data);
-        }
-
-        this.mixpanel.send_request({ method: "GET", endpoint: this.endpoint, data }, callback);
-    }
-
-    _union({identifiers, data, modifiers, callback}) {
-        let $union = {};
-
-        if (typeof(data) !== 'object' || util.isArray(data)) {
-            if (this.config.debug) {
-                console.error("Invalid value passed to #union - data must be an object with scalar or array values");
-            }
-            return;
-        }
-
-        for (const [key, val] of Object.entries(data)) {
-            if (util.isArray(val)) {
-                var merge_values = val.filter(function(v) {
-                    return typeof(v) === 'string' || typeof(v) === 'number';
-                });
-                if (merge_values.length > 0) {
-                    $union[key] = merge_values;
-                }
-            } else if (typeof(val) === 'string' || typeof(val) === 'number') {
-                $union[key] = [val];
-            } else {
-                if (this.config.debug) {
-                    console.error("Invalid argument passed to #union - values must be a scalar value or array");
-                    console.error("Passed " + key + ':', val);
-                }
-            }
-        }
-
-        if (Object.keys($union).length === 0) {
-            return;
-        }
-
-        data = {
-            '$union': $union,
-            '$token': this.token,
-            ...identifiers,
-        };
-
-        if (typeof(modifiers) === 'function') {
-            callback = modifiers;
-        }
-
-        data = merge_modifiers(data, modifiers);
-
-        if (this.config.debug) {
-            console.log(`Sending the following data to Mixpanel (${this.endpoint}):`);
-            console.log(data);
-        }
-
-        this.mixpanel.send_request({ method: "GET", endpoint: this.endpoint, data }, callback);
-    }
-
-    _unset({identifiers, prop, modifiers, callback}){
-        let $unset = [];
-
-        if (util.isArray(prop)) {
-            $unset = prop;
-        } else if (typeof(prop) === 'string') {
-            $unset = [prop];
-        } else {
-            if (this.config.debug) {
-                console.error("Invalid argument passed to #unset - must be a string or array");
-                console.error("Passed: " + prop);
-            }
-            return;
-        }
-
-        let data = {
-            '$unset': $unset,
-            '$token': this.token,
-            ...identifiers,
-        };
-
-        if (typeof(modifiers) === 'function') {
-            callback = modifiers;
-        }
-
-        data = merge_modifiers(data, modifiers);
-
-        if (this.config.debug) {
-            console.log(`Sending the following data to Mixpanel (${this.endpoint}):`);
-            console.log(data);
-        }
-
-        this.mixpanel.send_request({ method: "GET", endpoint: this.endpoint, data }, callback);
-    }
-};
-
-
-/***/ }),
-
 /***/ 854:
 /***/ (function(module) {
 
@@ -18895,7 +17421,7 @@ module.exports = require("tty");
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const { t } = __webpack_require__(781);
-const { postToSlack } = __webpack_require__(162);
+const { postToSlack } = __webpack_require__(443);
 const { SlackSplitter } = __webpack_require__(40);
 const buildMessage = __webpack_require__(741);
 
@@ -18904,7 +17430,6 @@ module.exports = async ({
   repos,
   core,
   slack,
-  isSponsor,
   reviewers,
   periodLength,
   disableLinks,
@@ -18915,11 +17440,6 @@ module.exports = async ({
 
   if (!webhook || !channel) {
     core.debug(t('integrations.slack.logs.notConfigured'));
-    return;
-  }
-
-  if (!isSponsor) {
-    core.error(t('integrations.slack.errors.notSponsor'));
     return;
   }
 
@@ -19175,7 +17695,7 @@ module.exports = function () {
 
 const buildReviewTimeLink = __webpack_require__(922);
 const getContributions = __webpack_require__(660);
-const calculateTotals = __webpack_require__(202);
+const calculateTotals = __webpack_require__(389);
 const sortByStats = __webpack_require__(914);
 
 const applyLimit = (data, limit) => (limit > 0 ? data.slice(0, limit) : data);
@@ -19199,54 +17719,6 @@ module.exports = ({
       contributions: getContributions(reviewer, totals),
       urls: getUrls({ reviewer, periodLength }),
     }));
-};
-
-
-/***/ }),
-
-/***/ 907:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { getRepoOwner } = __webpack_require__(109);
-
-module.exports = ({
-  org,
-  repos,
-  sortBy,
-  periodLength,
-  displayCharts,
-  disableLinks,
-  currentRepo,
-  limit,
-  tracker,
-  slack,
-  teams,
-  webhook,
-}) => {
-  const owner = getRepoOwner(currentRepo);
-  const reposCount = (repos || []).length;
-  const orgsCount = org ? 1 : 0;
-  const usingSlack = !!(slack || {}).webhook;
-  const usingTeams = !!(teams || {}).webhook;
-  const usingWebhook = !!webhook;
-
-  tracker.track('run', {
-    // Necessary to build the "Used by" section in Readme:
-    owner,
-    // Necessary to learn if used against specific repos or full organizations:
-    orgsCount,
-    reposCount,
-    currentRepo,
-    // Necessary to learn which options are commonly used and improve them:
-    sortBy,
-    periodLength,
-    displayCharts,
-    disableLinks,
-    limit,
-    usingSlack,
-    usingTeams,
-    usingWebhook,
-  });
 };
 
 
@@ -19279,7 +17751,7 @@ module.exports = sortByStats;
 /***/ 922:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const JSURL = __webpack_require__(297);
+const JSURL = __webpack_require__(402);
 
 const URL = 'https://app.flowwer.dev/charts/review-time/';
 const MAX_URI_LENGTH = 1024;
@@ -20782,7 +19254,6 @@ module.exports.parseURL = function (input, options) {
 const alreadyPublished = __webpack_require__(217);
 const buildTable = __webpack_require__(194);
 const buildComment = __webpack_require__(641);
-const checkSponsorship = __webpack_require__(402);
 const getPulls = __webpack_require__(591);
 const getReviewers = __webpack_require__(164);
 const postComment = __webpack_require__(173);
@@ -20796,7 +19267,6 @@ module.exports = {
   alreadyPublished,
   buildTable,
   buildComment,
-  checkSponsorship,
   getPulls,
   getReviewers,
   postComment,
@@ -20917,522 +19387,29 @@ module.exports = {
 
 /***/ }),
 
-/***/ 954:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const sendError = __webpack_require__(111);
-const sendStart = __webpack_require__(907);
-const sendSuccess = __webpack_require__(389);
-const buildTracker = __webpack_require__(438);
-
-class Telemetry {
-  constructor({ core, isSponsor, telemetry }) {
-    this.useTelemetry = !isSponsor || telemetry;
-    this.tracker = this.useTelemetry ? buildTracker() : null;
-    if (!this.useTelemetry) core.debug('Telemetry disabled correctly');
-    if (!telemetry && !isSponsor) core.error('Disabling telemetry is a premium feature, available to sponsors.');
-  }
-
-  start(params) {
-    if (!this.useTelemetry) return;
-    this.startDate = new Date();
-    sendStart({
-      ...params,
-      tracker: this.tracker,
-    });
-  }
-
-  error(error) {
-    if (!this.useTelemetry) return;
-    sendError({
-      error,
-      tracker: this.tracker,
-    });
-  }
-
-  success() {
-    if (!this.useTelemetry) return;
-    sendSuccess({
-      timeMs: new Date() - this.startDate,
-      tracker: this.tracker,
-    });
-  }
-}
-
-module.exports = Telemetry;
-
-
-/***/ }),
-
 /***/ 960:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-/*
-    Heavily inspired by the original js library copyright Mixpanel, Inc.
-    (http://mixpanel.com/)
-
-    Copyright (c) 2012 Carl Sverre
-
-    Released under the MIT license.
-*/
-
-const querystring = __webpack_require__(191);
-const Buffer = __webpack_require__(293).Buffer;
-const http = __webpack_require__(605);
-const https = __webpack_require__(211);
-const HttpsProxyAgent = __webpack_require__(414);
-
-const {async_all, ensure_timestamp} = __webpack_require__(609);
-const {MixpanelGroups} = __webpack_require__(242);
-const {MixpanelPeople} = __webpack_require__(380);
-
-const DEFAULT_CONFIG = {
-    test: false,
-    debug: false,
-    verbose: false,
-    host: 'api.mixpanel.com',
-    protocol: 'https',
-    path: '',
-};
-
-var create_client = function(token, config) {
-    if (!token) {
-        throw new Error("The Mixpanel Client needs a Mixpanel token: `init(token)`");
-    }
-
-    // mixpanel constants
-    const MAX_BATCH_SIZE = 50;
-    const TRACK_AGE_LIMIT = 60 * 60 * 24 * 5;
-    const REQUEST_LIBS = {http, https};
-    const proxyPath = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;
-    const proxyAgent = proxyPath ? new HttpsProxyAgent(proxyPath) : null;
-
-    const metrics = {
-        token,
-        config: {...DEFAULT_CONFIG},
-    };
-
-    /**
-     * sends an async GET or POST request to mixpanel
-     * for batch processes data must be send in the body of a POST
-     * @param {object} options
-     * @param {string} options.endpoint
-     * @param {object} options.data         the data to send in the request
-     * @param {string} [options.method]     e.g. `get` or `post`, defaults to `get`
-     * @param {function} callback           called on request completion or error
-     */
-    metrics.send_request = function(options, callback) {
-        callback = callback || function() {};
-
-        let content = Buffer.from(JSON.stringify(options.data)).toString('base64');
-        const endpoint = options.endpoint;
-        const method = (options.method || 'GET').toUpperCase();
-        let query_params = {
-            'ip': 0,
-            'verbose': metrics.config.verbose ? 1 : 0
-        };
-        const key = metrics.config.key;
-        const secret = metrics.config.secret;
-        const request_lib = REQUEST_LIBS[metrics.config.protocol];
-        let request_options = {
-            host: metrics.config.host,
-            port: metrics.config.port,
-            headers: {},
-            method: method
-        };
-        let request;
-
-        if (!request_lib) {
-            throw new Error(
-                "Mixpanel Initialization Error: Unsupported protocol " + metrics.config.protocol + ". " +
-                "Supported protocols are: " + Object.keys(REQUEST_LIBS)
-            );
-        }
-
-
-        if (method === 'POST') {
-            content = 'data=' + content;
-            request_options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-            request_options.headers['Content-Length'] = Buffer.byteLength(content);
-        } else if (method === 'GET') {
-            query_params.data = content;
-        }
-
-
-        // add auth params
-        if (secret) {
-            if (request_lib !== https) {
-                throw new Error("Must use HTTPS if authenticating with API Secret");
-            }
-            const encoded = Buffer.from(secret + ':').toString('base64');
-            request_options.headers['Authorization'] = 'Basic ' + encoded;
-        } else if (key) {
-            query_params.api_key = key;
-        } else if (endpoint === '/import') {
-            throw new Error("The Mixpanel Client needs a Mixpanel API Secret when importing old events: `init(token, { secret: ... })`");
-        }
-
-        if (proxyAgent) {
-            request_options.agent = proxyAgent;
-        }
-
-        if (metrics.config.test) {
-            query_params.test = 1;
-        }
-
-        request_options.path = metrics.config.path + endpoint + "?" + querystring.stringify(query_params);
-
-        request = request_lib.request(request_options, function(res) {
-            var data = "";
-            res.on('data', function(chunk) {
-                data += chunk;
-            });
-
-            res.on('end', function() {
-                var e;
-                if (metrics.config.verbose) {
-                    try {
-                        var result = JSON.parse(data);
-                        if(result.status != 1) {
-                            e = new Error("Mixpanel Server Error: " + result.error);
-                        }
-                    }
-                    catch(ex) {
-                        e = new Error("Could not parse response from Mixpanel");
-                    }
-                }
-                else {
-                    e = (data !== '1') ? new Error("Mixpanel Server Error: " + data) : undefined;
-                }
-
-                callback(e);
-            });
-        });
-
-        request.on('error', function(e) {
-            if (metrics.config.debug) {
-                console.log("Got Error: " + e.message);
-            }
-            callback(e);
-        });
-
-        if (method === 'POST') {
-            request.write(content);
-        }
-        request.end();
-    };
-
-    /**
-     * Send an event to Mixpanel, using the specified endpoint (e.g., track/import)
-     * @param {string} endpoint - API endpoint name
-     * @param {string} event - event name
-     * @param {object} properties - event properties
-     * @param {Function} [callback] - callback for request completion/error
-     */
-    metrics.send_event_request = function(endpoint, event, properties, callback) {
-        properties.token = metrics.token;
-        properties.mp_lib = "node";
-
-        var data = {
-            event: event,
-            properties: properties
-        };
-
-        if (metrics.config.debug) {
-            console.log("Sending the following event to Mixpanel:\n", data);
-        }
-
-        metrics.send_request({ method: "GET", endpoint: endpoint, data: data }, callback);
-    };
-
-    /**
-     * breaks array into equal-sized chunks, with the last chunk being the remainder
-     * @param {Array} arr
-     * @param {number} size
-     * @returns {Array}
-     */
-    var chunk = function(arr, size) {
-        var chunks = [],
-            i = 0,
-            total = arr.length;
-
-        while (i < total) {
-            chunks.push(arr.slice(i, i += size));
-        }
-        return chunks;
-    };
-
-    /**
-     * sends events in batches
-     * @param {object}   options
-     * @param {[{}]}     options.event_list                 array of event objects
-     * @param {string}   options.endpoint                   e.g. `/track` or `/import`
-     * @param {number}   [options.max_concurrent_requests]  limits concurrent async requests over the network
-     * @param {number}   [options.max_batch_size]           limits number of events sent to mixpanel per request
-     * @param {Function} [callback]                         callback receives array of errors if any
-     *
-     */
-    var send_batch_requests = function(options, callback) {
-        var event_list = options.event_list,
-            endpoint = options.endpoint,
-            max_batch_size = options.max_batch_size ? Math.min(MAX_BATCH_SIZE, options.max_batch_size) : MAX_BATCH_SIZE,
-            // to maintain original intention of max_batch_size; if max_batch_size is greater than 50, we assume the user is trying to set max_concurrent_requests
-            max_concurrent_requests = options.max_concurrent_requests || (options.max_batch_size > MAX_BATCH_SIZE && Math.ceil(options.max_batch_size / MAX_BATCH_SIZE)),
-            event_batches = chunk(event_list, max_batch_size),
-            request_batches = max_concurrent_requests ? chunk(event_batches, max_concurrent_requests) : [event_batches],
-            total_event_batches = event_batches.length,
-            total_request_batches = request_batches.length;
-
-        /**
-         * sends a batch of events to mixpanel through http api
-         * @param {Array} batch
-         * @param {Function} cb
-         */
-        function send_event_batch(batch, cb) {
-            if (batch.length > 0) {
-                batch = batch.map(function (event) {
-                    var properties = event.properties;
-
-                    if (endpoint === '/import' || event.properties.time) {
-                        // usually there will be a time property, but not required for `/track` endpoint
-                        event.properties.time = ensure_timestamp(event.properties.time);
-                    }
-                    event.properties.token = event.properties.token || metrics.token;
-                    return event;
-                });
-
-                // must be a POST
-                metrics.send_request({ method: "POST", endpoint: endpoint, data: batch }, cb);
-            }
-        }
-
-        /**
-         * Asynchronously sends batches of requests
-         * @param {number} index
-         */
-        function send_next_request_batch(index) {
-            var request_batch = request_batches[index],
-                cb = function (errors, results) {
-                    index += 1;
-                    if (index === total_request_batches) {
-                        callback && callback(errors, results);
-                    } else {
-                        send_next_request_batch(index);
-                    }
-                };
-
-            async_all(request_batch, send_event_batch, cb);
-        }
-
-        // init recursive function
-        send_next_request_batch(0);
-
-        if (metrics.config.debug) {
-            console.log(
-                "Sending " + event_list.length + " events to Mixpanel in " +
-                total_event_batches + " batches of events and " +
-                total_request_batches + " batches of requests"
-            );
-        }
-    };
-
-    /**
-         track(event, properties, callback)
-         ---
-         this function sends an event to mixpanel.
-
-         event:string                    the event name
-         properties:object               additional event properties to send
-         callback:function(err:Error)    callback is called when the request is
-                                         finished or an error occurs
-     */
-    metrics.track = function(event, properties, callback) {
-        if (!properties || typeof properties === "function") {
-            callback = properties;
-            properties = {};
-        }
-
-        // time is optional for `track` but must be less than 5 days old if set
-        if (properties.time) {
-            properties.time = ensure_timestamp(properties.time);
-            if (properties.time < Date.now() / 1000 - TRACK_AGE_LIMIT) {
-                throw new Error("`track` not allowed for event more than 5 days old; use `mixpanel.import()`");
-            }
-        }
-
-        metrics.send_event_request("/track", event, properties, callback);
-    };
-
-    /**
-     * send a batch of events to mixpanel `track` endpoint: this should only be used if events are less than 5 days old
-     * @param {Array}    event_list                         array of event objects to track
-     * @param {object}   [options]
-     * @param {number}   [options.max_concurrent_requests]  number of concurrent http requests that can be made to mixpanel
-     * @param {number}   [options.max_batch_size]           number of events that can be sent to mixpanel per request
-     * @param {Function} [callback]                         callback receives array of errors if any
-     */
-    metrics.track_batch = function(event_list, options, callback) {
-        options = options || {};
-        if (typeof options === 'function') {
-            callback = options;
-            options = {};
-        }
-        var batch_options = {
-            event_list: event_list,
-            endpoint: "/track",
-            max_concurrent_requests: options.max_concurrent_requests,
-            max_batch_size: options.max_batch_size
-        };
-
-        send_batch_requests(batch_options, callback);
-    };
-
-    /**
-        import(event, time, properties, callback)
-        ---
-        This function sends an event to mixpanel using the import
-        endpoint.  The time argument should be either a Date or Number,
-        and should signify the time the event occurred.
-
-        It is highly recommended that you specify the distinct_id
-        property for each event you import, otherwise the events will be
-        tied to the IP address of the sending machine.
-
-        For more information look at:
-        https://mixpanel.com/docs/api-documentation/importing-events-older-than-31-days
-
-        event:string                    the event name
-        time:date|number                the time of the event
-        properties:object               additional event properties to send
-        callback:function(err:Error)    callback is called when the request is
-                                        finished or an error occurs
-    */
-    metrics.import = function(event, time, properties, callback) {
-        if (!properties || typeof properties === "function") {
-            callback = properties;
-            properties = {};
-        }
-
-        properties.time = ensure_timestamp(time);
-
-        metrics.send_event_request("/import", event, properties, callback);
-    };
-
-    /**
-        import_batch(event_list, options, callback)
-        ---
-        This function sends a list of events to mixpanel using the import
-        endpoint. The format of the event array should be:
-
-        [
-            {
-                "event": "event name",
-                "properties": {
-                    "time": new Date(), // Number or Date; required for each event
-                    "key": "val",
-                    ...
-                }
-            },
-            {
-                "event": "event name",
-                "properties": {
-                    "time": new Date()  // Number or Date; required for each event
-                }
-            },
-            ...
-        ]
-
-        See import() for further information about the import endpoint.
-
-        Options:
-            max_batch_size: the maximum number of events to be transmitted over
-                            the network simultaneously. useful for capping bandwidth
-                            usage.
-            max_concurrent_requests: the maximum number of concurrent http requests that
-                            can be made to mixpanel; also useful for capping bandwidth.
-
-        N.B.: the Mixpanel API only accepts 50 events per request, so regardless
-        of max_batch_size, larger lists of events will be chunked further into
-        groups of 50.
-
-        event_list:array                    list of event names and properties
-        options:object                      optional batch configuration
-        callback:function(error_list:array) callback is called when the request is
-                                            finished or an error occurs
-    */
-    metrics.import_batch = function(event_list, options, callback) {
-        var batch_options;
-
-        if (typeof(options) === "function" || !options) {
-            callback = options;
-            options = {};
-        }
-        batch_options = {
-            event_list: event_list,
-            endpoint: "/import",
-            max_concurrent_requests: options.max_concurrent_requests,
-            max_batch_size: options.max_batch_size
-        };
-        send_batch_requests(batch_options, callback);
-    };
-
-    /**
-        alias(distinct_id, alias)
-        ---
-        This function creates an alias for distinct_id
-
-        For more information look at:
-        https://mixpanel.com/docs/integration-libraries/using-mixpanel-alias
-
-        distinct_id:string              the current identifier
-        alias:string                    the future alias
-    */
-    metrics.alias = function(distinct_id, alias, callback) {
-        var properties = {
-            distinct_id: distinct_id,
-            alias: alias
-        };
-
-        metrics.track('$create_alias', properties, callback);
-    };
-
-    metrics.groups = new MixpanelGroups(metrics);
-    metrics.people = new MixpanelPeople(metrics);
-
-    /**
-        set_config(config)
-        ---
-        Modifies the mixpanel config
-
-        config:object       an object with properties to override in the
-                            mixpanel client config
-    */
-    metrics.set_config = function(config) {
-        Object.assign(metrics.config, config);
-        if (config.host) {
-            // Split host into host and port
-            const [host, port] =  config.host.split(':');
-            metrics.config.host = host;
-            if (port) {
-                metrics.config.port = Number(port);
-            }
-        }
-    };
-
-    if (config) {
-        metrics.set_config(config);
-    }
-
-    return metrics;
-};
-
-// module exporting
-module.exports = {
-    Client: function(token) {
-        console.warn("The function `Client(token)` is deprecated.  It is now called `init(token)`.");
-        return create_client(token);
-    },
-    init: create_client
+"use strict";
+
+
+var isAbsoluteURL = __webpack_require__(590);
+var combineURLs = __webpack_require__(785);
+
+/**
+ * Creates a new URL by combining the baseURL with the requestedURL,
+ * only when the requestedURL is not already an absolute URL.
+ * If the requestURL is absolute, this function returns the requestedURL untouched.
+ *
+ * @param {string} baseURL The base URL
+ * @param {string} requestedURL Absolute or relative URL to combine
+ * @returns {string} The combined full path
+ */
+module.exports = function buildFullPath(baseURL, requestedURL) {
+  if (baseURL && !isAbsoluteURL(requestedURL)) {
+    return combineURLs(baseURL, requestedURL);
+  }
+  return requestedURL;
 };
 
 
