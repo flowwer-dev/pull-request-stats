@@ -7,12 +7,12 @@
 
 ## :superhero: Nature of this PR
 
-- :rocket: New feature
-- :lipstick: Enhancement / Refactor
-- :bug: Bug / Hotfix
-- :robot: Tests
-- :zap: Performance
-- :books: Documentation
+New feature :rocket: 
+Enhancement / Refactor :lipstick: 
+Bug / Hotfix :bug: 
+Tests :robot: 
+Performance :zap: 
+Documentation :books: 
 
 ## :framed_picture: Screenshots / Video / GIF
 <!-- Only required if UI has changed -->
