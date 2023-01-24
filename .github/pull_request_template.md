@@ -21,7 +21,7 @@
 ## :warning: Make sure you've done the following
 
 - Performed a self-review of your code.
-- Tested on Android, iOS and Web.
+- Tested that this Github Action works
 - Added comments where the code itself can't easily express intent.
 - Merged the latest from `master` onto your branch (or from `release` if this is a hotfix).
 - Updated documentation if required (Confluence, readme etc).
