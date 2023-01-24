@@ -8,7 +8,6 @@ module.exports = async ({
   repos,
   core,
   slack,
-  isSponsor,
   reviewers,
   periodLength,
   disableLinks,
@@ -19,11 +18,6 @@ module.exports = async ({
 
   if (!webhook || !channel) {
     core.debug(t('integrations.slack.logs.notConfigured'));
-    return;
-  }
-
-  if (!isSponsor) {
-    core.error(t('integrations.slack.errors.notSponsor'));
     return;
   }
 

@@ -40,6 +40,5 @@
     "eslint-plugin-import": "^2.24.1",
     "eslint-plugin-jest": "^24.4.0",
     "jest": "^27.0.6"
-  },
-  "funding": "https://github.com/sponsors/manuelmhtr"
+  }
 }

@@ -27,56 +27,6 @@ describe('Telemetry', () => {
     sendSuccess.mockClear();
   });
 
-  describe('Disabling telemetry', () => {
-    describe('sending the option and being a sponsor', () => {
-      const getTelemetry = () => new Telemetry({ core, telemetry: false, isSponsor: true });
-
-      it('disables telemetry', () => {
-        const telemetry = getTelemetry();
-        expect(telemetry.useTelemetry).toEqual(false);
-      });
-
-      it('logs telemetry has been disabled', () => {
-        getTelemetry();
-        expect(debug).toHaveBeenCalled();
-      });
-
-      it('does not send an error', () => {
-        getTelemetry();
-        expect(error).not.toHaveBeenCalled();
-      });
-
-      it('does not create a tracker', () => {
-        const telemetry = getTelemetry();
-        expect(telemetry.tracker).toEqual(null);
-      });
-
-      it('does not send "error" event, even when called', () => {
-        const telemetry = getTelemetry();
-        telemetry.error();
-        expect(sendError).not.toHaveBeenCalled();
-        expect(sendStart).not.toHaveBeenCalled();
-        expect(sendSuccess).not.toHaveBeenCalled();
-      });
-
-      it('does not send "start" event, even when called', () => {
-        const telemetry = getTelemetry();
-        telemetry.start();
-        expect(sendError).not.toHaveBeenCalled();
-        expect(sendStart).not.toHaveBeenCalled();
-        expect(sendSuccess).not.toHaveBeenCalled();
-      });
-
-      it('does not send "success" event, even when called', () => {
-        const telemetry = getTelemetry();
-        telemetry.success();
-        expect(sendError).not.toHaveBeenCalled();
-        expect(sendStart).not.toHaveBeenCalled();
-        expect(sendSuccess).not.toHaveBeenCalled();
-      });
-    });
-  });
-
   describe('.error', () => {
     const getTelemetry = () => new Telemetry({ core, telemetry: true });
 

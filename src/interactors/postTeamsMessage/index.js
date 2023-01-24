@@ -11,7 +11,6 @@ module.exports = async ({
   repos,
   core,
   teams,
-  isSponsor,
   reviewers,
   periodLength,
   disableLinks,
@@ -22,11 +21,6 @@ module.exports = async ({
 
   if (!webhook) {
     core.debug(t('integrations.teams.logs.notConfigured'));
-    return;
-  }
-
-  if (!isSponsor) {
-    core.error(t('integrations.teams.errors.notSponsor'));
     return;
   }
 

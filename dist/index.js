@@ -726,7 +726,7 @@ module.exports = (reviews) => {
 /***/ 61:
 /***/ (function(module) {
 
-module.exports = {"slack":{"logs":{"notConfigured":"Slack integration is disabled. No webhook or channel configured.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"notSponsor":"Slack integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it is configured as public).","requestFailed":"Error posting Slack message: {{error}}"}},"teams":{"logs":{"notConfigured":"Microsoft Teams integration is disabled. No webhook configured.","posting":"Post a MS Teams message with params: {{params}}","success":"Successfully posted to MS Teams"},"errors":{"notSponsor":"Microsoft Teams integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it is configured as public).","requestFailed":"Error posting MS Teams message: {{error}}"}},"webhook":{"logs":{"notConfigured":"Webhook integration is disabled.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"requestFailed":"Error posting Webhook: {{error}}"}},"summary":{"logs":{"posting":"Post action summary: {{content}}","success":"Successfully posted to action summary"},"errors":{"writeFailed":"Error posting action summary: {{error}}"}}};
+module.exports = {"slack":{"logs":{"notConfigured":"Slack integration is disabled. No webhook or channel configured.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"requestFailed":"Error posting Slack message: {{error}}"}},"teams":{"logs":{"notConfigured":"Microsoft Teams integration is disabled. No webhook configured.","posting":"Post a MS Teams message with params: {{params}}","success":"Successfully posted to MS Teams"},"errors":{"requestFailed":"Error posting MS Teams message: {{error}}"}},"webhook":{"logs":{"notConfigured":"Webhook integration is disabled.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"requestFailed":"Error posting Webhook: {{error}}"}},"summary":{"logs":{"posting":"Post action summary: {{content}}","success":"Successfully posted to action summary"},"errors":{"writeFailed":"Error posting action summary: {{error}}"}}};
 
 /***/ }),
 
@@ -1165,35 +1165,20 @@ exports.issueCommand = issueCommand;
 /***/ 104:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const core = __webpack_require__(470);
+"use strict";
 
-const SPONSORED_ACCOUNT = 'manuelmhtr';
-const DEFAULT_RESPONSE = { user: {} };
 
-const buildQuery = (logins) => {
-  const fields = logins.map(
-    (login, index) => `sponsor${index + 1}: isSponsoredBy(accountLogin: "${login}")`,
-  ).join('\n');
+var utils = __webpack_require__(35);
 
-  return `{
-    user(
-      login: "${SPONSORED_ACCOUNT}"
-    ) {
-      ${fields}
-    }
-  }`;
+/**
+ * Determines whether the payload is an error thrown by Axios
+ *
+ * @param {*} payload The value to test
+ * @returns {boolean} True if the payload is an error thrown by Axios, otherwise false
+ */
+module.exports = function isAxiosError(payload) {
+  return utils.isObject(payload) && (payload.isAxiosError === true);
 };
-
-module.exports = ({
-  octokit,
-  logins,
-}) => octokit
-  .graphql(buildQuery(logins))
-  .catch((error) => {
-    const msg = `Error fetching sponsorships with logins: "${JSON.stringify(logins)}"`;
-    core.debug(new Error(`${msg}. Error: ${error}`));
-    return DEFAULT_RESPONSE;
-  });
 
 
 /***/ }),
@@ -2203,7 +2188,6 @@ module.exports = (data = {}, pullRequest) => {
 const commentOnPullRequest = __webpack_require__(335);
 const fetchPullRequestById = __webpack_require__(105);
 const fetchPullRequests = __webpack_require__(593);
-const fetchSponsorships = __webpack_require__(104);
 const postToSlack = __webpack_require__(887);
 const postToWebhook = __webpack_require__(205);
 const updatePullRequest = __webpack_require__(664);
@@ -2212,7 +2196,6 @@ module.exports = {
   commentOnPullRequest,
   fetchPullRequestById,
   fetchPullRequests,
-  fetchSponsorships,
   postToSlack,
   postToWebhook,
   updatePullRequest,
@@ -5276,13 +5259,6 @@ module.exports = require("buffer");
 
 /***/ }),
 
-/***/ 297:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-module.exports = __webpack_require__(241);
-
-/***/ }),
-
 /***/ 299:
 /***/ (function(__unusedmodule, exports) {
 
@@ -5832,7 +5808,7 @@ axios.all = function all(promises) {
 axios.spread = __webpack_require__(879);
 
 // Expose isAxiosError
-axios.isAxiosError = __webpack_require__(769);
+axios.isAxiosError = __webpack_require__(104);
 
 module.exports = axios;
 
@@ -6424,21 +6400,6 @@ module.exports = ({
       },
     ],
   };
-};
-
-
-/***/ }),
-
-/***/ 379:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { getRepoOwner } = __webpack_require__(109);
-
-module.exports = ({ org, repos } = {}) => {
-  const logins = new Set();
-  if (org) logins.add(org);
-  (repos || []).forEach((repo) => logins.add(getRepoOwner(repo)));
-  return [...logins];
 };
 
 
@@ -7201,21 +7162,7 @@ module.exports = ({ tracker, timeMs }) => {
 /***/ 402:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { fetchSponsorships } = __webpack_require__(162);
-const getLogins = __webpack_require__(379);
-const isSponsoring = __webpack_require__(477);
-const isExternalSponsor = __webpack_require__(581);
-
-module.exports = async ({
-  octokit,
-  org,
-  repos,
-}) => {
-  const logins = getLogins({ org, repos });
-  const { user } = await fetchSponsorships({ octokit, logins });
-  return isSponsoring(user) || isExternalSponsor(logins);
-};
-
+module.exports = __webpack_require__(241);
 
 /***/ }),
 
@@ -7558,13 +7505,6 @@ function createHttpsProxyAgent(opts) {
 })(createHttpsProxyAgent || (createHttpsProxyAgent = {}));
 module.exports = createHttpsProxyAgent;
 //# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ 417:
-/***/ (function(module) {
-
-module.exports = require("crypto");
 
 /***/ }),
 
@@ -10902,16 +10842,6 @@ Object.defineProperty(exports, "markdownSummary", { enumerable: true, get: funct
 
 /***/ }),
 
-/***/ 477:
-/***/ (function(module) {
-
-module.exports = (list = {}) => Object
-  .values(list)
-  .some((value) => value === true);
-
-
-/***/ }),
-
 /***/ 482:
 /***/ (function(module) {
 
@@ -13532,31 +13462,6 @@ function omit(obj, ...keys) {
 
 /***/ }),
 
-/***/ 581:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const crypto = __webpack_require__(417);
-
-// A list of organizations which are sponsoring this project outside Github 💙
-// (hashed to keep them private)
-const externalSponsors = new Set([
-  '4cf2d30b6327df1b462663c7611de22f',
-  'cf681c59a1d2b1817befafc0d9482ba1',
-  'b9cf4cc40150a529e71058bd59f0ed0b',
-  '9d711ff8c0d5639289cdebfe92b11ecb',
-]);
-
-const getHash = (str) => crypto
-  .createHash('md5')
-  .update(str.toLowerCase())
-  .digest('hex');
-
-module.exports = (logins) => [...(logins || [])]
-  .some((login) => externalSponsors.has(getHash(login)));
-
-
-/***/ }),
-
 /***/ 583:
 /***/ (function(module) {
 
@@ -13968,7 +13873,6 @@ module.exports = async ({
   repos,
   core,
   teams,
-  isSponsor,
   reviewers,
   periodLength,
   disableLinks,
@@ -13979,11 +13883,6 @@ module.exports = async ({
 
   if (!webhook) {
     core.debug(t('integrations.teams.logs.notConfigured'));
-    return;
-  }
-
-  if (!isSponsor) {
-    core.error(t('integrations.teams.errors.notSponsor'));
     return;
   }
 
@@ -14235,7 +14134,6 @@ const {
   getReviewers,
   buildComment,
   setUpReviewers,
-  checkSponsorship,
   alreadyPublished,
   postSlackMessage,
   postSummary,
@@ -14313,15 +14211,13 @@ const run = async (params) => {
 module.exports = async (params) => {
   core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
 
-  const { githubToken, org, repos } = params;
+  const { githubToken } = params;
   const octokit = github.getOctokit(githubToken);
-  const isSponsor = await checkSponsorship({ octokit, org, repos });
-  const telemetry = new Telemetry({ core, isSponsor, telemetry: params.telemetry });
-  if (isSponsor) core.info('Thanks for sponsoring this project! 💙');
+  const telemetry = new Telemetry({ core, telemetry: params.telemetry });
 
   try {
     telemetry.start(params);
-    await run({ ...params, isSponsor, octokit });
+    await run({ ...params, octokit });
     telemetry.success();
   } catch (error) {
     telemetry.error(error);
@@ -15441,7 +15337,7 @@ module.exports = function bind(fn, thisArg) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.7.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"eslint src && ncc build src/index.js","test":"jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
+module.exports = {"name":"pull-request-stats","version":"2.7.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"eslint src && ncc build src/index.js","test":"jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"}};
 
 /***/ }),
 
@@ -15849,27 +15745,6 @@ module.exports = (pulls) => {
 /***/ (function(module) {
 
 module.exports = require("zlib");
-
-/***/ }),
-
-/***/ 769:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-"use strict";
-
-
-var utils = __webpack_require__(35);
-
-/**
- * Determines whether the payload is an error thrown by Axios
- *
- * @param {*} payload The value to test
- * @returns {boolean} True if the payload is an error thrown by Axios, otherwise false
- */
-module.exports = function isAxiosError(payload) {
-  return utils.isObject(payload) && (payload.isAxiosError === true);
-};
-
 
 /***/ }),
 
@@ -18904,7 +18779,6 @@ module.exports = async ({
   repos,
   core,
   slack,
-  isSponsor,
   reviewers,
   periodLength,
   disableLinks,
@@ -18915,11 +18789,6 @@ module.exports = async ({
 
   if (!webhook || !channel) {
     core.debug(t('integrations.slack.logs.notConfigured'));
-    return;
-  }
-
-  if (!isSponsor) {
-    core.error(t('integrations.slack.errors.notSponsor'));
     return;
   }
 
@@ -19279,7 +19148,7 @@ module.exports = sortByStats;
 /***/ 922:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const JSURL = __webpack_require__(297);
+const JSURL = __webpack_require__(402);
 
 const URL = 'https://app.flowwer.dev/charts/review-time/';
 const MAX_URI_LENGTH = 1024;
@@ -20782,7 +20651,6 @@ module.exports.parseURL = function (input, options) {
 const alreadyPublished = __webpack_require__(217);
 const buildTable = __webpack_require__(194);
 const buildComment = __webpack_require__(641);
-const checkSponsorship = __webpack_require__(402);
 const getPulls = __webpack_require__(591);
 const getReviewers = __webpack_require__(164);
 const postComment = __webpack_require__(173);
@@ -20796,7 +20664,6 @@ module.exports = {
   alreadyPublished,
   buildTable,
   buildComment,
-  checkSponsorship,
   getPulls,
   getReviewers,
   postComment,
@@ -20926,11 +20793,10 @@ const sendSuccess = __webpack_require__(389);
 const buildTracker = __webpack_require__(438);
 
 class Telemetry {
-  constructor({ core, isSponsor, telemetry }) {
-    this.useTelemetry = !isSponsor || telemetry;
+  constructor({ core, telemetry }) {
+    this.useTelemetry = telemetry;
     this.tracker = this.useTelemetry ? buildTracker() : null;
     if (!this.useTelemetry) core.debug('Telemetry disabled correctly');
-    if (!telemetry && !isSponsor) core.error('Disabling telemetry is a premium feature, available to sponsors.');
   }
 
   start(params) {

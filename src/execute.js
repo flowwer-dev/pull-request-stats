@@ -90,11 +90,10 @@ module.exports = async (params) => {
   const { githubToken } = params;
   const octokit = github.getOctokit(githubToken);
   const telemetry = new Telemetry({ core, telemetry: params.telemetry });
-  if (isSponsor) core.info('Thanks for sponsoring this project! 💙');
 
   try {
     telemetry.start(params);
-    await run({ ...params, isSponsor, octokit });
+    await run({ ...params, octokit });
     telemetry.success();
   } catch (error) {
     telemetry.error(error);
