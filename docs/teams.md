@@ -1,7 +1,5 @@
 # Posting to Microsoft Teams
 
-> 💙 This integration is available to sponsors.
-
 This action can post the results to a channel in Teams. For example:
 
 ![](/assets/teams.png)

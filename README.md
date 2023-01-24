@@ -54,10 +54,10 @@ The possible inputs for this action are:
 | `disable-links` | If `true`, removes the links to the detailed charts. Possible values: `true` or `false`. | `false` |
 | `sort-by` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
 | `publish-as` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`. | `COMMENT` |
-| `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps me improve this action. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`true`|
-| `slack-webhook` | **🔥 New.** A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/slack.md).  |`null`|
+| `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps me improve this action.
+| `slack-webhook` | **🔥 New.** A Slack webhook URL to post resulting stats. See [full documentation here](/docs/slack.md).  |`null`|
 | `slack-channel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slack-webhook` is configured. |`null`|
-| `teams-webhook` | **🔥 New.** A Microsoft Teams webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/teams.md).  |`null`|
+| `teams-webhook` | **🔥 New.** A Microsoft Teams webhook URL to post resulting stats. See [full documentation here](/docs/teams.md).  |`null`|
 | `webhook` | **🔥 New.** A webhook URL to send the resulting stats as JSON (integrate with Zapier, IFTTT...). See [full documentation here](/docs/webhook.md). |`null`|
 
 
@@ -188,26 +188,6 @@ Check the guide for the tool you want to integrate:
         uses: flowwer-dev/pull-request-stats@master
   ```
 </details>
-
-<details>
-  <summary>I'm a sponsor but still getting the error "...is a premium feature, available to sponsors".</summary>
-
-  1. Check the sponsorship comes from the account that owns the configured repos (usually an organization).
-  2. Make sure the sponsorship is configured as `public`, otherwhise the action cannot access the sponsorship information. If you prefer to keep it `private`, please reach me out to make it works for you that way 😉.
-</details>
-
-## Premium features ✨
-
-This action offers some premium features only for sponsors:
-
-* Disabling telemetry.
-* Slack integration.
-* Microsoft Teams integration.
-* Comming soon: Discord integration, web version.
-
-No minimum amount is required for now. In the future, a minimum monthly sponsorship will be inforced to access premium features.
-
-The minimum suggested sponsorship is $20 usd / month. Thanks for your support! 💙
 
 ## Used by
 

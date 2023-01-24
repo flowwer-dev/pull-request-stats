@@ -1,7 +1,5 @@
 # Posting stats to a Webhook
 
-> 🔥 This integration does **not** require a sponsorship. Enjoy!
-
 This action can also send the results to a webhook of your preference. This way, you can send them to [Zapier](https://zapier.com/), [IFTTT](https://ifttt.com/), [Automate.io](https://automate.io/) and more, to take actions based on the results.
 
 Just send a URL in the `webhook` parameter. For example:
@@ -104,8 +102,3 @@ The webhook payload will include:
 }
 ```
 
-## What's next?
-
-I'm building other integrations for this action, [I'd love to hear](https://github.com/flowwer-dev/pull-request-stats/discussions/new) which integration you want and how you are planning to use webhooks.
-
-Support this project by becoming a [sponsor](https://github.com/sponsors/manuelmhtr) 💙

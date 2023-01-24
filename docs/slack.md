@@ -1,7 +1,5 @@
 # Posting to Slack
 
-> 💙 This integration is available to sponsors.
-
 This action can post the results to a channel in Slack. For example:
 
 ![](/assets/slack.png)

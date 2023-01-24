@@ -75,20 +75,6 @@ describe('Telemetry', () => {
         expect(sendSuccess).not.toHaveBeenCalled();
       });
     });
-
-    describe('sending the option but not being a sponsor', () => {
-      const getTelemetry = () => new Telemetry({ core, telemetry: false, isSponsor: false });
-
-      it('keeps telemetry enabled', () => {
-        const telemetry = getTelemetry();
-        expect(telemetry.useTelemetry).toEqual(true);
-      });
-
-      it('warns this is a premium feature', () => {
-        getTelemetry();
-        expect(error).toHaveBeenCalled();
-      });
-    });
   });
 
   describe('.error', () => {

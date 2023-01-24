@@ -4,11 +4,10 @@ const sendSuccess = require('./sendSuccess');
 const buildTracker = require('./buildTracker');
 
 class Telemetry {
-  constructor({ core, isSponsor, telemetry }) {
-    this.useTelemetry = !isSponsor || telemetry;
+  constructor({ core, telemetry }) {
+    this.useTelemetry = telemetry;
     this.tracker = this.useTelemetry ? buildTracker() : null;
     if (!this.useTelemetry) core.debug('Telemetry disabled correctly');
-    if (!telemetry && !isSponsor) core.error('Disabling telemetry is a premium feature, available to sponsors.');
   }
 
   start(params) {

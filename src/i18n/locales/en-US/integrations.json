@@ -6,7 +6,6 @@
       "success": "Successfully posted to slack"
     },
     "errors": {
-      "notSponsor": "Slack integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it is configured as public).",
       "requestFailed": "Error posting Slack message: {{error}}"
     }
   },
@@ -17,7 +16,6 @@
       "success": "Successfully posted to MS Teams"
     },
     "errors": {
-      "notSponsor": "Microsoft Teams integration is a premium feature, available to sponsors.\n(If you are already an sponsor, please make sure it is configured as public).",
       "requestFailed": "Error posting MS Teams message: {{error}}"
     }
   },
