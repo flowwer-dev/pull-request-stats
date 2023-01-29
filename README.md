@@ -26,9 +26,9 @@ Or send the data to your favorite tools by using the integrations available:
 
 
 ## Privacy
-* **No repository data is collected**, stored or distributed by this GitHub action. This action is **state-less**.
-* Charts data is send over the URL, and never stored or transmitted anywhere else.
-* [Minimal data](/src/services/telemetry/sendStart.js) is send to Mixpanel in order to improve this action. However, you can opt-out using `telemetry` option.
+* **No repository data is collected**, stored, or distributed by this GitHub action. This action is **state-less**.
+* Charts data is sent over the URL and never stored or transmitted anywhere else.
+* [Minimal data](/src/services/telemetry/sendStart.js) is sent to Mixpanel in order to improve this action. However, you can opt-out using the `telemetry` option.
 
 ## Usage
 
@@ -46,11 +46,11 @@ The possible inputs for this action are:
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
 | `token` | A [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with `repo` permissions. Required to calculate stats for an organization or multiple repos. | `GITHUB_TOKEN` |
-| `repositories` | A comma separated list of github repositories to calculate the stats, eg. `username/repo1,username/repo2`. When specifying other repo(s) **it is mandatory to pass a Personal Access Token** in the `token` parameter.| Current repository |
-| `organization` | If you prefer, you may specify the name of your organization to calculate the stats across all of its repos. When specifying an organization **it is mandatory to pass a Personal Access Token** in the `token` parameter. | `null`|
-| `period` | The length of the period used to calculate the stats, expressed in days. | `30` |
+| `repositories` | A comma-separated list of GitHub repositories to calculate the stats, e.g. `username/repo1,username/repo2`. When specifying other repo(s), **it is mandatory to pass a Personal Access Token** in the `token` parameter.| Current repository |
+| `organization` | If you prefer, you may specify your organization's name to calculate the stats across all of its repos. When specifying an organization, **it is mandatory to pass a Personal Access Token** in the `token` parameter. | `null`|
+| `period` | The period used to calculate the stats, expressed in days. | `30` |
 | `limit` | The maximum number of rows to display in the table. A value of `0` means unlimited. |`0`|
-| `charts` | Whether to add a chart to the start or not. Possible values: `true` or `false`. | `false` |
+| `charts` | Whether to add a chart to the start. Possible values: `true` or `false`. | `false` |
 | `disable-links` | If `true`, removes the links to the detailed charts. Possible values: `true` or `false`. | `false` |
 | `sort-by` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
 | `publish-as` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`. | `COMMENT` |
@@ -84,9 +84,9 @@ jobs:
 
 This config will:
 
-* Calculate the reviewer stats for the current repo in the lasts 30 days
-* Add links to the historial data
-* Sort results by the "total reviews" column by default
+* Calculate the reviewer stats for the current repo in the lasts 30 days.
+* Add links to the historical data.
+* Sort results by the "total reviews" column by default.
 
 and print a table like this:
 
@@ -127,10 +127,10 @@ jobs:
 
 This config will:
 
-* Calculate the reviewer stats for all the repos in the "piedpiper" organization in the lasts 7 days
-* Display charts for the metrics
-* Remove the links to detailed charts
-* Sort results by the "comments" column
+* Calculate the reviewer stats for all the repos in the "piedpiper" organization in the lasts 7 days.
+* Display charts for the metrics.
+* Remove the links to detailed charts.
+* Sort results by the "comments" column.
 
 and print a table like this:
 
@@ -146,12 +146,12 @@ and print a table like this:
 
 ## Stats
 
-The stats are calculated as following:
+The stats are calculated as follows:
 
-* **Time to review:** It is the time taken by a reviewer from the _Pull Request publication_ or the last _Commit push_ (whatever happens last) to the first time the pull request is reviewed.
-* **Time to review:** It is the **median** of the _times to review_ of all Pull Requests reviewed by a person in the period.
-* **Total reviews:** It is the count of all Pull Requests reviewed by a person in the period.
-* **Total comments:** It is the count of all the comments while reviewing other user's Pull Requests in the period (comments in own PRs don't count).
+* **Time to review:** The time a reviewer takes from the _Pull Request publication_ or the last _Commit push_ (whatever happens last) to the first time the pull request is reviewed.
+* **Time to review:** The **median** of the _times to review_ of all Pull Requests reviewed by a person in the period.
+* **Total reviews:** The count of all Pull Requests reviewed by a person in the period.
+* **Total comments:** The count of all the comments while reviewing other users' Pull Requests in the period (comments in own PRs don't count).
 
 ## Integrations 🔌
 
@@ -167,14 +167,14 @@ Check the guide for the tool you want to integrate:
   <summary>The action is printing an empty table.</summary>
 
   1. Make sure the repositories have pull request reviews during the configured `period`.
-  2. When specifying `repositories` or `organization` paramaters, a [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) is required in the `token` parameter.
-  3. If providing a Personal Access Token, make sure it has the `repo` permission for the projects you want.
+  2. When specifying `repositories` or `organization` parameters, a [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) is required in the `token` parameter.
+  3. If providing a Personal Access Token, ensure it has the `repo` permission for the projects you want.
 </details>
 
 <details>
   <summary>I get the error "Error commenting on the pull request...".</summary>
 
-  This error happens when the action's permissions are configured as `read` by the organization. To fix it, overwrite them by adding a [`permissions`](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs) configuration in the workflow file. The minimum required permissions are `contents: read` and `pull-requests: write`:
+  This error happens when the organization configures the action's permissions as `read`. To fix it, overwrite them by adding a [`permissions`](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs) configuration in the workflow file. The minimum required permissions are `contents: read` and `pull-requests: write`:
 
   ```yml
   jobs:
@@ -193,7 +193,7 @@ Check the guide for the tool you want to integrate:
   <summary>I'm a sponsor but still getting the error "...is a premium feature, available to sponsors".</summary>
 
   1. Check the sponsorship comes from the account that owns the configured repos (usually an organization).
-  2. Make sure the sponsorship is configured as `public`, otherwhise the action cannot access the sponsorship information. If you prefer to keep it `private`, please reach me out to make it works for you that way 😉.
+  2. Make sure the sponsorship is configured as `public`, otherwise, the action cannot access the sponsorship information. If you prefer to keep it `private`, please reach me out to make it work for you that way 😉.
 </details>
 
 ## Premium features ✨
@@ -205,9 +205,9 @@ This action offers some premium features only for sponsors:
 * Microsoft Teams integration.
 * Comming soon: Discord integration, web version.
 
-No minimum amount is required for now. In the future, a minimum monthly sponsorship will be inforced to access premium features.
+The **suggested sponsorship is $20 USD / month**. However, if it's not possible for you or your organization, please consider supporting it with any amount you can. Even a one-time sponsorship will enable the Premium features and encourage the progress of this project.
 
-The minimum suggested sponsorship is $20 usd / month. Thanks for your support! 💙
+Thanks for your support! 💙
 
 ## Used by
 
@@ -215,7 +215,7 @@ Used by hundreds of successful teams:
 
 | <a href="https://www.sixt.com/"><img src="https://avatars.githubusercontent.com/u/25441140?s=200&v=4" width="64"></a><br/>Sixt | <a href="https://shop.lululemon.com"><img src="https://avatars.githubusercontent.com/u/17386352?s=200&v=4" width="64"></a><br/>Lululemon | <a href="https://www.deliveryhero.com"><img src="https://avatars.githubusercontent.com/u/7225556?s=200&v=4" width="64"></a><br/>Delivery H | <a href="https://jokr.com"><img src="https://avatars.githubusercontent.com/u/84920342?s=200&v=4" width="64"></a><br/>JOKR | <a href="https://lego.com"><img src="https://avatars.githubusercontent.com/u/4530164?s=200&v=4" width="64"></a><br/>Lego | <a href="https://firework.tv/"><img src="https://avatars.githubusercontent.com/u/25275837?s=200&v=4" width="64"></a><br/>LOOP | <a href="https://www.usehatchapp.com/"><img src="https://avatars.githubusercontent.com/u/38331218?s=200&v=4" width="64"></a><br/>Hatch | <a href="https://www.zenfi.mx/"><img src="https://avatars.githubusercontent.com/u/68744962?s=200&v=4" width="64"></a><br/>Zenfi |
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
-| <a href="https://www.trivago.com/"><img src="https://avatars.githubusercontent.com/u/1481788?s=200&v=4" width="64"></a><br/>**Trivago** | <a href="https://discovery.com"><img src="https://avatars.githubusercontent.com/u/48454976?s=200&v=4" width="64"></a><br/>**Discovery** | <a href="https://www.additionwealth.com/"><img src="https://avatars.githubusercontent.com/u/86253902?s=200&v=4" width="64"></a><br/>**Addition** | <a href="https://fauna.com/"><img src="https://avatars.githubusercontent.com/u/1477000?s=200&v=4" width="64"></a><br/>**Fauna** | <a href="http://open.cdc.gov/"><img src="https://avatars.githubusercontent.com/u/12104975?s=200&v=4" width="64"></a><br/>**CDC** | <a href="https://www.wecasa.fr/"><img src="https://avatars.githubusercontent.com/u/56955553?s=200&v=4" width="64"></a><br/>**Wecasa** | <a href="https://bolt.eu/"><img src="https://avatars.githubusercontent.com/u/37693190?s=200&v=4" width="64"></a><br/>**Bolt** | <a href="https://republic.com/"><img src="https://avatars.githubusercontent.com/u/18252987?s=200&v=4" width="64"></a><br/>**Republic** |
+| <a href="https://www.intel.com"><img src="https://avatars.githubusercontent.com/u/17888862?s=200&v=4" width="64"></a><br/>**Intel** | <a href="https://auth0.com/"><img src="https://avatars.githubusercontent.com/u/2824157?s=200&v=4" width="64"></a><br/>**Auth0** | <a href="https://www.additionwealth.com/"><img src="https://avatars.githubusercontent.com/u/86253902?s=200&v=4" width="64"></a><br/>**Addition** | <a href="https://fauna.com/"><img src="https://avatars.githubusercontent.com/u/1477000?s=200&v=4" width="64"></a><br/>**Fauna** | <a href="http://open.cdc.gov/"><img src="https://avatars.githubusercontent.com/u/12104975?s=200&v=4" width="64"></a><br/>**CDC** | <a href="https://www.wecasa.fr/"><img src="https://avatars.githubusercontent.com/u/56955553?s=200&v=4" width="64"></a><br/>**Wecasa** | <a href="https://bolt.eu/"><img src="https://avatars.githubusercontent.com/u/37693190?s=200&v=4" width="64"></a><br/>**Bolt** | <a href="https://republic.com/"><img src="https://avatars.githubusercontent.com/u/18252987?s=200&v=4" width="64"></a><br/>**Republic** |
 
 ## Author
 
