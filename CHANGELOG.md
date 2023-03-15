@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.7.2] - 2023-03-15
+### Added
+- A new private sponsor 💙
+
 ## [2.7.1] - 2023-01-29
 ### Added
 - A new private sponsor 💙
