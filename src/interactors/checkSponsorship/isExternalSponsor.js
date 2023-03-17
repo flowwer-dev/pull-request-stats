@@ -9,6 +9,7 @@ const externalSponsors = new Set([
   '9d711ff8c0d5639289cdebfe92b11ecb',
   '8abc3fe4bb48909ecae0da42f5b4bd32',
   '678ea87e416f29df82ddc695cda5f2c2',
+  'd8bf834133390da0d099017c9616102c',
 ]);
 
 const getHash = (str) => crypto
