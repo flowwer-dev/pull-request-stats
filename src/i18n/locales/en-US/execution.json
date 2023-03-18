@@ -3,6 +3,14 @@
     "success": "Action successfully executed",
     "news": "\n✨ New on v2.6:\n• Microsoft Teams integration\n• Slack integration\n• Webhooks integration"
   },
+  "sponsors": {
+    "external": {
+      "fetch": {
+        "success": "External sponsors fetched successfully. {{data}}",
+        "error": "Failed to fetch external sponsors. {{error}}"
+      }
+    }
+  },
   "errors": {
     "main": "Execution failed with error: {{message}}"
   }

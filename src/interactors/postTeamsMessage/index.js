@@ -26,7 +26,7 @@ module.exports = async ({
   }
 
   if (!isSponsor) {
-    core.error(t('integrations.teams.errors.notSponsor'));
+    core.setFailed(t('integrations.teams.errors.notSponsor'));
     return;
   }
 

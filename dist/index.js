@@ -13535,15 +13535,16 @@ function omit(obj, ...keys) {
 /***/ 581:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
+const axios = __webpack_require__(53);
 const crypto = __webpack_require__(417);
+const core = __webpack_require__(470);
+const { t } = __webpack_require__(781);
 
 // A list of organizations which are sponsoring this project outside Github 💙
 // (hashed to keep them private)
-const externalSponsors = new Set([
-  '4cf2d30b6327df1b462663c7611de22f',
-  'cf681c59a1d2b1817befafc0d9482ba1',
-  'b9cf4cc40150a529e71058bd59f0ed0b',
-  '9d711ff8c0d5639289cdebfe92b11ecb',
+const FILE_URL = 'https://raw.githubusercontent.com/manuelmhtr/private-sponsors/main/list.json';
+const offlineSponsors = new Set([
+  'd6ffa1c8205ff50605752d1fff1fa180',
 ]);
 
 const getHash = (str) => crypto
@@ -13551,8 +13552,24 @@ const getHash = (str) => crypto
   .update(str.toLowerCase())
   .digest('hex');
 
-module.exports = (logins) => [...(logins || [])]
-  .some((login) => externalSponsors.has(getHash(login)));
+// Get a json file from a url
+const getList = async (url) => {
+  try {
+    const response = await axios.get(url);
+    const data = response.data || [];
+    core.debug(t('execution.sponsors.external.fetch.success', { data }));
+    return new Set([...data, ...offlineSponsors]);
+  } catch (error) {
+    core.error(t('execution.sponsors.external.fetch.error', { error }));
+    return offlineSponsors;
+  }
+};
+
+module.exports = async (logins) => {
+  const list = await getList(FILE_URL);
+  return [...(logins || [])]
+    .some((login) => list.has(getHash(login)));
+};
 
 
 /***/ }),
@@ -13983,7 +14000,7 @@ module.exports = async ({
   }
 
   if (!isSponsor) {
-    core.error(t('integrations.teams.errors.notSponsor'));
+    core.setFailed(t('integrations.teams.errors.notSponsor'));
     return;
   }
 
@@ -15441,7 +15458,7 @@ module.exports = function bind(fn, thisArg) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.7.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"eslint src && ncc build src/index.js","test":"jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
+module.exports = {"name":"pull-request-stats","version":"2.8.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"eslint src && ncc build src/index.js","test":"jest"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","@sentry/react-native":"^3.4.2","axios":"^0.26.1","dotenv":"^16.0.1","graphql":"^16.5.0","graphql-anywhere":"^4.2.7","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash":"^4.17.21","lodash.get":"^4.4.2","lottie-react-native":"^5.1.3","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
 
 /***/ }),
 
@@ -18793,7 +18810,7 @@ module.exports = get;
 /***/ 861:
 /***/ (function(module) {
 
-module.exports = {"logs":{"success":"Action successfully executed","news":"\n✨ New on v2.6:\n• Microsoft Teams integration\n• Slack integration\n• Webhooks integration"},"errors":{"main":"Execution failed with error: {{message}}"}};
+module.exports = {"logs":{"success":"Action successfully executed","news":"\n✨ New on v2.6:\n• Microsoft Teams integration\n• Slack integration\n• Webhooks integration"},"sponsors":{"external":{"fetch":{"success":"External sponsors fetched successfully. {{data}}","error":"Failed to fetch external sponsors. {{error}}"}}},"errors":{"main":"Execution failed with error: {{message}}"}};
 
 /***/ }),
 
@@ -18919,7 +18936,7 @@ module.exports = async ({
   }
 
   if (!isSponsor) {
-    core.error(t('integrations.slack.errors.notSponsor'));
+    core.setFailed(t('integrations.slack.errors.notSponsor'));
     return;
   }
 
@@ -20930,7 +20947,7 @@ class Telemetry {
     this.useTelemetry = !isSponsor || telemetry;
     this.tracker = this.useTelemetry ? buildTracker() : null;
     if (!this.useTelemetry) core.debug('Telemetry disabled correctly');
-    if (!telemetry && !isSponsor) core.error('Disabling telemetry is a premium feature, available to sponsors.');
+    if (!telemetry && !isSponsor) core.setFailed('Disabling telemetry is a premium feature, available to sponsors.');
   }
 
   start(params) {

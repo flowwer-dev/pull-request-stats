@@ -1,15 +1,13 @@
+const axios = require('axios');
 const crypto = require('crypto');
+const core = require('@actions/core');
+const { t } = require('../../i18n');
 
 // A list of organizations which are sponsoring this project outside Github 💙
 // (hashed to keep them private)
-const externalSponsors = new Set([
-  '4cf2d30b6327df1b462663c7611de22f',
-  'cf681c59a1d2b1817befafc0d9482ba1',
-  'b9cf4cc40150a529e71058bd59f0ed0b',
-  '9d711ff8c0d5639289cdebfe92b11ecb',
-  '8abc3fe4bb48909ecae0da42f5b4bd32',
-  '678ea87e416f29df82ddc695cda5f2c2',
-  'd8bf834133390da0d099017c9616102c',
+const FILE_URL = 'https://raw.githubusercontent.com/manuelmhtr/private-sponsors/main/list.json';
+const offlineSponsors = new Set([
+  'd6ffa1c8205ff50605752d1fff1fa180',
 ]);
 
 const getHash = (str) => crypto
@@ -17,5 +15,21 @@ const getHash = (str) => crypto
   .update(str.toLowerCase())
   .digest('hex');
 
-module.exports = (logins) => [...(logins || [])]
-  .some((login) => externalSponsors.has(getHash(login)));
+// Get a json file from a url
+const getList = async (url) => {
+  try {
+    const response = await axios.get(url);
+    const data = response.data || [];
+    core.debug(t('execution.sponsors.external.fetch.success', { data }));
+    return new Set([...data, ...offlineSponsors]);
+  } catch (error) {
+    core.error(t('execution.sponsors.external.fetch.error', { error }));
+    return offlineSponsors;
+  }
+};
+
+module.exports = async (logins) => {
+  const list = await getList(FILE_URL);
+  return [...(logins || [])]
+    .some((login) => list.has(getHash(login)));
+};

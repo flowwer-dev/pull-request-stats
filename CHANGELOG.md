@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.8.0] - 2023-03-18
+### Added
+- Get private sponsors from a dynamic list.
+
 ## [2.7.3] - 2023-03-17
 ### Added
 - A new private sponsor 💙

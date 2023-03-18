@@ -16,10 +16,12 @@ jest.mock('../buildPayload', () => jest.fn());
 describe('Interactors | .postTeamsMessage', () => {
   const debug = jest.fn();
   const error = jest.fn();
+  const setFailed = jest.fn();
 
   const core = {
     debug,
     error,
+    setFailed,
   };
 
   const defaultOptions = {
@@ -66,7 +68,7 @@ describe('Interactors | .postTeamsMessage', () => {
   describe('when user is not a sponsor', () => {
     it('logs a error', async () => {
       await postTeamsMessage({ ...defaultOptions, isSponsor: false });
-      expect(error).toHaveBeenCalled();
+      expect(setFailed).toHaveBeenCalled();
       expect(buildMessage).not.toHaveBeenCalled();
       expect(Fetchers.postToWebhook).not.toHaveBeenCalled();
     });

@@ -13,10 +13,12 @@ jest.mock('../buildTracker', () => jest.fn(() => TRACKER));
 describe('Telemetry', () => {
   const debug = jest.fn();
   const error = jest.fn();
+  const setFailed = jest.fn();
 
   const core = {
     debug,
     error,
+    setFailed,
   };
 
   beforeEach(() => {
@@ -86,7 +88,7 @@ describe('Telemetry', () => {
 
       it('warns this is a premium feature', () => {
         getTelemetry();
-        expect(error).toHaveBeenCalled();
+        expect(setFailed).toHaveBeenCalled();
       });
     });
   });

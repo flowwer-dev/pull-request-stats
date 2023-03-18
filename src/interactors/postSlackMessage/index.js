@@ -23,7 +23,7 @@ module.exports = async ({
   }
 
   if (!isSponsor) {
-    core.error(t('integrations.slack.errors.notSponsor'));
+    core.setFailed(t('integrations.slack.errors.notSponsor'));
     return;
   }
 
