@@ -11,6 +11,9 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "ignorePatterns": [
+    "dist/**"
+  ],
   "globals": {
     "Promise": "readonly"
   }

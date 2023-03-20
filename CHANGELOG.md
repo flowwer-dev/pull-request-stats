@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.8.1] - 2023-03-20
+### Added
+- Reference to "Recap" action.
+- Adding Recap and Link actions.
+
 ## [2.8.0] - 2023-03-18
 ### Added
 - Get private sponsors from a dynamic list.

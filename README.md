@@ -178,14 +178,14 @@ Check the guide for the tool you want to integrate:
 
   ```yml
   jobs:
-  stats:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@master
+    stats:
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        pull-requests: write
+      steps:
+        - name: Run pull request stats
+          uses: flowwer-dev/pull-request-stats@master
   ```
 </details>
 
@@ -203,11 +203,17 @@ This action offers some premium features only for sponsors:
 * Disabling telemetry.
 * Slack integration.
 * Microsoft Teams integration.
-* Comming soon: Discord integration, web version.
+* Coming soon: Discord integration, web version.
 
 The **suggested sponsorship is $20 USD / month**. However, if it's not possible for you or your organization, please consider supporting it with any amount you can. Even a one-time sponsorship will enable the Premium features and encourage the progress of this project.
 
+Being a sponsor will also give you access to the premium features in all of my [other projects](#related-projects).
+
 Thanks for your support! 💙
+
+## Related projects 🔥
+
+* **[Recap](https://github.com/flowwer-dev/recap)**: Tired of writing pull request descriptions? Let GPT do it for you.
 
 ## Used by
 
