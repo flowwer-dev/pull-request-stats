@@ -13901,7 +13901,7 @@ const ownerFilter = ({ org, repos }) => {
 
 const buildQuery = ({ org, repos, startDate }) => {
   const dateFilter = `created:>=${startDate.toISOString()}`;
-  return `type:pr -review:none sort:author-date ${ownerFilter({ org, repos })} ${dateFilter}`;
+  return `type:pr sort:author-date ${ownerFilter({ org, repos })} ${dateFilter}`;
 };
 
 const getPullRequests = async (params) => {
