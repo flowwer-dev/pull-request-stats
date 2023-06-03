@@ -47,7 +47,7 @@ describe('Interactors | .getPulls', () => {
     it('queries the correct date', () => {
       const tDate = '2021-06-12T06:00:00.000Z';
       const params = { ...input, startDate: new Date(tDate) };
-      const expectedQuery = `type:pr -review:none sort:author-date repo:${input.repos[0]} created:>=${tDate}`;
+      const expectedQuery = `type:pr sort:author-date repo:${input.repos[0]} created:>=${tDate}`;
       return testQuery({ params, expectedQuery });
     });
 
@@ -55,14 +55,14 @@ describe('Interactors | .getPulls', () => {
       const repos = ['org1/repo1', 'org1/repo2', 'org2/repo3'];
       const params = { ...input, repos };
       const reposFilter = `repo:${repos[0]} repo:${repos[1]} repo:${repos[2]}`;
-      const expectedQuery = `type:pr -review:none sort:author-date ${reposFilter} created:>=${date}`;
+      const expectedQuery = `type:pr sort:author-date ${reposFilter} created:>=${date}`;
       return testQuery({ params, expectedQuery });
     });
 
     it('queries for an organization when sending one, ignores repos if passed', () => {
       const org = 'mycoolorganization';
       const params = { ...input, org };
-      const expectedQuery = `type:pr -review:none sort:author-date org:${org} created:>=${date}`;
+      const expectedQuery = `type:pr sort:author-date org:${org} created:>=${date}`;
       return testQuery({ params, expectedQuery });
     });
   });
