@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.9.0] - 2023-06-03
+### Added
+- [#70](https://github.com/flowwer-dev/pull-request-stats/pull/70) Removes `-review:none` filter. Let PRs with requested changes be included in the stats (By [Danny McCormick](https://github.com/damccorm)).
+
 ## [2.8.1] - 2023-03-20
 ### Added
 - Reference to "Recap" action.

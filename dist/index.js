@@ -13901,7 +13901,7 @@ const ownerFilter = ({ org, repos }) => {
 
 const buildQuery = ({ org, repos, startDate }) => {
   const dateFilter = `created:>=${startDate.toISOString()}`;
-  return `type:pr -review:none sort:author-date ${ownerFilter({ org, repos })} ${dateFilter}`;
+  return `type:pr sort:author-date ${ownerFilter({ org, repos })} ${dateFilter}`;
 };
 
 const getPullRequests = async (params) => {
@@ -15458,7 +15458,7 @@ module.exports = function bind(fn, thisArg) {
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"pull-request-stats","version":"2.8.1","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"eslint src && ncc build src/index.js","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","axios":"^0.26.1","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
+module.exports = {"name":"pull-request-stats","version":"2.9.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","scripts":{"build":"eslint src && ncc build src/index.js","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.5.0","@actions/github":"^5.0.0","axios":"^0.26.1","humanize-duration":"^3.27.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.13.0"},"devDependencies":{"@zeit/ncc":"^0.22.3","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-plugin-import":"^2.24.1","eslint-plugin-jest":"^24.4.0","jest":"^27.0.6"},"funding":"https://github.com/sponsors/manuelmhtr"};
 
 /***/ }),
 
