@@ -12,6 +12,8 @@ module.exports = ({
   currentBody,
   pullRequestId,
 }) => {
+  if (publishAs === 'NONE') return null;
+
   if (publishAs === 'DESCRIPTION') {
     return updatePullRequest({
       octokit,

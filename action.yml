@@ -32,7 +32,7 @@ inputs:
     required: false
     default: 'REVIEWS'
   publish-as:
-    description: 'Where to publish the results. Possible values: "COMMENT" or "DESCRIPTION"'
+    description: 'Where to publish the results. Possible values: "COMMENT", "DESCRIPTION" or "NONE"'
     required: false
     default: 'COMMENT'
   disable-links:

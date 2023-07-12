@@ -43,4 +43,11 @@ describe('Interactors | .postComment', () => {
       body: content,
     });
   });
+
+  it('does nothing when publishAs is "NONE"', async () => {
+    const publishAs = 'NONE';
+    await postComment({ ...baseParams, publishAs });
+    expect(commentOnPullRequest).not.toBeCalled();
+    expect(updatePullRequest).not.toBeCalled();
+  });
 });

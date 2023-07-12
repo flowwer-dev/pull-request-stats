@@ -53,7 +53,7 @@ The possible inputs for this action are:
 | `charts` | Whether to add a chart to the start. Possible values: `true` or `false`. | `false` |
 | `disable-links` | If `true`, removes the links to the detailed charts. Possible values: `true` or `false`. | `false` |
 | `sort-by` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
-| `publish-as` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`. | `COMMENT` |
+| `publish-as` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`, or publish `NONE`. | `COMMENT` |
 | `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps me improve this action. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`true`|
 | `slack-webhook` | **🔥 New.** A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/slack.md).  |`null`|
 | `slack-channel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slack-webhook` is configured. |`null`|

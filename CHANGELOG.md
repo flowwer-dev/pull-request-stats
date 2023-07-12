@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.10.0] - 2023-07-11
+### Added
+- `publish-as` config now supports the `NONE` option to prevent publishing the stats in the pull request.
+
 ## [2.9.0] - 2023-06-03
 ### Added
 - [#70](https://github.com/flowwer-dev/pull-request-stats/pull/70) Removes `-review:none` filter. Let PRs with requested changes be included in the stats (By [Danny McCormick](https://github.com/damccorm)).
