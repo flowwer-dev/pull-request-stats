@@ -94,7 +94,7 @@ The webhook payload will include:
       "urls": {
         "timeToReview": "https://app.flowwer.dev/charts/review-time/..."
       }
-    },
+    }
   ],
   "options": {
     "periodLength": 30,
