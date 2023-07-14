@@ -95,5 +95,25 @@ describe('Interactors | .getPulls', () => {
         }),
       );
     });
+
+    it('calls fetcher the expected amount of times when there are null pr author items', async () => {
+      const itemsPerPage = 3;
+
+      const nullAuthorResponse = buildResponse(itemsPerPage);
+      nullAuthorResponse.search.edges[0].node.author = null;
+
+      fetchPullRequests
+        .mockReturnValueOnce(nullAuthorResponse)
+        .mockReturnValueOnce(buildResponse(1));
+
+      await getPulls({ ...input, itemsPerPage });
+      expect(parsePullRequest).toBeCalledTimes(itemsPerPage + 1);
+      expect(fetchPullRequests).toBeCalledTimes(2);
+      expect(fetchPullRequests).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          after: 'CURSOR',
+        }),
+      );
+    });
   });
 });

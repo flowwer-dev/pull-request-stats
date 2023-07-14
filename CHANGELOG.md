@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.10.1] - 2023-07-22
+### Fixed
+- [#75](https://github.com/flowwer-dev/pull-request-stats/pull/75) Iterate pull request pages correctly when having null authors (by [Glen Keane](https://github.com/GlenTiki))
+
 ## [2.10.0] - 2023-07-11
 ### Added
 - `publish-as` config now supports the `NONE` option to prevent publishing the stats in the pull request.
