@@ -73,6 +73,7 @@ const run = async (params) => {
   await postSlackMessage({ ...whParams, pullRequest });
   await postTeamsMessage({ ...whParams, pullRequest });
   await postSummary({ core, content });
+  await core.setOutput('results', content);
 
   if (!pullRequestId) return;
   await postComment({
