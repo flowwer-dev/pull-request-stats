@@ -101,7 +101,7 @@ describe('Interactors | .getPulls', () => {
       const itemsPerPage = 3;
 
       const nullAuthorResponse = buildResponse(itemsPerPage)
-      nullAuthorResponse.search.edges.node.author = null
+      nullAuthorResponse.search.edges[0].node.author = null
 
       fetchPullRequests
         .mockReturnValueOnce(nullAuthorResponse)
