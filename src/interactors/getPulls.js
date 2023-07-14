@@ -20,7 +20,7 @@ const getPullRequests = async (params) => {
     .filter(filterNullAuthor)
     .map(parsePullRequest);
 
-  if (results.length < limit) return results;
+  if (data.search.edges.length < limit) return results;
 
   const last = results[results.length - 1].cursor;
   return results.concat(await getPullRequests({ ...params, after: last }));
