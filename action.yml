@@ -55,6 +55,9 @@ inputs:
   webhook:
     description: 'A webhook URL to post resulting stats.'
     required: false
+outputs:
+  results:
+    description: 'The resulting stats stored as a step output variable'
 runs:
   using: 'node16'
   main: 'dist/index.js'
