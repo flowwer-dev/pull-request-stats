@@ -100,8 +100,8 @@ describe('Interactors | .getPulls', () => {
     it('calls fetcher the expected amount of times when there are null pr author items', async () => {
       const itemsPerPage = 3;
 
-      const nullAuthorResponse = buildResponse(itemsPerPage)
-      nullAuthorResponse.search.edges[0].node.author = null
+      const nullAuthorResponse = buildResponse(itemsPerPage);
+      nullAuthorResponse.search.edges[0].node.author = null;
 
       fetchPullRequests
         .mockReturnValueOnce(nullAuthorResponse)
