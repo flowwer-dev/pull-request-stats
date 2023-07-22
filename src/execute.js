@@ -59,6 +59,7 @@ const run = async (params) => {
     periodLength,
     reviewers: reviewersRaw,
   });
+  core.debug(`Analyzed reviewers: ${reviewers}`);
 
   const table = buildTable({ reviewers, disableLinks, displayCharts });
   core.debug('Stats table built successfully');
@@ -73,7 +74,8 @@ const run = async (params) => {
   await postSlackMessage({ ...whParams, pullRequest });
   await postTeamsMessage({ ...whParams, pullRequest });
   await postSummary({ core, content });
-  await core.setOutput('results', content);
+  await core.setOutput('resultsMd', content);
+  await core.setOutput('resultsJson', whParams);
 
   if (!pullRequestId) return;
   await postComment({

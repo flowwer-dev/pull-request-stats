@@ -60,7 +60,7 @@ module.exports = async ({
     });
     // Delaying between requests to prevent rate limiting
     // https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using?tabs=cURL#rate-limiting-for-connectors
-    await new Promise((resolve) => setTimeout(resolve, DELAY));
+    await new Promise((resolve) => { setTimeout(resolve, DELAY); });
   }, Promise.resolve());
 
   core.debug(t('integrations.teams.logs.success'));

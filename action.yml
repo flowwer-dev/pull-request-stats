@@ -5,7 +5,7 @@ inputs:
   token:
     description: 'An optional Personal Access Token with enough permissions to fetch all required pull requests to calculate the stats.'
     required: false
-  github-token:
+  githubToken:
     description: 'The default GitHub Token (secrets.GITHUB_TOKEN), used to publish comments as a bot. No need to assign a value for this input.'
     required: true
     default: ${{ github.token }}
@@ -27,15 +27,15 @@ inputs:
     description: 'Whether to add charts to the stats or not. Possible values: "true" or "false"'
     required: false
     default: 'false'
-  sort-by:
+  sortBy:
     description: 'The column used to sort the data. Possible values: "REVIEWS", "TIME" or "COMMENTS"'
     required: false
     default: 'REVIEWS'
-  publish-as:
+  publishAs:
     description: 'Where to publish the results. Possible values: "COMMENT", "DESCRIPTION" or "NONE"'
     required: false
     default: 'COMMENT'
-  disable-links:
+  disableLinks:
     description: 'Prevents from adding any external links in the stats'
     required: false
     default: false
@@ -43,21 +43,42 @@ inputs:
     description: 'Indicates if the action is allowed to send monitoring data to the developer.'
     required: false
     default: true
-  slack-webhook:
+  slackWebhook:
     description: 'A Slack webhook URL to post resulting stats.'
     required: false
-  slack-channel:
+  slackChannel:
     description: 'The Slack channel where stats will be posted. Required when a Slack webhook is configured.'
     required: false
-  teams-webhook:
+  teamsWebhook:
     description: 'A Microsoft Teams webhook URL to post resulting stats.'
     required: false
   webhook:
     description: 'A webhook URL to post resulting stats.'
     required: false
+  sort-by:
+    description: 'Used for retro compatibility. Use "sortBy" input instead.'
+    required: false
+  publish-as:
+    description: 'Used for retro compatibility. Use "publishAs" input instead.'
+    required: false
+  disable-links:
+    description: 'Used for retro compatibility. Use "disableLinks" input instead.'
+    required: false
+    default: false
+  slack-webhook:
+    description: 'Used for retro compatibility. Use "slackWebhook" input instead.'
+    required: false
+  slack-channel:
+    description: 'Used for retro compatibility. Use "slackChannel" input instead.'
+    required: false
+  teams-webhook:
+    description: 'Used for retro compatibility. Use "teamsWebhook" input instead.'
+    required: false
 outputs:
-  results:
-    description: 'The resulting stats stored as a step output variable'
+  resultsMd:
+    description: 'The resulting stats stored as a step output variable in Markdown format.'
+  resultsJson:
+    description: 'The resulting stats stored as a step output variable in JSON format.'
 runs:
   using: 'node16'
   main: 'dist/index.js'

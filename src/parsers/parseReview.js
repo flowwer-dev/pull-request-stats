@@ -1,7 +1,7 @@
 const get = require('lodash.get');
 const parseUser = require('./parseUser');
 
-module.exports = (data = {}, pullRequest) => {
+module.exports = (data = {}, pullRequest = {}) => {
   const author = parseUser(data.author);
   const isOwnPull = author.login === pullRequest.authorLogin;
   const submittedAt = new Date(data.submittedAt);

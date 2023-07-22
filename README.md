@@ -51,14 +51,24 @@ The possible inputs for this action are:
 | `period` | The period used to calculate the stats, expressed in days. | `30` |
 | `limit` | The maximum number of rows to display in the table. A value of `0` means unlimited. |`0`|
 | `charts` | Whether to add a chart to the start. Possible values: `true` or `false`. | `false` |
-| `disable-links` | If `true`, removes the links to the detailed charts. Possible values: `true` or `false`. | `false` |
-| `sort-by` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
-| `publish-as` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`, or publish `NONE`. | `COMMENT` |
+| `disableLinks` | If `true`, removes the links to the detailed charts. Possible values: `true` or `false`. | `false` |
+| `sortBy` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
+| `publishAs` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`, or publish `NONE`. | `COMMENT` |
 | `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps me improve this action. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`true`|
-| `slack-webhook` | **🔥 New.** A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/slack.md).  |`null`|
-| `slack-channel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slack-webhook` is configured. |`null`|
-| `teams-webhook` | **🔥 New.** A Microsoft Teams webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/teams.md).  |`null`|
+| `slackWebhook` | **🔥 New.** A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/slack.md).  |`null`|
+| `slackChannel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slackWebhook` is configured. |`null`|
+| `teamsWebhook` | **🔥 New.** A Microsoft Teams webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/teams.md).  |`null`|
 | `webhook` | **🔥 New.** A webhook URL to send the resulting stats as JSON (integrate with Zapier, IFTTT...). See [full documentation here](/docs/webhook.md). |`null`|
+
+
+### Action outputs
+
+This action outputs the following variables:
+
+| Variable | Description |
+| --------- | ----------- |
+| `resultsMd` | The resulting stats stored as a step output variable in **Markdown** format. |
+| `resultsJson` | The resulting stats stored as a step output variable in **JSON** format. |
 
 
 ## Examples
@@ -121,8 +131,8 @@ jobs:
           organization: 'piedpiper'
           period: 7
           charts: true
-          disable-links: true
-          sort-by: 'COMMENTS'
+          disableLinks: true
+          sortBy: 'COMMENTS'
 ```
 
 This config will:

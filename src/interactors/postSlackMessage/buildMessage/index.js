@@ -20,15 +20,17 @@ module.exports = ({
       periodLength,
     }),
 
-    ...reviewers.reduce((prev, reviewer, index) => [
-      ...prev,
-      ...buildReviewer({
-        t,
-        index,
-        reviewer,
-        disableLinks,
-        displayCharts,
-      })],
-    []),
+    ...reviewers.reduce(
+      (prev, reviewer, index) => [
+        ...prev,
+        ...buildReviewer({
+          t,
+          index,
+          reviewer,
+          disableLinks,
+          displayCharts,
+        })],
+      [],
+    ),
   ],
 });

@@ -21,7 +21,7 @@ const getPrId = () => get(github, 'context.payload.pull_request.node_id');
 
 const getParams = () => {
   const currentRepo = process.env.GITHUB_REPOSITORY;
-  const githubToken = core.getInput('github-token');
+  const githubToken = core.getInput('githubToken');
   const personalToken = core.getInput('token') || githubToken;
 
   return {
@@ -30,21 +30,21 @@ const getParams = () => {
     personalToken,
     org: core.getInput('organization'),
     repos: getRepositories(currentRepo),
-    sortBy: core.getInput('sort-by'),
-    publishAs: core.getInput('publish-as'),
+    sortBy: core.getInput('sortBy') || core.getInput('sort-by'),
+    publishAs: core.getInput('publishAs') || core.getInput('publish-as'),
     periodLength: getPeriod(),
     displayCharts: core.getBooleanInput('charts'),
-    disableLinks: core.getBooleanInput('disable-links'),
+    disableLinks: core.getBooleanInput('disableLinks') || core.getBooleanInput('disable-links'),
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),
     telemetry: core.getBooleanInput('telemetry'),
     webhook: core.getInput('webhook'),
     slack: {
-      webhook: core.getInput('slack-webhook'),
-      channel: core.getInput('slack-channel'),
+      webhook: core.getInput('slackWebhook') || core.getInput('slack-webhook'),
+      channel: core.getInput('slackChannel') || core.getInput('slack-channel'),
     },
     teams: {
-      webhook: core.getInput('teams-webhook'),
+      webhook: core.getInput('teamsWebhook') || core.getInput('teams-webhook'),
     },
   };
 };

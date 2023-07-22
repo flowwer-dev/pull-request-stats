@@ -1,7 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [2.10.1] - 2023-07-22
+## [2.11.0] - 2023-07-22
+### Added
+- [#76](https://github.com/flowwer-dev/pull-request-stats/pull/76) Add stats as a github step output (by [Danny McCormick](https://github.com/damccorm))
+
+### Changed
+- Changed input to camelCase format, keeping the old ones for backward compatibility. Eg: `publish-as` is now `publishAs`.
+
 ### Fixed
 - [#75](https://github.com/flowwer-dev/pull-request-stats/pull/75) Iterate pull request pages correctly when having null authors (by [Glen Keane](https://github.com/GlenTiki))
 

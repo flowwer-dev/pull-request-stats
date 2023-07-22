@@ -10,8 +10,8 @@ const defaultParams = {
 };
 
 const extractData = (response) => {
-  const [usernameCol, ...statsCols] = response?.columns;
-  const [imageCol, nameCol] = usernameCol?.items?.[0].columns;
+  const [usernameCol, ...statsCols] = response?.columns || [];
+  const [imageCol, nameCol] = usernameCol?.items?.[0].columns || [];
   const stats = statsCols.map((col) => col?.items?.[0].text);
 
   return {

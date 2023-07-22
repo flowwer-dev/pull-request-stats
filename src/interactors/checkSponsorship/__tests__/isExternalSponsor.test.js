@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require('axios').default;
 const isExternalSponsor = require('../isExternalSponsor');
 
 const sponsors = [
@@ -8,7 +8,9 @@ const sponsors = [
 ];
 
 jest.mock('axios', () => ({
-  get: jest.fn(),
+  default: {
+    get: jest.fn(),
+  },
 }));
 
 jest.mock('@actions/core', () => ({
