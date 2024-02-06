@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.12.0] - 2024-02-06
+### Changed
+- [#85](https://github.com/flowwer-dev/pull-request-stats/pull/85) Use Node v20 (by [antonindrawan](https://github.com/antonindrawan))
+
 ## [2.11.0] - 2023-07-22
 ### Added
 - [#76](https://github.com/flowwer-dev/pull-request-stats/pull/76) Add stats as a github step output (by [Danny McCormick](https://github.com/damccorm))

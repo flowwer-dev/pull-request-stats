@@ -9,12 +9,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Upgrade Yarn
+        run: |
+          corepack enable
+          yarn set version stable
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "yarn"
+          cache: yarn
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - run: yarn lint
