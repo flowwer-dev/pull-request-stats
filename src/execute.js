@@ -31,7 +31,9 @@ const run = async (params) => {
     personalToken,
     displayCharts,
     pullRequestId,
+    typeTimeToReview,
   } = params;
+
 
   const pullRequest = pullRequestId
     ? await fetchPullRequestById(octokit, pullRequestId)
@@ -50,7 +52,11 @@ const run = async (params) => {
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
 
-  const reviewersRaw = getReviewers(pulls);
+
+  const options = {
+    typeTimeToReview
+  }
+  const reviewersRaw = getReviewers(pulls, options);
   core.info(`Analyzed stats for ${reviewersRaw.length} pull request reviewers`);
 
   const reviewers = setUpReviewers({

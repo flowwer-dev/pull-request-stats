@@ -1,8 +1,8 @@
-const { sum, median, divide } = require('../../utils');
+const { sum, calculateTimeToReview, divide } = require('../../utils');
 
 const getProperty = (list, prop) => list.map((el) => el[prop]);
 
-module.exports = (reviews) => {
+module.exports = (reviews, options) => {
   const pullRequestIds = getProperty(reviews, 'pullRequestId');
   const totalReviews = new Set(pullRequestIds).size;
   const totalComments = sum(getProperty(reviews, 'commentsCount'));
@@ -11,6 +11,6 @@ module.exports = (reviews) => {
     totalReviews,
     totalComments,
     commentsPerReview: divide(totalComments, totalReviews),
-    timeToReview: median(getProperty(reviews, 'timeToReview')),
+    timeToReview: calculateTimeToReview(getProperty(reviews, 'timeToReview'), options.typeTimeToReview),
   };
 };
