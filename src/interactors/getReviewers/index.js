@@ -1,7 +1,14 @@
 const calculateReviewsStats = require('./calculateReviewsStats');
+const filterReviewer = require('./filterReviewer');
+const parseExclude = require('./parseExclude');
 const groupReviews = require('./groupReviews');
 
-module.exports = (pulls) => groupReviews(pulls).map(({ author, reviews }) => {
-  const stats = calculateReviewsStats(reviews);
-  return { author, reviews, stats };
-});
+module.exports = (pulls, { excludeStr } = {}) => {
+  const exclude = parseExclude(excludeStr);
+  return groupReviews(pulls)
+    .filter(({ author }) => filterReviewer(exclude, author.login))
+    .map(({ author, reviews }) => {
+      const stats = calculateReviewsStats(reviews);
+      return { author, reviews, stats };
+    });
+};

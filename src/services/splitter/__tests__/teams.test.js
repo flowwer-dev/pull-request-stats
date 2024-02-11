@@ -37,9 +37,10 @@ describe('Services | Splitter | TeamsSplitter', () => {
     block7,
   ];
 
-  describe('.defaultLimit', () => {
+  describe('limits', () => {
     it('returns limit from config', () => {
-      expect(TeamsSplitter.defaultLimit()).toEqual(5000);
+      const splitter = new TeamsSplitter();
+      expect(splitter.limit).toEqual(5000);
     });
   });
 

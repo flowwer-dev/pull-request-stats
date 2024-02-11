@@ -2,7 +2,7 @@ const SlackSplitter = require('../slack');
 const { median } = require('../../../utils');
 
 jest.mock('../../../config', () => ({
-  getSlackCharsLimit: () => 100,
+  getSlackLimits: () => ({ chars: 100, blocks: 5 }),
 }));
 
 describe('Services | Splitter | SlackSplitter', () => {
@@ -37,9 +37,11 @@ describe('Services | Splitter | SlackSplitter', () => {
     ],
   };
 
-  describe('.defaultLimit', () => {
-    it('returns limit from config', () => {
-      expect(SlackSplitter.defaultLimit()).toEqual(100);
+  describe('limits', () => {
+    it('returns limits from config', () => {
+      const splitter = new SlackSplitter();
+      expect(splitter.limit).toEqual(100);
+      expect(splitter.maxBlocksLength).toEqual(5);
     });
   });
 

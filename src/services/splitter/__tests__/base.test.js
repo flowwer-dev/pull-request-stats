@@ -10,15 +10,10 @@ describe('Services | Splitter | BaseSplitter', () => {
       expect(splitter.message).toEqual(message);
     });
 
-    it('assigns a default limit when not specified', () => {
+    it('assigns default limits when not specified', () => {
       const splitter = new BaseSplitter({ message: '' });
-      expect(splitter.limit).toEqual(BaseSplitter.defaultLimit());
-    });
-  });
-
-  describe('.defaultLimit', () => {
-    it('returns the highest possible number', () => {
-      expect(BaseSplitter.defaultLimit()).toEqual(Infinity);
+      expect(splitter.limit).toEqual(Infinity);
+      expect(splitter.maxBlocksLength).toEqual(Infinity);
     });
   });
 
@@ -177,6 +172,19 @@ describe('Services | Splitter | BaseSplitter', () => {
         [block3],
         [block4],
         [block5, block6, block7],
+      ]);
+    });
+
+    it('allows a maximum blocks length to be specified', () => {
+      const limit = Infinity;
+      const maxBlocksLength = 2;
+      const splitter = new BaseSplitter({ message, limit, maxBlocksLength });
+      const result = splitter.chunks;
+      expect(result).toEqual([
+        [block1],
+        [block2, block3],
+        [block4, block5],
+        [block6, block7],
       ]);
     });
   });

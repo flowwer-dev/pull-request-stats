@@ -50,7 +50,7 @@ const run = async (params) => {
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
 
-  const reviewersRaw = getReviewers(pulls);
+  const reviewersRaw = getReviewers(pulls, { excludeStr: params.excludeStr });
   core.info(`Analyzed stats for ${reviewersRaw.length} pull request reviewers`);
 
   const reviewers = setUpReviewers({

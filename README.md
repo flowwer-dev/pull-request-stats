@@ -39,6 +39,8 @@ Just add this action to one of your [workflow files](https://docs.github.com/en/
         uses: flowwer-dev/pull-request-stats@master
 ```
 
+If you are getting an empty table or an error, check the [troubleshooting section](#troubleshooting).
+
 ### Action inputs
 
 The possible inputs for this action are:
@@ -47,18 +49,19 @@ The possible inputs for this action are:
 | --------- | ----------- | ------- |
 | `token` | A [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with `repo` permissions. Required to calculate stats for an organization or multiple repos. | `GITHUB_TOKEN` |
 | `repositories` | A comma-separated list of GitHub repositories to calculate the stats, e.g. `username/repo1,username/repo2`. When specifying other repo(s), **it is mandatory to pass a Personal Access Token** in the `token` parameter.| Current repository |
-| `organization` | If you prefer, you may specify your organization's name to calculate the stats across all of its repos. When specifying an organization, **it is mandatory to pass a Personal Access Token** in the `token` parameter. | `null`|
+| `organization` | If you prefer, you may specify your organization's name to calculate the stats across all of its repos. When specifying an organization, **it is mandatory to pass a Personal Access Token** in the `token` parameter. | `null` |
 | `period` | The period used to calculate the stats, expressed in days. | `30` |
-| `limit` | The maximum number of rows to display in the table. A value of `0` means unlimited. |`0`|
+| `limit` | The maximum number of rows to display in the table. A value of `0` means unlimited. | `0` |
 | `charts` | Whether to add a chart to the start. Possible values: `true` or `false`. | `false` |
 | `disableLinks` | If `true`, removes the links to the detailed charts. Possible values: `true` or `false`. | `false` |
 | `sortBy` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
 | `publishAs` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`, or publish `NONE`. | `COMMENT` |
+| `exclude` | A comma-separated list of usernames (case-insensitive) to be excluded from the results (e.g. `username1,username2`), or a regular expression enclosed between slashes (eg. `/^bot/i` will exclude all usernames that begin with "bot"). | `null` |
 | `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps me improve this action. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`true`|
-| `slackWebhook` | **🔥 New.** A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/slack.md).  |`null`|
-| `slackChannel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slackWebhook` is configured. |`null`|
-| `teamsWebhook` | **🔥 New.** A Microsoft Teams webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/teams.md).  |`null`|
-| `webhook` | **🔥 New.** A webhook URL to send the resulting stats as JSON (integrate with Zapier, IFTTT...). See [full documentation here](/docs/webhook.md). |`null`|
+| `slackWebhook` | **🔥 New.** A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/slack.md).  | `null` |
+| `slackChannel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slackWebhook` is configured. | `null` |
+| `teamsWebhook` | **🔥 New.** A Microsoft Teams webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/teams.md).  | `null` |
+| `webhook` | **🔥 New.** A webhook URL to send the resulting stats as JSON (integrate with Zapier, IFTTT...). See [full documentation here](/docs/webhook.md). | `null` |
 
 
 ### Action outputs
@@ -179,6 +182,19 @@ Check the guide for the tool you want to integrate:
   1. Make sure the repositories have pull request reviews during the configured `period`.
   2. When specifying `repositories` or `organization` parameters, a [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) is required in the `token` parameter.
   3. If providing a Personal Access Token, ensure it has the `repo` permission for the projects you want.
+  4. If you are not providing a Personal Access Token (thus, the action is using the default `GITHUB_TOKEN`), make sure the job has the `contents: read` and `pull-requests: write` [permissions](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs#defining-access-for-the-github_token-scopes) While these permissions are typically provided by default, certain organizations may customize or overwrite them.
+
+  ```yml
+  jobs:
+    stats:
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        pull-requests: write
+      steps:
+        - name: Run pull request stats
+          uses: flowwer-dev/pull-request-stats@master
+  ```
 </details>
 
 <details>

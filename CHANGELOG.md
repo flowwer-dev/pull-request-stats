@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.13.0] - 2024-02-10
+### Added
+- `exclude` option to exclude specific users from the stats.
+
+### Fixed
+- Reduces the block size in the Slack messages to prevent hitting the characters limit.
+
 ## [2.12.0] - 2024-02-06
 ### Changed
 - [#85](https://github.com/flowwer-dev/pull-request-stats/pull/85) Use Node v20 (by [antonindrawan](https://github.com/antonindrawan))

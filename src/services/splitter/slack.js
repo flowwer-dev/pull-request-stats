@@ -1,10 +1,15 @@
-const { getSlackCharsLimit } = require('../../config');
+const { getSlackLimits } = require('../../config');
 const { median } = require('../../utils');
 const BaseSplitter = require('./base');
 
 class SlackSplitter extends BaseSplitter {
-  static defaultLimit() {
-    return getSlackCharsLimit();
+  constructor(args = {}) {
+    const limits = getSlackLimits();
+    super({
+      ...args,
+      limit: limits.chars,
+      maxBlocksLength: limits.blocks,
+    });
   }
 
   static splitBlocks(message, count) {

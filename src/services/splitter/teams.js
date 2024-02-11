@@ -3,8 +3,11 @@ const { median } = require('../../utils');
 const BaseSplitter = require('./base');
 
 class TeamsSplitter extends BaseSplitter {
-  static defaultLimit() {
-    return getTeamsBytesLimit();
+  constructor(args = {}) {
+    super({
+      ...args,
+      limit: getTeamsBytesLimit(),
+    });
   }
 
   static splitBlocks(body, count) {

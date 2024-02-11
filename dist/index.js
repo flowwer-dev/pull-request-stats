@@ -41192,11 +41192,14 @@ module.exports = parseParams
 /***/ 1855:
 /***/ ((module) => {
 
-const getSlackCharsLimit = () => 39000;
-const getTeamsBytesLimit = () => 27000;
+const getSlackLimits = () => ({
+  chars: 30_000,
+  blocks: 50,
+});
+const getTeamsBytesLimit = () => 27_000;
 
 module.exports = {
-  getSlackCharsLimit,
+  getSlackLimits,
   getTeamsBytesLimit,
 };
 
@@ -41288,7 +41291,7 @@ const run = async (params) => {
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
 
-  const reviewersRaw = getReviewers(pulls);
+  const reviewersRaw = getReviewers(pulls, { excludeStr: params.excludeStr });
   core.info(`Analyzed stats for ${reviewersRaw.length} pull request reviewers`);
 
   const reviewers = setUpReviewers({
@@ -42064,6 +42067,18 @@ module.exports = (reviews) => {
 
 /***/ }),
 
+/***/ 3966:
+/***/ ((module) => {
+
+module.exports = (exclude, username) => {
+  if (exclude.test) return !exclude.test(username);
+  if (exclude.includes) return !exclude.includes(username);
+  return true;
+};
+
+
+/***/ }),
+
 /***/ 9633:
 /***/ ((module) => {
 
@@ -42100,12 +42115,43 @@ module.exports = (pulls) => {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const calculateReviewsStats = __nccwpck_require__(3753);
+const filterReviewer = __nccwpck_require__(3966);
+const parseExclude = __nccwpck_require__(7960);
 const groupReviews = __nccwpck_require__(9633);
 
-module.exports = (pulls) => groupReviews(pulls).map(({ author, reviews }) => {
-  const stats = calculateReviewsStats(reviews);
-  return { author, reviews, stats };
-});
+module.exports = (pulls, { excludeStr } = {}) => {
+  const exclude = parseExclude(excludeStr);
+  return groupReviews(pulls)
+    .filter(({ author }) => filterReviewer(exclude, author.login))
+    .map(({ author, reviews }) => {
+      const stats = calculateReviewsStats(reviews);
+      return { author, reviews, stats };
+    });
+};
+
+
+/***/ }),
+
+/***/ 7960:
+/***/ ((module) => {
+
+const REGEXP_PATTERN = /^\/.+\/[a-z]*$/;
+
+// Github usernames can only contain alphanumeric characters and dashes (-)
+const sanitize = (str = '') => (str || '').replace(/[^-a-zA-Z0-9]/g, '').toLowerCase();
+
+const isRegExp = (str) => REGEXP_PATTERN.test(str);
+
+const parseRegExp = (str) => {
+  const [pattern, flags] = str.split('/').slice(1);
+  return new RegExp(pattern, flags);
+};
+
+module.exports = (excludeStr) => {
+  if (!sanitize(excludeStr)) return [];
+  if (isRegExp(excludeStr)) return parseRegExp(excludeStr);
+  return excludeStr.split(',').map(sanitize);
+};
 
 
 /***/ }),
@@ -43086,13 +43132,10 @@ module.exports = {
 /***/ ((module) => {
 
 class BaseSplitter {
-  constructor({ message, limit = null }) {
-    this.limit = limit || this.constructor.defaultLimit();
+  constructor({ message, limit = null, maxBlocksLength = null }) {
     this.message = message;
-  }
-
-  static defaultLimit() {
-    return Infinity;
+    this.limit = limit || Infinity;
+    this.maxBlocksLength = maxBlocksLength || Infinity;
   }
 
   get blockSize() {
@@ -43118,10 +43161,13 @@ class BaseSplitter {
     const blocksCount = this.constructor.getBlocksCount(message);
     const currentSize = this.constructor.calculateSize(message);
     const diff = currentSize - this.limit;
-    if (diff < 0 || blocksCount === 1) return 0;
+    const onLimit = diff <= 0 && blocksCount <= this.maxBlocksLength;
+    if (onLimit || blocksCount === 1) return 0;
 
     const blocksSpace = Math.ceil(diff / this.blockSize);
-    const blocksToSplit = Math.max(1, Math.min(blocksCount - 1, blocksSpace));
+    const upperBound = Math.min(blocksCount - 1, blocksSpace);
+    const exceedingBlocks = Math.max(0, blocksCount - this.maxBlocksLength);
+    const blocksToSplit = Math.max(1, upperBound, exceedingBlocks);
     const [firsts] = this.constructor.splitBlocks(message, blocksToSplit);
     return this.calculateBlocksToSplit(firsts) || blocksToSplit;
   }
@@ -43165,13 +43211,18 @@ module.exports = {
 /***/ 2843:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { getSlackCharsLimit } = __nccwpck_require__(1855);
+const { getSlackLimits } = __nccwpck_require__(1855);
 const { median } = __nccwpck_require__(9988);
 const BaseSplitter = __nccwpck_require__(7027);
 
 class SlackSplitter extends BaseSplitter {
-  static defaultLimit() {
-    return getSlackCharsLimit();
+  constructor(args = {}) {
+    const limits = getSlackLimits();
+    super({
+      ...args,
+      limit: limits.chars,
+      maxBlocksLength: limits.blocks,
+    });
   }
 
   static splitBlocks(message, count) {
@@ -43212,8 +43263,11 @@ const { median } = __nccwpck_require__(9988);
 const BaseSplitter = __nccwpck_require__(7027);
 
 class TeamsSplitter extends BaseSplitter {
-  static defaultLimit() {
-    return getTeamsBytesLimit();
+  constructor(args = {}) {
+    super({
+      ...args,
+      limit: getTeamsBytesLimit(),
+    });
   }
 
   static splitBlocks(body, count) {
@@ -47978,7 +48032,7 @@ module.exports = JSON.parse('{"name":"mixpanel","description":"A simple server-s
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"pull-request-stats","version":"2.12.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.10.1","@actions/github":"^6.0.0","axios":"^1.6.7","humanize-duration":"^3.31.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@vercel/ncc":"^0.38.1","eslint":"^8.56.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.29.1","eslint-plugin-jest":"^27.6.3","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
+module.exports = JSON.parse('{"name":"pull-request-stats","version":"2.13.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.10.1","@actions/github":"^6.0.0","axios":"^1.6.7","humanize-duration":"^3.31.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@vercel/ncc":"^0.38.1","eslint":"^8.56.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.29.1","eslint-plugin-jest":"^27.6.3","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
 
 /***/ }),
 
@@ -48086,6 +48140,7 @@ const getParams = () => {
     disableLinks: core.getBooleanInput('disableLinks') || core.getBooleanInput('disable-links'),
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),
+    excludeStr: core.getInput('exclude'),
     telemetry: core.getBooleanInput('telemetry'),
     webhook: core.getInput('webhook'),
     slack: {

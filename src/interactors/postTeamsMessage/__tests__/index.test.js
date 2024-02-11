@@ -3,11 +3,9 @@ const buildMessage = require('../buildMessage');
 const buildPayload = require('../buildPayload');
 const postTeamsMessage = require('../index');
 
-const MESSAGE = {
-  blocks: [
-    { type: 'section', text: 'MESSAGE' },
-  ],
-};
+const MESSAGE = [
+  { type: 'section', text: 'MESSAGE' },
+];
 
 jest.mock('../../../fetchers', () => ({ postToWebhook: jest.fn(() => Promise.resolve()) }));
 jest.mock('../buildMessage', () => jest.fn());

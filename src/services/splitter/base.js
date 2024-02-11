@@ -1,11 +1,8 @@
 class BaseSplitter {
-  constructor({ message, limit = null }) {
-    this.limit = limit || this.constructor.defaultLimit();
+  constructor({ message, limit = null, maxBlocksLength = null }) {
     this.message = message;
-  }
-
-  static defaultLimit() {
-    return Infinity;
+    this.limit = limit || Infinity;
+    this.maxBlocksLength = maxBlocksLength || Infinity;
   }
 
   get blockSize() {
@@ -31,10 +28,13 @@ class BaseSplitter {
     const blocksCount = this.constructor.getBlocksCount(message);
     const currentSize = this.constructor.calculateSize(message);
     const diff = currentSize - this.limit;
-    if (diff < 0 || blocksCount === 1) return 0;
+    const onLimit = diff <= 0 && blocksCount <= this.maxBlocksLength;
+    if (onLimit || blocksCount === 1) return 0;
 
     const blocksSpace = Math.ceil(diff / this.blockSize);
-    const blocksToSplit = Math.max(1, Math.min(blocksCount - 1, blocksSpace));
+    const upperBound = Math.min(blocksCount - 1, blocksSpace);
+    const exceedingBlocks = Math.max(0, blocksCount - this.maxBlocksLength);
+    const blocksToSplit = Math.max(1, upperBound, exceedingBlocks);
     const [firsts] = this.constructor.splitBlocks(message, blocksToSplit);
     return this.calculateBlocksToSplit(firsts) || blocksToSplit;
   }
