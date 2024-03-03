@@ -28,11 +28,12 @@ class Telemetry {
     });
   }
 
-  success() {
+  success(results) {
     if (!this.useTelemetry) return;
     sendSuccess({
       timeMs: new Date() - this.startDate,
       tracker: this.tracker,
+      ...(results || {}),
     });
   }
 }

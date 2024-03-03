@@ -41280,7 +41280,7 @@ const run = async (params) => {
 
   if (alreadyPublished(pullRequest)) {
     core.info('Skipping execution because stats are published already');
-    return;
+    return null;
   }
 
   const pulls = await getPulls({
@@ -41306,7 +41306,7 @@ const run = async (params) => {
   core.debug('Stats table built successfully');
 
   const content = buildComment({
-    table, periodLength, org, repos,
+    table, periodLength, org, repos, isSponsor: params.isSponsor,
   });
   core.debug(`Commit content built successfully: ${content}`);
 
@@ -41318,15 +41318,21 @@ const run = async (params) => {
   await core.setOutput('resultsMd', content);
   await core.setOutput('resultsJson', whParams);
 
-  if (!pullRequestId) return;
-  await postComment({
-    octokit,
-    content,
-    publishAs,
-    pullRequestId,
-    currentBody: pullRequest.body,
-  });
-  core.debug('Posted comment successfully');
+  if (pullRequestId) {
+    await postComment({
+      octokit,
+      content,
+      publishAs,
+      pullRequestId,
+      currentBody: pullRequest.body,
+    });
+    core.debug('Posted comment successfully');
+  }
+
+  return {
+    reviewers,
+    pullRequest,
+  };
 };
 
 module.exports = async (params) => {
@@ -41340,8 +41346,8 @@ module.exports = async (params) => {
 
   try {
     telemetry.start(params);
-    await run({ ...params, isSponsor, octokit });
-    telemetry.success();
+    const results = await run({ ...params, isSponsor, octokit });
+    telemetry.success(results);
   } catch (error) {
     telemetry.error(error);
     throw error;
@@ -41392,6 +41398,9 @@ const PR_BY_ID_QUERY = `
         url
         body
         number
+        author {
+          login
+        }
         comments(last: 100) {
           nodes {
             author {
@@ -41703,11 +41712,13 @@ module.exports = ({
   table,
   org,
   repos,
+  isSponsor,
   periodLength,
 }) => {
   const sources = buildSources({ buildGithubLink, org, repos });
   const message = t('table.subtitle', { sources, count: periodLength });
-  return `## ${t('table.title')}\n${message}:\n${table}`;
+  const footer = isSponsor ? '' : `\n${t('table.footer')}`;
+  return `## ${t('table.title')}\n${message}:\n${table}${footer}`;
 };
 
 
@@ -43360,11 +43371,12 @@ class Telemetry {
     });
   }
 
-  success() {
+  success(results) {
     if (!this.useTelemetry) return;
     sendSuccess({
       timeMs: new Date() - this.startDate,
       tracker: this.tracker,
+      ...(results || {}),
     });
   }
 }
@@ -43437,14 +43449,25 @@ module.exports = ({
 /***/ 7513:
 /***/ ((module) => {
 
-module.exports = ({ tracker, timeMs }) => {
+module.exports = ({
+  timeMs,
+  tracker,
+  pullRequest,
+  reviewers: reviewersInput,
+}) => {
   const timeSec = Math.floor(timeMs / 1000);
   const timeMin = Math.floor(timeMs / 60000);
+  const prAuthor = pullRequest?.author?.login;
+  const reviewers = (reviewersInput || []).map((r) => r?.author?.login);
+  const reviewersCount = reviewers.length;
 
   tracker.track('success', {
     timeMs,
     timeSec,
     timeMin,
+    prAuthor,
+    reviewers,
+    reviewersCount,
   });
 };
 
@@ -48032,7 +48055,7 @@ module.exports = JSON.parse('{"name":"mixpanel","description":"A simple server-s
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"pull-request-stats","version":"2.13.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.10.1","@actions/github":"^6.0.0","axios":"^1.6.7","humanize-duration":"^3.31.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@vercel/ncc":"^0.38.1","eslint":"^8.56.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.29.1","eslint-plugin-jest":"^27.6.3","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
+module.exports = JSON.parse('{"name":"pull-request-stats","version":"2.14.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.10.1","@actions/github":"^6.0.0","axios":"^1.6.7","humanize-duration":"^3.31.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@vercel/ncc":"^0.38.1","eslint":"^8.56.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.29.1","eslint-plugin-jest":"^27.6.3","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
 
 /***/ }),
 
@@ -48056,7 +48079,7 @@ module.exports = JSON.parse('{"slack":{"logs":{"notConfigured":"Slack integratio
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"title":"Pull reviewers stats","icon":"https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png","subtitle":{"one":"Stats of the last day for {{sources}}","other":"Stats of the last {{count}} days for {{sources}}"},"sources":{"separator":", ","fullList":"{{firsts}} and {{last}}","andOthers":"{{firsts}} and {{count}} others"},"columns":{"avatar":"","username":"User","timeToReview":"Time to review","totalReviews":"Total reviews","totalComments":"Total comments"}}');
+module.exports = JSON.parse('{"title":"Pull reviewers stats","icon":"https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png","subtitle":{"one":"Stats of the last day for {{sources}}","other":"Stats of the last {{count}} days for {{sources}}"},"sources":{"separator":", ","fullList":"{{firsts}} and {{last}}","andOthers":"{{firsts}} and {{count}} others"},"columns":{"avatar":"","username":"User","timeToReview":"Time to review","totalReviews":"Total reviews","totalComments":"Total comments"},"footer":"<sup>⚡️ [Pull request stats](https://bit.ly/pull-request-stats)</sup>"}');
 
 /***/ })
 

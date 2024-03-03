@@ -39,7 +39,7 @@ const run = async (params) => {
 
   if (alreadyPublished(pullRequest)) {
     core.info('Skipping execution because stats are published already');
-    return;
+    return null;
   }
 
   const pulls = await getPulls({
@@ -65,7 +65,7 @@ const run = async (params) => {
   core.debug('Stats table built successfully');
 
   const content = buildComment({
-    table, periodLength, org, repos,
+    table, periodLength, org, repos, isSponsor: params.isSponsor,
   });
   core.debug(`Commit content built successfully: ${content}`);
 
@@ -77,15 +77,21 @@ const run = async (params) => {
   await core.setOutput('resultsMd', content);
   await core.setOutput('resultsJson', whParams);
 
-  if (!pullRequestId) return;
-  await postComment({
-    octokit,
-    content,
-    publishAs,
-    pullRequestId,
-    currentBody: pullRequest.body,
-  });
-  core.debug('Posted comment successfully');
+  if (pullRequestId) {
+    await postComment({
+      octokit,
+      content,
+      publishAs,
+      pullRequestId,
+      currentBody: pullRequest.body,
+    });
+    core.debug('Posted comment successfully');
+  }
+
+  return {
+    reviewers,
+    pullRequest,
+  };
 };
 
 module.exports = async (params) => {
@@ -99,8 +105,8 @@ module.exports = async (params) => {
 
   try {
     telemetry.start(params);
-    await run({ ...params, isSponsor, octokit });
-    telemetry.success();
+    const results = await run({ ...params, isSponsor, octokit });
+    telemetry.success(results);
   } catch (error) {
     telemetry.error(error);
     throw error;

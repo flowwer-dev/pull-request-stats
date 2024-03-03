@@ -1,3 +1,4 @@
+const { t } = require('../../i18n');
 const buildComment = require('../buildComment');
 const { getRepoName } = require('../../utils');
 
@@ -5,6 +6,7 @@ const TABLE_MOCK = 'TABLE';
 const ORG = 'org';
 const REPO1 = 'org/repo1';
 const REPO2 = 'org/repo2';
+const FOOTER = t('table.footer');
 
 const linkOrg = (org) => `[${org}](https://github.com/${org})`;
 
@@ -18,7 +20,7 @@ describe('Interactors | .buildComment', () => {
     const message = `Stats of the last day for ${linkOrg(ORG)}:`;
 
     it('builds the message in singular', () => {
-      const expected = `${title}\n${message}\n${TABLE_MOCK}`;
+      const expected = `${title}\n${message}\n${TABLE_MOCK}\n${FOOTER}`;
       const response = buildComment({ periodLength, table: TABLE_MOCK, org: ORG });
       expect(response).toEqual(expected);
     });
@@ -29,7 +31,7 @@ describe('Interactors | .buildComment', () => {
     const message = `Stats of the last 365 days for ${linkOrg(ORG)}:`;
 
     it('builds the message in singular', () => {
-      const expected = `${title}\n${message}\n${TABLE_MOCK}`;
+      const expected = `${title}\n${message}\n${TABLE_MOCK}\n${FOOTER}`;
       const response = buildComment({ periodLength, table: TABLE_MOCK, org: ORG });
       expect(response).toEqual(expected);
     });
@@ -41,8 +43,25 @@ describe('Interactors | .buildComment', () => {
     const message = `Stats of the last day for ${linkRepo(REPO1)} and ${linkRepo(REPO2)}:`;
 
     it('builds the message in singular', () => {
-      const expected = `${title}\n${message}\n${TABLE_MOCK}`;
+      const expected = `${title}\n${message}\n${TABLE_MOCK}\n${FOOTER}`;
       const response = buildComment({ periodLength, table: TABLE_MOCK, repos });
+      expect(response).toEqual(expected);
+    });
+  });
+
+  describe('when is a sponsor', () => {
+    const isSponsor = true;
+    const periodLength = 1;
+    const message = `Stats of the last day for ${linkOrg(ORG)}:`;
+
+    it('removes the footer', () => {
+      const expected = `${title}\n${message}\n${TABLE_MOCK}`;
+      const response = buildComment({
+        isSponsor,
+        periodLength,
+        org: ORG,
+        table: TABLE_MOCK,
+      });
       expect(response).toEqual(expected);
     });
   });

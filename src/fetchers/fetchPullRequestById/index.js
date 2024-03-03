@@ -8,6 +8,9 @@ const PR_BY_ID_QUERY = `
         url
         body
         number
+        author {
+          login
+        }
         comments(last: 100) {
           nodes {
             author {

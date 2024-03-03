@@ -249,21 +249,33 @@ Used by hundreds of successful teams:
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
 | <a href="https://www.intel.com"><img src="https://avatars.githubusercontent.com/u/17888862?s=200&v=4" width="64"></a><br/>**Intel** | <a href="https://auth0.com/"><img src="https://avatars.githubusercontent.com/u/2824157?s=200&v=4" width="64"></a><br/>**Auth0** | <a href="https://www.additionwealth.com/"><img src="https://avatars.githubusercontent.com/u/86253902?s=200&v=4" width="64"></a><br/>**Addition** | <a href="https://fauna.com/"><img src="https://avatars.githubusercontent.com/u/1477000?s=200&v=4" width="64"></a><br/>**Fauna** | <a href="http://open.cdc.gov/"><img src="https://avatars.githubusercontent.com/u/12104975?s=200&v=4" width="64"></a><br/>**CDC** | <a href="https://www.wecasa.fr/"><img src="https://avatars.githubusercontent.com/u/56955553?s=200&v=4" width="64"></a><br/>**Wecasa** | <a href="https://bolt.eu/"><img src="https://avatars.githubusercontent.com/u/37693190?s=200&v=4" width="64"></a><br/>**Bolt** | <a href="https://republic.com/"><img src="https://avatars.githubusercontent.com/u/18252987?s=200&v=4" width="64"></a><br/>**Republic** |
 
-## Author
+## Authors
 
 |<a href="https://github.com/manuelmhtr"><img src="https://avatars.githubusercontent.com/u/1031639?v=4" width="32"></a>|[@manuelmhtr](https://github.com/manuelmhtr)<br/>🇲🇽 Guadalajara, MX|
 | -- | :-- |
+|<a href="https://github.com/CarlosCRG19"><img src="https://avatars.githubusercontent.com/u/61464973?v=4" width="32"></a>|[@CarlosCRG19](https://github.com/CarlosCRG19)<br/>🇲🇽 Colima, MX|
 
 
 ## Help
 
-This project is maintained by a single person, considering supporting the project by:
+This project is maintained by a small team, considering supporting the project by:
 
 * ⭐ Star this repo.
-* Sharing your [feedback](https://github.com/flowwer-dev/pull-request-stats/discussions/new).
-* Joining the [community](https://discord.gg/SGYbZkac).
+* Sharing your [feedback](https://forms.gle/xNakBCbfjEnVvmcZ7).
+* Joining the [community](https://discord.gg/wk5zy5aAZQ).
 * Becoming a [sponsor](https://github.com/sponsors/manuelmhtr).
 
-### License
+## NEW: We are building the web version! ⚡
+
+![](/assets/web-banner.png)
+
+Exciting News! After receiving numerous requests from developers, we're actively developing a stand-alone version of this action!
+
+**Get early access** by filling out [this form](https://c4tj3h4y5wh.typeform.com/to/Ejo56p27).
+
+Psst! Current sponsors will receive early access and free premium feature for a limited time 🤫
+
+
+## License
 
 MIT

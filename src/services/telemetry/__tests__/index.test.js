@@ -132,13 +132,15 @@ describe('Telemetry', () => {
 
   describe('.success', () => {
     const getTelemetry = () => new Telemetry({ core, telemetry: true });
+    const results = { result1: 'RESULT1', result2: 'RESULT2' };
 
     it('calls .sendSuccess with the correct parameters', () => {
       const telemetry = getTelemetry();
-      telemetry.success();
+      telemetry.success(results);
       expect(sendSuccess).toHaveBeenCalledWith(expect.objectContaining({
         timeMs: expect.any(Number),
         tracker: TRACKER,
+        ...results,
       }));
     });
   });

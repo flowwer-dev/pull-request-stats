@@ -5,6 +5,9 @@ const input = {
     id: 'PR_kwDODiVEWs455SUz',
     url: 'https://github.com/zenfi/api/pull/493',
     number: 493,
+    author: {
+      login: 'author1',
+    },
     comments: {
       nodes: [
         {
@@ -28,6 +31,9 @@ const expectedOutput = {
   id: 'PR_kwDODiVEWs455SUz',
   url: 'https://github.com/zenfi/api/pull/493',
   number: 493,
+  author: {
+    login: 'author1',
+  },
   comments: [
     {
       author: {

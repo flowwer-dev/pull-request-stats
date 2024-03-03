@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.14.0] - 2024-03-03
+### Added
+- Announcing the web version development.
+- Improved telemetry, by adding a reviewers summary.
+- "Build with" link in the footer.
+
 ## [2.13.0] - 2024-02-10
 ### Added
 - `exclude` option to exclude specific users from the stats.
