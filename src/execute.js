@@ -30,6 +30,7 @@ const run = async (params) => {
     disableLinks,
     personalToken,
     displayCharts,
+    displayReviewPercentage,
     pullRequestId,
   } = params;
 
@@ -61,7 +62,12 @@ const run = async (params) => {
   });
   core.debug(`Analyzed reviewers: ${reviewers}`);
 
-  const table = buildTable({ reviewers, disableLinks, displayCharts });
+  const table = buildTable({
+    reviewers,
+    disableLinks,
+    displayCharts,
+    displayReviewPercentage,
+  });
   core.debug('Stats table built successfully');
 
   const content = buildComment({

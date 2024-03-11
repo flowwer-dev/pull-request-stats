@@ -4,13 +4,14 @@ const SORT_KEY = {
   COMMENTS: 'totalComments',
 };
 
-const COLUMNS_ORDER = ['totalReviews', 'timeToReview', 'totalComments'];
+const COLUMNS_ORDER = ['totalReviews', 'totalReviewsPerPrs', 'timeToReview', 'totalComments'];
 
 const STATS_OPTIMIZATION = {
   totalReviews: 'MAX',
   totalComments: 'MAX',
   commentsPerReview: 'MAX',
   timeToReview: 'MIN',
+  totalReviewsPerPrs: 'MAX',
 };
 
 const STATS = Object.keys(STATS_OPTIMIZATION);

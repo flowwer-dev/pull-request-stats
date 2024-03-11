@@ -2,5 +2,6 @@
   "totalReviews": 46,
   "totalComments": 115,
   "commentsPerReview": 5.92,
-  "timeToReview": 2503500
+  "timeToReview": 2503500,
+  "totalReviewsPerPrs": 0
 }
