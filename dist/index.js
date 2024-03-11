@@ -41838,7 +41838,7 @@ module.exports = ({
     const timeVal = printStat(stats, 'timeToReview', durationToString);
     const timeStr = addReviewsTimeLink(timeVal, disableLinks, urls.timeToReview);
     const commentsStr = printStat(stats, 'totalComments', noParse);
-    const reviewsStr = `${printStat(stats, 'totalReviews', noParse)} (${getPercentage(contributions.totalReviews)})`;
+    const reviewsStr = `${printStat(stats, 'totalReviews', noParse)} (${stats.totalReviews}/${stats.totalReviewablePullRequest} = ${getPercentage(contributions.totalReviews)})`;
 
     return {
       avatar,

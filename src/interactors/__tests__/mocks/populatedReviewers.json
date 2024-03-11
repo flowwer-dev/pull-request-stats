@@ -40,7 +40,8 @@
       "totalReviews": 4,
       "totalComments": 1,
       "commentsPerReview": 0.25,
-      "timeToReview": 2052500
+      "timeToReview": 2052500,
+      "totalReviewablePullRequest": 5
     },
     "contributions": {
       "totalReviews": 0.8,
@@ -72,7 +73,8 @@
       "totalReviews": 1,
       "totalComments": 5,
       "commentsPerReview": 5,
-      "timeToReview": 8465000
+      "timeToReview": 8465000,
+      "totalReviewablePullRequest": 5
     },
     "contributions": {
       "totalReviews": 0.2,
