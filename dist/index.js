@@ -41799,11 +41799,18 @@ const addReviewsTimeLink = (text, disable, link) => {
 };
 
 /**
+ * round number from 80.2234 to 80.22
+ * @param {number} number
+ * @returns number
+ */
+const roundNumber = (number) => Math.round(number * 100) / 100;
+
+/**
  * convert 0 to 1 to a percentage value
  * @param {number} number from 0 to 1
  * @returns percentage string
  */
-const getPercentage = (number) => `${number * 100}%`;
+const getPercentage = (number) => `${roundNumber(number * 100)}%`;
 
 module.exports = ({
   reviewers,
