@@ -30,7 +30,7 @@ const run = async (params) => {
     disableLinks,
     personalToken,
     displayCharts,
-    displayReviewPercentage,
+    displayTotalReviewsPerPrs,
     pullRequestId,
   } = params;
 
@@ -66,7 +66,7 @@ const run = async (params) => {
     reviewers,
     disableLinks,
     displayCharts,
-    displayReviewPercentage,
+    displayTotalReviewsPerPrs,
   });
   core.debug('Stats table built successfully');
 

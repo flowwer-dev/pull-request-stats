@@ -71,7 +71,7 @@ module.exports = ({
   bests = {},
   disableLinks = false,
   displayCharts = false,
-  displayReviewPercentage = false,
+  displayTotalReviewsPerPrs = false,
 }) => {
   const printStat = (stats, statName, parser) => {
     const value = stats[statName];
@@ -104,7 +104,7 @@ module.exports = ({
       totalComments: `${commentsStr}${chartsData.commentsStr}`,
     };
 
-    if (displayReviewPercentage) result.totalReviewsPerPrs = `${totalReviewsPerPrsStr}${chartsData.totalReviewsPerPrsStr}`;
+    if (displayTotalReviewsPerPrs) result.totalReviewsPerPrs = `${totalReviewsPerPrsStr}${chartsData.totalReviewsPerPrsStr}`;
 
     return result;
   };
@@ -125,7 +125,7 @@ module.exports = ({
       totalComments: t('table.columns.totalComments'),
     };
 
-    if (displayReviewPercentage) titles.totalReviewsPerPrs = t('table.columns.totalReviewsPerPrs');
+    if (displayTotalReviewsPerPrs) titles.totalReviewsPerPrs = t('table.columns.totalReviewsPerPrs');
 
     return [
       titles,

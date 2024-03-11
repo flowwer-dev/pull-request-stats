@@ -47,8 +47,8 @@ describe('Interactors | .buildTable', () => {
     expect(response).toEqual(LINKS_AND_CHARTS_RESPONSE);
   });
 
-  it('with displayReviewPercentage true', () => {
-    const response = buildTable({ reviewers, displayReviewPercentage: true });
+  it('with displayTotalReviewsPerPrs true', () => {
+    const response = buildTable({ reviewers, displayTotalReviewsPerPrs: true });
     expect(response).toEqual(REVIEW_PER_PR_RESPONSE);
   });
 });

@@ -182,7 +182,7 @@ describe('Interactors | .buildTable | .getTableData', () => {
         reviewers,
         displayCharts: true,
         disableLinks: false,
-        displayReviewPercentage: true,
+        displayTotalReviewsPerPrs: true,
       });
       expect(response).toEqual(REVIEW_PER_PR_RESPONSE);
     });
@@ -192,7 +192,7 @@ describe('Interactors | .buildTable | .getTableData', () => {
         reviewers,
         displayCharts: true,
         disableLinks: true,
-        displayReviewPercentage: true,
+        displayTotalReviewsPerPrs: true,
       });
       expect(response).toEqual(REVIEW_PER_PR_NO_LINKS_RESPONSE);
     });

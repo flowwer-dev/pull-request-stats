@@ -41272,7 +41272,7 @@ const run = async (params) => {
     disableLinks,
     personalToken,
     displayCharts,
-    displayReviewPercentage,
+    displayTotalReviewsPerPrs,
     pullRequestId,
   } = params;
 
@@ -41308,7 +41308,7 @@ const run = async (params) => {
     reviewers,
     disableLinks,
     displayCharts,
-    displayReviewPercentage,
+    displayTotalReviewsPerPrs,
   });
   core.debug('Stats table built successfully');
 
@@ -41825,7 +41825,7 @@ module.exports = ({
   bests = {},
   disableLinks = false,
   displayCharts = false,
-  displayReviewPercentage = false,
+  displayTotalReviewsPerPrs = false,
 }) => {
   const printStat = (stats, statName, parser) => {
     const value = stats[statName];
@@ -41858,7 +41858,7 @@ module.exports = ({
       totalComments: `${commentsStr}${chartsData.commentsStr}`,
     };
 
-    if (displayReviewPercentage) result.totalReviewsPerPrs = `${totalReviewsPerPrsStr}${chartsData.totalReviewsPerPrsStr}`;
+    if (displayTotalReviewsPerPrs) result.totalReviewsPerPrs = `${totalReviewsPerPrsStr}${chartsData.totalReviewsPerPrsStr}`;
 
     return result;
   };
@@ -41879,7 +41879,7 @@ module.exports = ({
       totalComments: t('table.columns.totalComments'),
     };
 
-    if (displayReviewPercentage) titles.totalReviewsPerPrs = t('table.columns.totalReviewsPerPrs');
+    if (displayTotalReviewsPerPrs) titles.totalReviewsPerPrs = t('table.columns.totalReviewsPerPrs');
 
     return [
       titles,
@@ -41905,7 +41905,7 @@ module.exports = ({
   reviewers,
   disableLinks,
   displayCharts,
-  displayReviewPercentage,
+  displayTotalReviewsPerPrs,
 }) => {
   const execute = () => {
     const allStats = reviewers.map((r) => r.stats);
@@ -41916,7 +41916,7 @@ module.exports = ({
       reviewers,
       disableLinks,
       displayCharts,
-      displayReviewPercentage,
+      displayTotalReviewsPerPrs,
     });
 
     return table(toTableArray(tableData));
@@ -48212,7 +48212,7 @@ const getParams = () => {
     publishAs: core.getInput('publishAs') || core.getInput('publish-as'),
     periodLength: getPeriod(),
     displayCharts: core.getBooleanInput('charts'),
-    displayReviewPercentage: core.getBooleanInput('totalReviewsPerPrs') || core.getBooleanInput('total-reviews-per-prs'),
+    displayTotalReviewsPerPrs: core.getBooleanInput('totalReviewsPerPrs') || core.getBooleanInput('total-reviews-per-prs'),
     disableLinks: core.getBooleanInput('disableLinks') || core.getBooleanInput('disable-links'),
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),
