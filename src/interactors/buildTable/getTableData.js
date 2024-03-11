@@ -56,7 +56,7 @@ const addReviewsTimeLink = (text, disable, link) => {
  * @param {number} number from 0 to 1
  * @returns percentage string
  */
-const getPercentage = (number) => `${number * 100}%`;
+const getPercentage = (number) => `${(number * 100).toFixed(2)}%`;
 
 module.exports = ({
   reviewers,
