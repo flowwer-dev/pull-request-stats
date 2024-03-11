@@ -10,7 +10,8 @@ describe('Interactors | .buildTable | .getContributions', () => {
     expect(response).toMatchObject({
       commentsPerReview: 0.004222972972972973,
       totalComments: 0.008695652173913044,
-      totalReviews: 0.4,
+      totalReviews: 0.8695652173913043,
+      reviewPerPrs: 0.4,
     });
   });
 });

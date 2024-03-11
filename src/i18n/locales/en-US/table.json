@@ -15,7 +15,8 @@
     "username": "User",
     "timeToReview": "Time to review",
     "totalReviews": "Total reviews",
-    "totalComments": "Total comments"
+    "totalComments": "Total comments",
+    "reviewPerPrs": "Review per PRs"
   },
   "footer": "<sup>⚡️ [Pull request stats](https://bit.ly/pull-request-stats)</sup>"
 }

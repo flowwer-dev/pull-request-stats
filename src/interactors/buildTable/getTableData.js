@@ -30,6 +30,7 @@ const getChartsData = ({ index, contributions, displayCharts }) => {
     timeStr: addBr(generateChart(contributions.timeToReview)),
     reviewsStr: addBr(generateChart(contributions.totalReviews)),
     commentsStr: addBr(generateChart(contributions.totalComments)),
+    reviewPerPrsStr: addBr(generateChart(contributions.reviewPerPrs)),
   };
 };
 
@@ -70,6 +71,7 @@ module.exports = ({
   bests = {},
   disableLinks = false,
   displayCharts = false,
+  displayReviewPercentage = false,
 }) => {
   const printStat = (stats, statName, parser) => {
     const value = stats[statName];
@@ -91,15 +93,20 @@ module.exports = ({
     const timeVal = printStat(stats, 'timeToReview', durationToString);
     const timeStr = addReviewsTimeLink(timeVal, disableLinks, urls.timeToReview);
     const commentsStr = printStat(stats, 'totalComments', noParse);
-    const reviewsStr = `${printStat(stats, 'totalReviews', noParse)} (${stats.totalReviews}/${stats.totalReviewablePullRequest} = ${getPercentage(contributions.totalReviews)})`;
+    const reviewsStr = printStat(stats, 'totalReviews', noParse);
+    const reviewPerPrsStr = `${stats.totalReviews}/${stats.totalReviewablePullRequest} (${getPercentage(contributions.reviewPerPrs)})`;
 
-    return {
+    const result = {
       avatar,
       username: `${login}${chartsData.username}`,
       timeToReview: `${timeStr}${chartsData.timeStr}`,
       totalReviews: `${reviewsStr}${chartsData.reviewsStr}`,
       totalComments: `${commentsStr}${chartsData.commentsStr}`,
     };
+
+    if (displayReviewPercentage) result.reviewPerPrs = `${reviewPerPrsStr}${chartsData.reviewPerPrsStr}`;
+
+    return result;
   };
 
   const execute = () => {
@@ -117,6 +124,8 @@ module.exports = ({
       totalReviews: t('table.columns.totalReviews'),
       totalComments: t('table.columns.totalComments'),
     };
+
+    if (displayReviewPercentage) titles.reviewPerPrs = t('table.columns.reviewPerPrs');
 
     return [
       titles,

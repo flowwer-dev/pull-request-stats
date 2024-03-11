@@ -6,16 +6,16 @@ const calculatePercentage = (value, total) => {
 };
 
 const getContributions = (reviewer, totals) => STATS.reduce((prev, statsName) => {
-  // for totalReviews, the contribution is compared to the reviewable pull request
+  // for reviewPerPrs, the contribution is compared to the reviewable pull request
   // instead of the total overall reviews of all
-  if (statsName === 'totalReviews') {
+  if (statsName === 'reviewPerPrs') {
     const percentage = calculatePercentage(
       reviewer.stats.totalReviews,
       reviewer.stats.totalReviewablePullRequest,
     );
     return {
       ...prev,
-      totalReviews: percentage,
+      reviewPerPrs: percentage,
     };
   }
   const percentage = calculatePercentage(reviewer.stats[statsName], totals[statsName]);

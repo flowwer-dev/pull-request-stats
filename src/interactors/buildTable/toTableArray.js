@@ -3,6 +3,7 @@ const { SORT_KEY, COLUMNS_ORDER } = require('../../constants');
 const FIXED_COLUMNS = ['avatar', 'username'];
 
 const hasValue = (str) => !!str;
+const notUndefined = (val) => val !== undefined;
 
 const getColumnsOrder = (sortBy) => {
   const main = SORT_KEY[sortBy];
@@ -10,7 +11,7 @@ const getColumnsOrder = (sortBy) => {
   return [...FIXED_COLUMNS, main, ...others].filter(hasValue);
 };
 
-const toArray = (columns) => (row) => columns.map((c) => row[c]);
+const toArray = (columns) => (row) => columns.map((c) => row[c]).filter(notUndefined);
 
 module.exports = (tableData, sortBy) => {
   const columns = getColumnsOrder(sortBy);

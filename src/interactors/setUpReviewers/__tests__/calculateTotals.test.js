@@ -14,6 +14,7 @@ describe('Interactors | .buildTable | .calculateTotals', () => {
       totalComments: null,
       commentsPerReview: null,
       timeToReview: 0,
+      reviewPerPrs: 0,
     };
     const response = calculateTotals([...stats, withNulls]);
     expect(response).toEqual(statsSum);
@@ -32,6 +33,7 @@ describe('Interactors | .buildTable | .calculateTotals', () => {
       totalComments: 0,
       commentsPerReview: 0,
       timeToReview: 0,
+      reviewPerPrs: 0,
     });
   });
 });

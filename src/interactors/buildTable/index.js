@@ -7,6 +7,7 @@ module.exports = ({
   reviewers,
   disableLinks,
   displayCharts,
+  displayReviewPercentage,
 }) => {
   const execute = () => {
     const allStats = reviewers.map((r) => r.stats);
@@ -17,6 +18,7 @@ module.exports = ({
       reviewers,
       disableLinks,
       displayCharts,
+      displayReviewPercentage,
     });
 
     return table(toTableArray(tableData));

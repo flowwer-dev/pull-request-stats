@@ -47,7 +47,8 @@
       "totalReviews": 0.8,
       "totalComments": 0.16666666666666666,
       "commentsPerReview": 0.047619047619047616,
-      "timeToReview": 0.19515093891133825
+      "timeToReview": 0.19515093891133825,
+      "reviewPerPrs": 0.8
     },
     "urls": {
       "timeToReview": "https://app.flowwer.dev/charts/review-time/1"
@@ -80,7 +81,8 @@
       "totalReviews": 0.2,
       "totalComments": 0.8333333333333334,
       "commentsPerReview": 0.9523809523809523,
-      "timeToReview": 0.8048490610886617
+      "timeToReview": 0.8048490610886617,
+      "reviewPerPrs": 0.2
     },
     "urls": {
       "timeToReview": "https://app.flowwer.dev/charts/review-time/2"

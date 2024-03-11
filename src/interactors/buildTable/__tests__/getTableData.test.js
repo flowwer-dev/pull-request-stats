@@ -7,6 +7,7 @@ const bests = {
   totalComments: 5,
   commentsPerReview: 5,
   timeToReview: 2052500,
+  reviewPerPrs: 0.8,
 };
 
 const TITLES = {
@@ -15,6 +16,15 @@ const TITLES = {
   timeToReview: t('table.columns.timeToReview'),
   totalReviews: t('table.columns.totalReviews'),
   totalComments: t('table.columns.totalComments'),
+  reviewPerPrs: undefined,
+};
+const TITLES_WITH_REVIEW_PERCENTAGE = {
+  avatar: t('table.columns.avatar'),
+  username: t('table.columns.username'),
+  timeToReview: t('table.columns.timeToReview'),
+  totalReviews: t('table.columns.totalReviews'),
+  totalComments: t('table.columns.totalComments'),
+  reviewPerPrs: t('table.columns.reviewPerPrs'),
 };
 
 const AVATAR1 = '<a href="https://github.com/user1"><img src="https://avatars.githubusercontent.com/u/1234" width="20"></a>';
@@ -28,14 +38,14 @@ const SIMPLE_RESPONSE = [
     avatar: AVATAR1,
     username: 'user1',
     timeToReview: '[34m](https://app.flowwer.dev/charts/review-time/1)',
-    totalReviews: '4 (80%)',
+    totalReviews: '4',
     totalComments: '1',
   },
   {
     avatar: AVATAR2,
     username: 'user2',
     timeToReview: '[2h 21m](https://app.flowwer.dev/charts/review-time/2)',
-    totalReviews: '1 (20%)',
+    totalReviews: '1',
     totalComments: '5',
   },
 ];
@@ -46,15 +56,17 @@ const CHARTS_RESPONSE = [
     avatar: AVATAR1_BIG,
     username: 'user1<br/>🥇',
     timeToReview: '[**34m**](https://app.flowwer.dev/charts/review-time/1)<br/>▀▀',
-    totalReviews: '**4** (80%)<br/>▀▀▀▀▀▀▀▀',
+    totalReviews: '**4**<br/>▀▀▀▀▀▀▀▀',
     totalComments: '1<br/>▀▀',
+    reviewPerPrs: undefined,
   },
   {
     avatar: AVATAR2_BIG,
     username: 'user2<br/>🥈',
     timeToReview: '[2h 21m](https://app.flowwer.dev/charts/review-time/2)<br/>▀▀▀▀▀▀▀▀',
-    totalReviews: '1 (20%)<br/>▀▀',
+    totalReviews: '1<br/>▀▀',
     totalComments: '**5**<br/>▀▀▀▀▀▀▀▀',
+    reviewPerPrs: undefined,
   },
 ];
 
@@ -64,14 +76,14 @@ const NO_LINKS_RESPONSE = [
     avatar: AVATAR1,
     username: 'user1',
     timeToReview: '34m',
-    totalReviews: '4 (80%)',
+    totalReviews: '4',
     totalComments: '1',
   },
   {
     avatar: AVATAR2,
     username: 'user2',
     timeToReview: '2h 21m',
-    totalReviews: '1 (20%)',
+    totalReviews: '1',
     totalComments: '5',
   },
 ];
@@ -82,15 +94,54 @@ const CHARTS_NO_LINKS_RESPONSE = [
     avatar: AVATAR1_BIG,
     username: 'user1<br/>🥇',
     timeToReview: '**34m**<br/>▀▀',
-    totalReviews: '**4** (80%)<br/>▀▀▀▀▀▀▀▀',
+    totalReviews: '**4**<br/>▀▀▀▀▀▀▀▀',
     totalComments: '1<br/>▀▀',
   },
   {
     avatar: AVATAR2_BIG,
     username: 'user2<br/>🥈',
     timeToReview: '2h 21m<br/>▀▀▀▀▀▀▀▀',
-    totalReviews: '1 (20%)<br/>▀▀',
+    totalReviews: '1<br/>▀▀',
     totalComments: '**5**<br/>▀▀▀▀▀▀▀▀',
+  },
+];
+
+const REVIEW_PERCENTAGE_RESPONSE = [
+  TITLES_WITH_REVIEW_PERCENTAGE,
+  {
+    avatar: AVATAR1_BIG,
+    username: 'user1<br/>🥇',
+    timeToReview: '[**34m**](https://app.flowwer.dev/charts/review-time/1)<br/>▀▀',
+    totalReviews: '**4**<br/>▀▀▀▀▀▀▀▀',
+    totalComments: '1<br/>▀▀',
+    reviewPerPrs: '4/5 (80%)<br/>▀▀▀▀▀▀▀▀',
+  },
+  {
+    avatar: AVATAR2_BIG,
+    username: 'user2<br/>🥈',
+    timeToReview: '[2h 21m](https://app.flowwer.dev/charts/review-time/2)<br/>▀▀▀▀▀▀▀▀',
+    totalReviews: '1<br/>▀▀',
+    totalComments: '**5**<br/>▀▀▀▀▀▀▀▀',
+    reviewPerPrs: '1/5 (20%)<br/>▀▀',
+  },
+];
+const REVIEW_PERCENTAGE_NO_LINKS_RESPONSE = [
+  TITLES_WITH_REVIEW_PERCENTAGE,
+  {
+    avatar: AVATAR1_BIG,
+    username: 'user1<br/>🥇',
+    timeToReview: '**34m**<br/>▀▀',
+    totalReviews: '**4**<br/>▀▀▀▀▀▀▀▀',
+    totalComments: '1<br/>▀▀',
+    reviewPerPrs: '4/5 (80%)<br/>▀▀▀▀▀▀▀▀',
+  },
+  {
+    avatar: AVATAR2_BIG,
+    username: 'user2<br/>🥈',
+    timeToReview: '2h 21m<br/>▀▀▀▀▀▀▀▀',
+    totalReviews: '1<br/>▀▀',
+    totalComments: '**5**<br/>▀▀▀▀▀▀▀▀',
+    reviewPerPrs: '1/5 (20%)<br/>▀▀',
   },
 ];
 
@@ -122,6 +173,28 @@ describe('Interactors | .buildTable | .getTableData', () => {
         bests, reviewers, displayCharts: true, disableLinks: true,
       });
       expect(response).toEqual(CHARTS_NO_LINKS_RESPONSE);
+    });
+  });
+  describe('when enabling review percentage', () => {
+    it('returns the data with charts, links', () => {
+      const response = getTableData({
+        bests,
+        reviewers,
+        displayCharts: true,
+        disableLinks: false,
+        displayReviewPercentage: true,
+      });
+      expect(response).toEqual(REVIEW_PERCENTAGE_RESPONSE);
+    });
+    it('returns the data with charts, but no links', () => {
+      const response = getTableData({
+        bests,
+        reviewers,
+        displayCharts: true,
+        disableLinks: true,
+        displayReviewPercentage: true,
+      });
+      expect(response).toEqual(REVIEW_PERCENTAGE_NO_LINKS_RESPONSE);
     });
   });
 });
