@@ -51,6 +51,20 @@ const addReviewsTimeLink = (text, disable, link) => {
   return addLink ? `[${text}](${link})` : text;
 };
 
+/**
+ * round number from 80.2234 to 80.22
+ * @param {number} number
+ * @returns number
+ */
+const roundNumber = (number) => Math.round(number * 100) / 100;
+
+/**
+ * convert 0 to 1 to a percentage value
+ * @param {number} number from 0 to 1
+ * @returns percentage string
+ */
+const getPercentage = (number) => `${roundNumber(number * 100)}%`;
+
 module.exports = ({
   reviewers,
   bests = {},
@@ -76,8 +90,8 @@ module.exports = ({
     const avatar = getImage({ author, displayCharts });
     const timeVal = printStat(stats, 'timeToReview', durationToString);
     const timeStr = addReviewsTimeLink(timeVal, disableLinks, urls.timeToReview);
-    const reviewsStr = printStat(stats, 'totalReviews', noParse);
     const commentsStr = printStat(stats, 'totalComments', noParse);
+    const reviewsStr = `${printStat(stats, 'totalReviews', noParse)} (${getPercentage(contributions.totalReviews)})`;
 
     return {
       avatar,

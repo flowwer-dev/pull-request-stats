@@ -8,7 +8,7 @@ module.exports = (pulls, { excludeStr } = {}) => {
   return groupReviews(pulls)
     .filter(({ author }) => filterReviewer(exclude, author.login))
     .map(({ author, reviews }) => {
-      const stats = calculateReviewsStats(reviews);
+      const stats = calculateReviewsStats({ pulls, reviews, author });
       return { author, reviews, stats };
     });
 };
