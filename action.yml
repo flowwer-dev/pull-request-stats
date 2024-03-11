@@ -68,6 +68,10 @@ inputs:
   publish-as:
     description: 'Used for retro compatibility. Use "publishAs" input instead.'
     required: false
+  review-percentage:
+    description: 'Used for retro compatibility. Use "reviewPercentage" input instead.'
+    required: false
+    default: false
   disable-links:
     description: 'Used for retro compatibility. Use "disableLinks" input instead.'
     required: false
@@ -80,9 +84,6 @@ inputs:
     required: false
   teams-webhook:
     description: 'Used for retro compatibility. Use "teamsWebhook" input instead.'
-    required: false
-  review-percentage:
-    description: 'Used for retro compatibility. Use "reviewPercentage" input instead.'
     required: false
 outputs:
   resultsMd:
