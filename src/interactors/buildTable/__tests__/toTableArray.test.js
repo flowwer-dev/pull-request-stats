@@ -24,14 +24,14 @@ const TABLE_DATA = [
   },
 ];
 
-const TABLE_WITH_REVIEW_PERCENTAGE = [
+const TABLE_WITH_REVIEW_PER_PR = [
   {
     avatar: '',
     username: 'User',
     timeToReview: 'Median time to review',
     totalReviews: 'Total reviews',
     totalComments: 'Total comments',
-    reviewPercentage: 'Review per PRs',
+    totalReviewsPerPrs: 'Total reviews of PRs',
   },
   {
     avatar: 'avatar1',
@@ -39,7 +39,7 @@ const TABLE_WITH_REVIEW_PERCENTAGE = [
     timeToReview: '34m',
     totalReviews: '4',
     totalComments: '1',
-    reviewPercentage: '4/5 (80%)',
+    totalReviewsPerPrs: '4/5 (80%)',
   },
   {
     avatar: 'avatar2',
@@ -47,7 +47,7 @@ const TABLE_WITH_REVIEW_PERCENTAGE = [
     timeToReview: '2h 21m',
     totalReviews: '1',
     totalComments: '5',
-    reviewPercentage: '1/5 (20%)',
+    totalReviewsPerPrs: '1/5 (20%)',
   },
 ];
 
@@ -57,8 +57,8 @@ const BY_TOTAL_REVIEWS = [
   ['avatar2', 'user2', '1', '2h 21m', '5'],
 ];
 
-const BY_TOTAL_REVIEWS_WITH_REVIEW_PERCENTAGE = [
-  ['', 'User', 'Total reviews', 'Review per PRs', 'Median time to review', 'Total comments'],
+const BY_TOTAL_REVIEWS_WITH_REVIEW_PER_PR = [
+  ['', 'User', 'Total reviews', 'Total reviews of PRs', 'Median time to review', 'Total comments'],
   ['avatar1', 'user1', '4', '4/5 (80%)', '34m', '1'],
   ['avatar2', 'user2', '1', '1/5 (20%)', '2h 21m', '5'],
 ];
@@ -99,9 +99,9 @@ describe('Interactors | .buildTable | .toTableArray', () => {
     const response = toTableArray(TABLE_DATA, sortBy);
     expect(response).toEqual(BY_TOTAL_REVIEWS);
   });
-  it('receive reviewPercentage key', () => {
+  it('receive totalReviewsPerPrs key', () => {
     const sortBy = null;
-    const response = toTableArray(TABLE_WITH_REVIEW_PERCENTAGE, sortBy);
-    expect(response).toEqual(BY_TOTAL_REVIEWS_WITH_REVIEW_PERCENTAGE);
+    const response = toTableArray(TABLE_WITH_REVIEW_PER_PR, sortBy);
+    expect(response).toEqual(BY_TOTAL_REVIEWS_WITH_REVIEW_PER_PR);
   });
 });

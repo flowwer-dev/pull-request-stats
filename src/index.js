@@ -34,7 +34,7 @@ const getParams = () => {
     publishAs: core.getInput('publishAs') || core.getInput('publish-as'),
     periodLength: getPeriod(),
     displayCharts: core.getBooleanInput('charts'),
-    displayReviewPercentage: core.getBooleanInput('reviewPercentage') || core.getBooleanInput('review-percentage'),
+    displayReviewPercentage: core.getBooleanInput('totalReviewsPerPrs') || core.getBooleanInput('total-reviews-per-prs'),
     disableLinks: core.getBooleanInput('disableLinks') || core.getBooleanInput('disable-links'),
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),

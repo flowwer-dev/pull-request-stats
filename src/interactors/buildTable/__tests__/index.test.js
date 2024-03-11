@@ -21,10 +21,10 @@ const LINKS_AND_CHARTS_RESPONSE = `|                                            
 | <a href="https://github.com/user1"><img src="https://avatars.githubusercontent.com/u/1234" width="32"></a> | user1<br/>🥇 | **4**<br/>▀▀▀▀▀▀▀▀ | [**34m**](https://app.flowwer.dev/charts/review-time/1)<br/>▀▀      | 1<br/>▀▀           |
 | <a href="https://github.com/user2"><img src="https://avatars.githubusercontent.com/u/5678" width="32"></a> | user2<br/>🥈 | 1<br/>▀▀           | [2h 21m](https://app.flowwer.dev/charts/review-time/2)<br/>▀▀▀▀▀▀▀▀ | **5**<br/>▀▀▀▀▀▀▀▀ |`;
 
-const REVIEW_PERCENTAGE_RESPONSE = `|                                                                                                            | User  | Total reviews | Review per PRs | Time to review                                          | Total comments |
-| ---------------------------------------------------------------------------------------------------------- | ----- | ------------- | -------------- | ------------------------------------------------------- | -------------- |
-| <a href="https://github.com/user1"><img src="https://avatars.githubusercontent.com/u/1234" width="20"></a> | user1 | **4**         | 4/5 (80%)      | [**34m**](https://app.flowwer.dev/charts/review-time/1) | 1              |
-| <a href="https://github.com/user2"><img src="https://avatars.githubusercontent.com/u/5678" width="20"></a> | user2 | 1             | 1/5 (20%)      | [2h 21m](https://app.flowwer.dev/charts/review-time/2)  | **5**          |`;
+const REVIEW_PER_PR_RESPONSE = `|                                                                                                            | User  | Total reviews | Total reviews of PRs | Time to review                                          | Total comments |
+| ---------------------------------------------------------------------------------------------------------- | ----- | ------------- | -------------------- | ------------------------------------------------------- | -------------- |
+| <a href="https://github.com/user1"><img src="https://avatars.githubusercontent.com/u/1234" width="20"></a> | user1 | **4**         | 4/5 (80%)            | [**34m**](https://app.flowwer.dev/charts/review-time/1) | 1              |
+| <a href="https://github.com/user2"><img src="https://avatars.githubusercontent.com/u/5678" width="20"></a> | user2 | 1             | 1/5 (20%)            | [2h 21m](https://app.flowwer.dev/charts/review-time/2)  | **5**          |`;
 
 describe('Interactors | .buildTable', () => {
   it('returns all available reviewers in a set of pull requests', () => {
@@ -49,6 +49,6 @@ describe('Interactors | .buildTable', () => {
 
   it('with displayReviewPercentage true', () => {
     const response = buildTable({ reviewers, displayReviewPercentage: true });
-    expect(response).toEqual(REVIEW_PERCENTAGE_RESPONSE);
+    expect(response).toEqual(REVIEW_PER_PR_RESPONSE);
   });
 });

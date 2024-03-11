@@ -41215,14 +41215,14 @@ const SORT_KEY = {
   COMMENTS: 'totalComments',
 };
 
-const COLUMNS_ORDER = ['totalReviews', 'reviewPercentage', 'timeToReview', 'totalComments'];
+const COLUMNS_ORDER = ['totalReviews', 'totalReviewsPerPrs', 'timeToReview', 'totalComments'];
 
 const STATS_OPTIMIZATION = {
   totalReviews: 'MAX',
   totalComments: 'MAX',
   commentsPerReview: 'MAX',
   timeToReview: 'MIN',
-  reviewPercentage: 'MAX',
+  totalReviewsPerPrs: 'MAX',
 };
 
 const STATS = Object.keys(STATS_OPTIMIZATION);
@@ -41784,7 +41784,7 @@ const getChartsData = ({ index, contributions, displayCharts }) => {
     timeStr: addBr(generateChart(contributions.timeToReview)),
     reviewsStr: addBr(generateChart(contributions.totalReviews)),
     commentsStr: addBr(generateChart(contributions.totalComments)),
-    reviewPercentageStr: addBr(generateChart(contributions.reviewPercentage)),
+    totalReviewsPerPrsStr: addBr(generateChart(contributions.totalReviewsPerPrs)),
   };
 };
 
@@ -41848,7 +41848,7 @@ module.exports = ({
     const timeStr = addReviewsTimeLink(timeVal, disableLinks, urls.timeToReview);
     const commentsStr = printStat(stats, 'totalComments', noParse);
     const reviewsStr = printStat(stats, 'totalReviews', noParse);
-    const reviewPercentageStr = `${stats.totalReviews}/${stats.totalReviewablePullRequest} (${getPercentage(contributions.reviewPercentage)})`;
+    const totalReviewsPerPrsStr = `${stats.totalReviews}/${stats.totalReviewablePullRequest} (${getPercentage(contributions.totalReviewsPerPrs)})`;
 
     const result = {
       avatar,
@@ -41858,7 +41858,7 @@ module.exports = ({
       totalComments: `${commentsStr}${chartsData.commentsStr}`,
     };
 
-    if (displayReviewPercentage) result.reviewPercentage = `${reviewPercentageStr}${chartsData.reviewPercentageStr}`;
+    if (displayReviewPercentage) result.totalReviewsPerPrs = `${totalReviewsPerPrsStr}${chartsData.totalReviewsPerPrsStr}`;
 
     return result;
   };
@@ -41879,7 +41879,7 @@ module.exports = ({
       totalComments: t('table.columns.totalComments'),
     };
 
-    if (displayReviewPercentage) titles.reviewPercentage = t('table.columns.reviewPercentage');
+    if (displayReviewPercentage) titles.totalReviewsPerPrs = t('table.columns.totalReviewsPerPrs');
 
     return [
       titles,
@@ -43017,16 +43017,16 @@ const calculatePercentage = (value, total) => {
 };
 
 const getContributions = (reviewer, totals) => STATS.reduce((prev, statsName) => {
-  // for reviewPercentage, the contribution is compared to the reviewable pull request
+  // for totalReviewsPerPrs, the contribution is compared to the reviewable pull request
   // instead of the total overall reviews of all
-  if (statsName === 'reviewPercentage') {
+  if (statsName === 'totalReviewsPerPrs') {
     const percentage = calculatePercentage(
       reviewer.stats.totalReviews,
       reviewer.stats.totalReviewablePullRequest,
     );
     return {
       ...prev,
-      reviewPercentage: percentage,
+      totalReviewsPerPrs: percentage,
     };
   }
   const percentage = calculatePercentage(reviewer.stats[statsName], totals[statsName]);
@@ -48131,7 +48131,7 @@ module.exports = JSON.parse('{"slack":{"logs":{"notConfigured":"Slack integratio
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"title":"Pull reviewers stats","icon":"https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png","subtitle":{"one":"Stats of the last day for {{sources}}","other":"Stats of the last {{count}} days for {{sources}}"},"sources":{"separator":", ","fullList":"{{firsts}} and {{last}}","andOthers":"{{firsts}} and {{count}} others"},"columns":{"avatar":"","username":"User","timeToReview":"Time to review","totalReviews":"Total reviews","totalComments":"Total comments","reviewPercentage":"Review per PRs"},"footer":"<sup>⚡️ [Pull request stats](https://bit.ly/pull-request-stats)</sup>"}');
+module.exports = JSON.parse('{"title":"Pull reviewers stats","icon":"https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png","subtitle":{"one":"Stats of the last day for {{sources}}","other":"Stats of the last {{count}} days for {{sources}}"},"sources":{"separator":", ","fullList":"{{firsts}} and {{last}}","andOthers":"{{firsts}} and {{count}} others"},"columns":{"avatar":"","username":"User","timeToReview":"Time to review","totalReviews":"Total reviews","totalComments":"Total comments","totalReviewsPerPrs":"Total reviews of PRs"},"footer":"<sup>⚡️ [Pull request stats](https://bit.ly/pull-request-stats)</sup>"}');
 
 /***/ })
 
@@ -48212,7 +48212,7 @@ const getParams = () => {
     publishAs: core.getInput('publishAs') || core.getInput('publish-as'),
     periodLength: getPeriod(),
     displayCharts: core.getBooleanInput('charts'),
-    displayReviewPercentage: core.getBooleanInput('reviewPercentage') || core.getBooleanInput('review-percentage'),
+    displayReviewPercentage: core.getBooleanInput('totalReviewsPerPrs') || core.getBooleanInput('total-reviews-per-prs'),
     disableLinks: core.getBooleanInput('disableLinks') || core.getBooleanInput('disable-links'),
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),

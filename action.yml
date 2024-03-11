@@ -27,7 +27,7 @@ inputs:
     description: 'Whether to add charts to the stats or not. Possible values: "true" or "false"'
     required: false
     default: 'false'
-  reviewPercentage:
+  totalReviewsPerPrs:
     description: 'The percentage of reviews in all reviewable pull requests'
     required: false
     default: 'false'
@@ -68,8 +68,8 @@ inputs:
   publish-as:
     description: 'Used for retro compatibility. Use "publishAs" input instead.'
     required: false
-  review-percentage:
-    description: 'Used for retro compatibility. Use "reviewPercentage" input instead.'
+  total-reviews-per-prs:
+    description: 'Used for retro compatibility. Use "totalReviewsPerPrs" input instead.'
     required: false
     default: false
   disable-links:
