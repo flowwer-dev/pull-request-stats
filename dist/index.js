@@ -41215,14 +41215,14 @@ const SORT_KEY = {
   COMMENTS: 'totalComments',
 };
 
-const COLUMNS_ORDER = ['totalReviews', 'reviewPerPrs', 'timeToReview', 'totalComments'];
+const COLUMNS_ORDER = ['totalReviews', 'reviewPercentage', 'timeToReview', 'totalComments'];
 
 const STATS_OPTIMIZATION = {
   totalReviews: 'MAX',
   totalComments: 'MAX',
   commentsPerReview: 'MAX',
   timeToReview: 'MIN',
-  reviewPerPrs: 'MAX',
+  reviewPercentage: 'MAX',
 };
 
 const STATS = Object.keys(STATS_OPTIMIZATION);
@@ -41784,7 +41784,7 @@ const getChartsData = ({ index, contributions, displayCharts }) => {
     timeStr: addBr(generateChart(contributions.timeToReview)),
     reviewsStr: addBr(generateChart(contributions.totalReviews)),
     commentsStr: addBr(generateChart(contributions.totalComments)),
-    reviewPerPrsStr: addBr(generateChart(contributions.reviewPerPrs)),
+    reviewPercentageStr: addBr(generateChart(contributions.reviewPercentage)),
   };
 };
 
@@ -41848,7 +41848,7 @@ module.exports = ({
     const timeStr = addReviewsTimeLink(timeVal, disableLinks, urls.timeToReview);
     const commentsStr = printStat(stats, 'totalComments', noParse);
     const reviewsStr = printStat(stats, 'totalReviews', noParse);
-    const reviewPerPrsStr = `${stats.totalReviews}/${stats.totalReviewablePullRequest} (${getPercentage(contributions.reviewPerPrs)})`;
+    const reviewPercentageStr = `${stats.totalReviews}/${stats.totalReviewablePullRequest} (${getPercentage(contributions.reviewPercentage)})`;
 
     const result = {
       avatar,
@@ -41858,7 +41858,7 @@ module.exports = ({
       totalComments: `${commentsStr}${chartsData.commentsStr}`,
     };
 
-    if (displayReviewPercentage) result.reviewPerPrs = `${reviewPerPrsStr}${chartsData.reviewPerPrsStr}`;
+    if (displayReviewPercentage) result.reviewPercentage = `${reviewPercentageStr}${chartsData.reviewPercentageStr}`;
 
     return result;
   };
@@ -41879,7 +41879,7 @@ module.exports = ({
       totalComments: t('table.columns.totalComments'),
     };
 
-    if (displayReviewPercentage) titles.reviewPerPrs = t('table.columns.reviewPerPrs');
+    if (displayReviewPercentage) titles.reviewPercentage = t('table.columns.reviewPercentage');
 
     return [
       titles,
@@ -43017,16 +43017,16 @@ const calculatePercentage = (value, total) => {
 };
 
 const getContributions = (reviewer, totals) => STATS.reduce((prev, statsName) => {
-  // for reviewPerPrs, the contribution is compared to the reviewable pull request
+  // for reviewPercentage, the contribution is compared to the reviewable pull request
   // instead of the total overall reviews of all
-  if (statsName === 'reviewPerPrs') {
+  if (statsName === 'reviewPercentage') {
     const percentage = calculatePercentage(
       reviewer.stats.totalReviews,
       reviewer.stats.totalReviewablePullRequest,
     );
     return {
       ...prev,
-      reviewPerPrs: percentage,
+      reviewPercentage: percentage,
     };
   }
   const percentage = calculatePercentage(reviewer.stats[statsName], totals[statsName]);
@@ -48107,7 +48107,7 @@ module.exports = JSON.parse('{"name":"mixpanel","description":"A simple server-s
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"pull-request-stats","version":"2.14.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./","dev":"node ./index.js"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.10.1","@actions/github":"^6.0.0","axios":"^1.6.7","humanize-duration":"^3.31.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@vercel/ncc":"^0.38.1","eslint":"^8.56.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.29.1","eslint-plugin-jest":"^27.6.3","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.1"}');
+module.exports = JSON.parse('{"name":"pull-request-stats","version":"2.14.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.10.1","@actions/github":"^6.0.0","axios":"^1.6.7","humanize-duration":"^3.31.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@vercel/ncc":"^0.38.1","eslint":"^8.56.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.29.1","eslint-plugin-jest":"^27.6.3","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
 
 /***/ }),
 
@@ -48131,7 +48131,7 @@ module.exports = JSON.parse('{"slack":{"logs":{"notConfigured":"Slack integratio
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"title":"Pull reviewers stats","icon":"https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png","subtitle":{"one":"Stats of the last day for {{sources}}","other":"Stats of the last {{count}} days for {{sources}}"},"sources":{"separator":", ","fullList":"{{firsts}} and {{last}}","andOthers":"{{firsts}} and {{count}} others"},"columns":{"avatar":"","username":"User","timeToReview":"Time to review","totalReviews":"Total reviews","totalComments":"Total comments","reviewPerPrs":"Review per PRs"},"footer":"<sup>⚡️ [Pull request stats](https://bit.ly/pull-request-stats)</sup>"}');
+module.exports = JSON.parse('{"title":"Pull reviewers stats","icon":"https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png","subtitle":{"one":"Stats of the last day for {{sources}}","other":"Stats of the last {{count}} days for {{sources}}"},"sources":{"separator":", ","fullList":"{{firsts}} and {{last}}","andOthers":"{{firsts}} and {{count}} others"},"columns":{"avatar":"","username":"User","timeToReview":"Time to review","totalReviews":"Total reviews","totalComments":"Total comments","reviewPercentage":"Review per PRs"},"footer":"<sup>⚡️ [Pull request stats](https://bit.ly/pull-request-stats)</sup>"}');
 
 /***/ })
 

@@ -11,7 +11,7 @@ describe('Interactors | .buildTable | .getContributions', () => {
       commentsPerReview: 0.004222972972972973,
       totalComments: 0.008695652173913044,
       totalReviews: 0.8695652173913043,
-      reviewPerPrs: 0.4,
+      reviewPercentage: 0.4,
     });
   });
 });

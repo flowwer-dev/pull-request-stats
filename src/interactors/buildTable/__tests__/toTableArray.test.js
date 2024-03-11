@@ -31,7 +31,7 @@ const TABLE_WITH_REVIEW_PERCENTAGE = [
     timeToReview: 'Median time to review',
     totalReviews: 'Total reviews',
     totalComments: 'Total comments',
-    reviewPerPrs: 'Review per PRs',
+    reviewPercentage: 'Review per PRs',
   },
   {
     avatar: 'avatar1',
@@ -39,7 +39,7 @@ const TABLE_WITH_REVIEW_PERCENTAGE = [
     timeToReview: '34m',
     totalReviews: '4',
     totalComments: '1',
-    reviewPerPrs: '4/5 (80%)',
+    reviewPercentage: '4/5 (80%)',
   },
   {
     avatar: 'avatar2',
@@ -47,7 +47,7 @@ const TABLE_WITH_REVIEW_PERCENTAGE = [
     timeToReview: '2h 21m',
     totalReviews: '1',
     totalComments: '5',
-    reviewPerPrs: '1/5 (20%)',
+    reviewPercentage: '1/5 (20%)',
   },
 ];
 
@@ -99,7 +99,7 @@ describe('Interactors | .buildTable | .toTableArray', () => {
     const response = toTableArray(TABLE_DATA, sortBy);
     expect(response).toEqual(BY_TOTAL_REVIEWS);
   });
-  it('receive reviewPerPrs key', () => {
+  it('receive reviewPercentage key', () => {
     const sortBy = null;
     const response = toTableArray(TABLE_WITH_REVIEW_PERCENTAGE, sortBy);
     expect(response).toEqual(BY_TOTAL_REVIEWS_WITH_REVIEW_PERCENTAGE);
