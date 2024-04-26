@@ -6,7 +6,8 @@ const getPRText = (pullRequest) => {
   return ` (<${url}|#${number}>)`;
 };
 
-const buildGithubLink = ({ description, path }) => `<https://github.com/${path}|${description}>`;
+const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
+const buildGithubLink = ({ description, path }) => `<${serverUrl}/${path}|${description}>`;
 
 module.exports = ({
   t,

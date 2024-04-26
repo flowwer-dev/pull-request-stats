@@ -1,7 +1,8 @@
 const { t } = require('../i18n');
 const { buildSources } = require('../utils');
 
-const buildGithubLink = ({ description, path }) => `[${description}](https://github.com/${path})`;
+const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
+const buildGithubLink = ({ description, path }) => `[${description}](${serverUrl}/${path})`;
 
 module.exports = ({
   table,

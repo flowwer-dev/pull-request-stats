@@ -41286,7 +41286,7 @@ const run = async (params) => {
   const pulls = await getPulls({
     org,
     repos,
-    octokit: github.getOctokit(personalToken),
+    octokit: github.getOctokit(personalToken, { baseUrl: process.env.GITHUB_API_URL || 'https://api.github.com' }),
     startDate: subtractDaysToDate(new Date(), periodLength),
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
@@ -41339,7 +41339,7 @@ module.exports = async (params) => {
   core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
 
   const { githubToken, org, repos } = params;
-  const octokit = github.getOctokit(githubToken);
+  const octokit = github.getOctokit(githubToken, { baseUrl: process.env.GITHUB_API_URL || 'https://api.github.com' });
   const isSponsor = await checkSponsorship({ octokit, org, repos });
   const telemetry = new Telemetry({ core, isSponsor, telemetry: params.telemetry });
   if (isSponsor) core.info('Thanks for sponsoring this project! 💙');
@@ -41706,7 +41706,8 @@ module.exports = (pullRequest) => {
 const { t } = __nccwpck_require__(6830);
 const { buildSources } = __nccwpck_require__(9988);
 
-const buildGithubLink = ({ description, path }) => `[${description}](https://github.com/${path})`;
+const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
+const buildGithubLink = ({ description, path }) => `[${description}](${serverUrl}/${path})`;
 
 module.exports = ({
   table,
@@ -42328,7 +42329,8 @@ const getPRText = (pullRequest) => {
   return ` (<${url}|#${number}>)`;
 };
 
-const buildGithubLink = ({ description, path }) => `<https://github.com/${path}|${description}>`;
+const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
+const buildGithubLink = ({ description, path }) => `<${serverUrl}/${path}|${description}>`;
 
 module.exports = ({
   t,
