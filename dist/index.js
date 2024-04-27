@@ -41197,10 +41197,13 @@ const getSlackLimits = () => ({
   blocks: 50,
 });
 const getTeamsBytesLimit = () => 27_000;
-
+const getGithubApiUrl = () => process.env.GITHUB_API_URL || 'https://api.github.com';
+const getGithubServerUrl = () => process.env.GITHUB_SERVER_URL || 'https://github.com';
 module.exports = {
   getSlackLimits,
   getTeamsBytesLimit,
+  getGithubApiUrl,
+  getGithubServerUrl,
 };
 
 
@@ -41244,6 +41247,7 @@ const github = __nccwpck_require__(5438);
 const { subtractDaysToDate } = __nccwpck_require__(9988);
 const { Telemetry } = __nccwpck_require__(4786);
 const { fetchPullRequestById } = __nccwpck_require__(8001);
+const { getGithubApiUrl } = __nccwpck_require__(1855);
 const {
   getPulls,
   buildTable,
@@ -41286,7 +41290,7 @@ const run = async (params) => {
   const pulls = await getPulls({
     org,
     repos,
-    octokit: github.getOctokit(personalToken, { baseUrl: process.env.GITHUB_API_URL || 'https://api.github.com' }),
+    octokit: github.getOctokit(personalToken, { baseUrl: getGithubApiUrl() }),
     startDate: subtractDaysToDate(new Date(), periodLength),
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
@@ -41339,7 +41343,7 @@ module.exports = async (params) => {
   core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
 
   const { githubToken, org, repos } = params;
-  const octokit = github.getOctokit(githubToken, { baseUrl: process.env.GITHUB_API_URL || 'https://api.github.com' });
+  const octokit = github.getOctokit(githubToken, { baseUrl: getGithubApiUrl() });
   const isSponsor = await checkSponsorship({ octokit, org, repos });
   const telemetry = new Telemetry({ core, isSponsor, telemetry: params.telemetry });
   if (isSponsor) core.info('Thanks for sponsoring this project! 💙');
@@ -41705,9 +41709,9 @@ module.exports = (pullRequest) => {
 
 const { t } = __nccwpck_require__(6830);
 const { buildSources } = __nccwpck_require__(9988);
+const { getGithubServerUrl } = __nccwpck_require__(1855);
 
-const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
-const buildGithubLink = ({ description, path }) => `[${description}](${serverUrl}/${path})`;
+const buildGithubLink = ({ description, path }) => `[${description}](${getGithubServerUrl()}/${path})`;
 
 module.exports = ({
   table,
@@ -42322,6 +42326,7 @@ module.exports = ({
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const { buildSources } = __nccwpck_require__(9988);
+const { getGithubServerUrl } = __nccwpck_require__(1855);
 
 const getPRText = (pullRequest) => {
   const { url, number } = pullRequest || {};
@@ -42329,8 +42334,7 @@ const getPRText = (pullRequest) => {
   return ` (<${url}|#${number}>)`;
 };
 
-const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
-const buildGithubLink = ({ description, path }) => `<${serverUrl}/${path}|${description}>`;
+const buildGithubLink = ({ description, path }) => `<${getGithubServerUrl()}/${path}|${description}>`;
 
 module.exports = ({
   t,
@@ -42658,6 +42662,7 @@ module.exports = ({
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const { buildSources } = __nccwpck_require__(9988);
+const { getGithubServerUrl } = __nccwpck_require__(1855);
 
 const getPRText = (pullRequest) => {
   const { url, number } = pullRequest || {};
@@ -42665,7 +42670,7 @@ const getPRText = (pullRequest) => {
   return ` ([#${number}](${url}))`;
 };
 
-const buildGithubLink = ({ description, path }) => `[${description}](https://github.com/${path})`;
+const buildGithubLink = ({ description, path }) => `[${description}](${getGithubServerUrl()}/${path})`;
 
 module.exports = ({
   t,
@@ -48057,7 +48062,7 @@ module.exports = JSON.parse('{"name":"mixpanel","description":"A simple server-s
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"pull-request-stats","version":"2.14.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.10.1","@actions/github":"^6.0.0","axios":"^1.6.7","humanize-duration":"^3.31.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@vercel/ncc":"^0.38.1","eslint":"^8.56.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.29.1","eslint-plugin-jest":"^27.6.3","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
+module.exports = JSON.parse('{"name":"pull-request-stats","version":"2.15.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.10.1","@actions/github":"^6.0.0","axios":"^1.6.7","humanize-duration":"^3.31.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@vercel/ncc":"^0.38.1","eslint":"^8.56.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.29.1","eslint-plugin-jest":"^27.6.3","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
 
 /***/ }),
 
