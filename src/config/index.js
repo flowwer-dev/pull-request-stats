@@ -9,5 +9,5 @@ module.exports = {
   getSlackLimits,
   getTeamsBytesLimit,
   getGithubApiUrl,
-  getGithubServerUrl
+  getGithubServerUrl,
 };

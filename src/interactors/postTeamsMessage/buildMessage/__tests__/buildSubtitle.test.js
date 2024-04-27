@@ -43,9 +43,7 @@ describe('Interactors | postTeamsMessage | .buildSubtitle', () => {
         number: 13,
         url: 'https://github.example.io/manuelmhtr/pulls/13',
       };
-      
       const linkOrgWithCustomDomain = (org) => `[${org}](https://github.example.io/${org})`;
-      
       const response = buildSubtitle({ ...baseParams, pullRequest: pullRequestWithCustomDomain });
       const prLinkWithCustomDomain = `([#${pullRequestWithCustomDomain.number}](${pullRequestWithCustomDomain.url}))`;
       const sources = linkOrgWithCustomDomain(ORG);
