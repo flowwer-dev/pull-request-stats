@@ -1,4 +1,5 @@
 const { buildSources } = require('../../../utils');
+const { getGithubServerUrl } = require('../../../config');
 
 const getPRText = (pullRequest) => {
   const { url, number } = pullRequest || {};
@@ -6,8 +7,7 @@ const getPRText = (pullRequest) => {
   return ` (<${url}|#${number}>)`;
 };
 
-const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
-const buildGithubLink = ({ description, path }) => `<${serverUrl}/${path}|${description}>`;
+const buildGithubLink = ({ description, path }) => `<${getGithubServerUrl()}/${path}|${description}>`;
 
 module.exports = ({
   t,

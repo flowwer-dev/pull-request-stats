@@ -1,4 +1,5 @@
 const { buildSources } = require('../../../utils');
+const { getGithubServerUrl } = require('../../../config');
 
 const getPRText = (pullRequest) => {
   const { url, number } = pullRequest || {};
@@ -6,7 +7,7 @@ const getPRText = (pullRequest) => {
   return ` ([#${number}](${url}))`;
 };
 
-const buildGithubLink = ({ description, path }) => `[${description}](https://github.com/${path})`;
+const buildGithubLink = ({ description, path }) => `[${description}](${getGithubServerUrl()}/${path})`;
 
 module.exports = ({
   t,
