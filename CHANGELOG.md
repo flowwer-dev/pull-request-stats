@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.15.0] - 2024-04-27
+### Added
+- Support for hosted GitHub variants with non-standard domains (e.g., GitHub Enterprise)
+
 ## [2.14.0] - 2024-03-03
 ### Added
 - Announcing the web version development.
