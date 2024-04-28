@@ -15,6 +15,19 @@ const linkRepo = (repo) => `[${getRepoName(repo)}](https://github.com/${repo})`;
 describe('Interactors | .buildComment', () => {
   const title = '## Pull reviewers stats';
 
+  describe('when GITHUB_SERVER_URL is present', () => {
+    const periodLength = 1;
+    const message = `Stats of the last day for [${ORG}](https://github.example.io/${ORG}):`;
+
+    it('builds an environment-specific comment using this URL', () => {
+      process.env.GITHUB_SERVER_URL = 'https://github.example.io';
+      const expected = `${title}\n${message}\n${TABLE_MOCK}\n${FOOTER}`;
+      const response = buildComment({ periodLength, table: TABLE_MOCK, org: ORG });
+      delete process.env.GITHUB_SERVER_URL;
+      expect(response).toEqual(expected);
+    });
+  });
+
   describe('when period length is 1', () => {
     const periodLength = 1;
     const message = `Stats of the last day for ${linkOrg(ORG)}:`;

@@ -23,6 +23,33 @@ describe('Interactors | postSlackMessage | .buildSubtitle', () => {
     org: ORG,
   };
 
+  describe('when GITHUB_SERVER_URL is present', () => {
+    it('returns a subtitle with custom github server URL', () => {
+      process.env.GITHUB_SERVER_URL = 'https://github.example.io';
+      const pullRequestWithCustomDomain = {
+        number: 13,
+        url: 'https://github.example.io/manuelmhtr/pulls/13',
+      };
+      const linkOrgWithCustomDomain = (org) => `<https://github.example.io/${org}|${org}>`;
+      const response = buildSubtitle({ ...baseParams, pullRequest: pullRequestWithCustomDomain });
+      const prLinkWithCustomDomain = `(<${pullRequestWithCustomDomain.url}|#${pullRequestWithCustomDomain.number}>)`;
+      const sources = linkOrgWithCustomDomain(ORG);
+      delete process.env.GITHUB_SERVER_URL;
+      expect(response).toEqual([
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: `${t('table.subtitle', { sources, count: periodLength })} ${prLinkWithCustomDomain}`,
+          },
+        },
+        {
+          type: 'divider',
+        },
+      ]);
+    });
+  });
+
   describe('when sending a pull request', () => {
     it('returns a subtitle with no pull request data', () => {
       const response = buildSubtitle({ ...baseParams, pullRequest });
