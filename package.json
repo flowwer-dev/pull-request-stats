@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@zeit/ncc": "^0.22.3",
+    "bundlesize": "^0.18.2",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.1",
