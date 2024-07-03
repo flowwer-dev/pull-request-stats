@@ -38,6 +38,7 @@ const getParams = () => {
     pullRequestId: getPrId(),
     limit: parseInt(core.getInput('limit'), 10),
     excludeStr: core.getInput('exclude'),
+    excludeTitleRegex: core.getInput('excludeTitle'),
     telemetry: core.getBooleanInput('telemetry'),
     webhook: core.getInput('webhook'),
     slack: {

@@ -6,6 +6,7 @@ const PRS_QUERY = `
         node {
           ... on PullRequest {
             id
+            title
             publishedAt
             author { ...ActorFragment }
             reviews(first: 100) {

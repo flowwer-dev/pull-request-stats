@@ -57,6 +57,7 @@ The possible inputs for this action are:
 | `sortBy` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
 | `publishAs` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`, or publish `NONE`. | `COMMENT` |
 | `exclude` | A comma-separated list of usernames (case-insensitive) to be excluded from the results (e.g. `username1,username2`), or a regular expression enclosed between slashes (eg. `/^bot/i` will exclude all usernames that begin with "bot"). | `null` |
+| `excludeTitle` | A regex pattern to exclude the PRs with a title that matches the pattern. | `null` |
 | `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps me improve this action. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`true`|
 | `slackWebhook` | **🔥 New.** A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/slack.md).  | `null` |
 | `slackChannel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slackWebhook` is configured. | `null` |

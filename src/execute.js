@@ -32,6 +32,7 @@ const run = async (params) => {
     personalToken,
     displayCharts,
     pullRequestId,
+    excludeTitleRegex,
   } = params;
 
   const pullRequest = pullRequestId
@@ -46,11 +47,13 @@ const run = async (params) => {
   const pulls = await getPulls({
     org,
     repos,
+    excludeTitleRegex,
     octokit: github.getOctokit(personalToken, { baseUrl: getGithubApiUrl() }),
     startDate: subtractDaysToDate(new Date(), periodLength),
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
-
+  // Log the title of each pull request
+  pulls.forEach((pull) => core.debug(`Pull request title: ${pull.title}`));
   const reviewersRaw = getReviewers(pulls, { excludeStr: params.excludeStr });
   core.info(`Analyzed stats for ${reviewersRaw.length} pull request reviewers`);
 

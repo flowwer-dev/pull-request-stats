@@ -13,13 +13,22 @@ const buildQuery = ({ org, repos, startDate }) => {
   return `type:pr sort:author-date ${ownerFilter({ org, repos })} ${dateFilter}`;
 };
 
+// eslint-disable-next-line arrow-body-style
+const filterPullsByTitle = ({ pulls, excludeTitleRegex }) => {
+  return pulls.filter((pull) => !pull.title.match(excludeTitleRegex));
+};
+
 const getPullRequests = async (params) => {
-  const { limit } = params;
+  const { limit, excludeTitleRegex } = params;
   const data = await fetchPullRequests(params);
   const edges = data.search.edges || [];
-  const results = edges
+  let results = edges
     .filter(filterNullAuthor)
     .map(parsePullRequest);
+
+  if (excludeTitleRegex) {
+    results = filterPullsByTitle({ pulls: results, excludeTitleRegex });
+  }
 
   if (edges.length < limit) return results;
 
@@ -31,9 +40,12 @@ module.exports = ({
   octokit,
   org,
   repos,
+  excludeTitleRegex,
   startDate,
   itemsPerPage = 100,
 }) => {
   const search = buildQuery({ org, repos, startDate });
-  return getPullRequests({ octokit, search, limit: itemsPerPage });
+  return getPullRequests({
+    octokit, search, limit: itemsPerPage, excludeTitleRegex,
+  });
 };

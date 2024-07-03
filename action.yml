@@ -38,6 +38,9 @@ inputs:
   exclude:
     description: 'A list or regular expression to exclude users from the stats'
     required: false
+  excludeTitle:
+    description: 'A regular expression to exclude PR titles from the stats'
+    required: false
   disableLinks:
     description: 'Prevents from adding any external links in the stats'
     required: false

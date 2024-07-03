@@ -16,6 +16,7 @@ module.exports = (data = {}) => {
     publishedAt,
     cursor: data.cursor,
     id: get(data, 'node.id'),
+    title: get(data, 'node.title'),
     reviews: getFilteredReviews(data).map(handleReviews),
   };
 };
