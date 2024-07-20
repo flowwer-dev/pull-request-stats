@@ -41244,6 +41244,7 @@ module.exports = {
 
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
+const { t } = __nccwpck_require__(6830);
 const { subtractDaysToDate } = __nccwpck_require__(9988);
 const { Telemetry } = __nccwpck_require__(4786);
 const { fetchPullRequestById } = __nccwpck_require__(8001);
@@ -41346,7 +41347,7 @@ module.exports = async (params) => {
   const octokit = github.getOctokit(githubToken, { baseUrl: getGithubApiUrl() });
   const isSponsor = await checkSponsorship({ octokit, org, repos });
   const telemetry = new Telemetry({ core, isSponsor, telemetry: params.telemetry });
-  if (isSponsor) core.info('Thanks for sponsoring this project! 💙');
+  if (isSponsor) core.info(t('execution.logs.sponsors'));
 
   try {
     telemetry.start(params);
@@ -41722,7 +41723,7 @@ module.exports = ({
 }) => {
   const sources = buildSources({ buildGithubLink, org, repos });
   const message = t('table.subtitle', { sources, count: periodLength });
-  const footer = isSponsor ? '' : `\n${t('table.footer')}`;
+  const footer = isSponsor ? '' : `\n\n${t('table.footer')}`;
   return `## ${t('table.title')}\n${message}:\n${table}${footer}`;
 };
 
@@ -48062,7 +48063,7 @@ module.exports = JSON.parse('{"name":"mixpanel","description":"A simple server-s
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"pull-request-stats","version":"2.15.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.10.1","@actions/github":"^6.0.0","axios":"^1.6.7","humanize-duration":"^3.31.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@vercel/ncc":"^0.38.1","eslint":"^8.56.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.29.1","eslint-plugin-jest":"^27.6.3","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
+module.exports = JSON.parse('{"name":"pull-request-stats","version":"2.15.1","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.10.1","@actions/github":"^6.0.0","axios":"^1.6.7","humanize-duration":"^3.31.0","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@vercel/ncc":"^0.38.1","eslint":"^8.56.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.29.1","eslint-plugin-jest":"^27.6.3","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
 
 /***/ }),
 
@@ -48070,7 +48071,7 @@ module.exports = JSON.parse('{"name":"pull-request-stats","version":"2.15.0","de
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"logs":{"success":"Action successfully executed","news":"\\n✨ New on v2.6:\\n• Microsoft Teams integration\\n• Slack integration\\n• Webhooks integration"},"sponsors":{"external":{"fetch":{"success":"External sponsors fetched successfully. {{data}}","error":"Failed to fetch external sponsors. {{error}}"}}},"errors":{"main":"Execution failed with error: {{message}}"}}');
+module.exports = JSON.parse('{"logs":{"success":"Action successfully executed","news":"\\n✨ New web version released! https://app.flowwer.dev","sponsors":"Thanks for sponsoring this project! 💙"},"sponsors":{"external":{"fetch":{"success":"External sponsors fetched successfully. {{data}}","error":"Failed to fetch external sponsors. {{error}}"}}},"errors":{"main":"Execution failed with error: {{message}}"}}');
 
 /***/ }),
 

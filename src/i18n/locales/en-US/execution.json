@@ -1,7 +1,8 @@
 {
   "logs": {
     "success": "Action successfully executed",
-    "news": "\n✨ New on v2.6:\n• Microsoft Teams integration\n• Slack integration\n• Webhooks integration"
+    "news": "\n✨ New web version released! https://app.flowwer.dev",
+    "sponsors": "Thanks for sponsoring this project! 💙"
   },
   "sponsors": {
     "external": {

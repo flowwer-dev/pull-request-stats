@@ -1,9 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.15.1] - 2024-07-19
+### Changes
+- Fix on "Build with" link.
+- Adds web version announcement.
+
 ## [2.15.0] - 2024-04-27
 ### Added
-- Support for hosted GitHub variants with non-standard domains (e.g., GitHub Enterprise)
+- Support for hosted GitHub variants with non-standard domains (e.g., GitHub Enterprise).
 
 ## [2.14.0] - 2024-03-03
 ### Added

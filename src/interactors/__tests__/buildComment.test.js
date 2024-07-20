@@ -21,7 +21,7 @@ describe('Interactors | .buildComment', () => {
 
     it('builds an environment-specific comment using this URL', () => {
       process.env.GITHUB_SERVER_URL = 'https://github.example.io';
-      const expected = `${title}\n${message}\n${TABLE_MOCK}\n${FOOTER}`;
+      const expected = `${title}\n${message}\n${TABLE_MOCK}\n\n${FOOTER}`;
       const response = buildComment({ periodLength, table: TABLE_MOCK, org: ORG });
       delete process.env.GITHUB_SERVER_URL;
       expect(response).toEqual(expected);
@@ -33,7 +33,7 @@ describe('Interactors | .buildComment', () => {
     const message = `Stats of the last day for ${linkOrg(ORG)}:`;
 
     it('builds the message in singular', () => {
-      const expected = `${title}\n${message}\n${TABLE_MOCK}\n${FOOTER}`;
+      const expected = `${title}\n${message}\n${TABLE_MOCK}\n\n${FOOTER}`;
       const response = buildComment({ periodLength, table: TABLE_MOCK, org: ORG });
       expect(response).toEqual(expected);
     });
@@ -44,7 +44,7 @@ describe('Interactors | .buildComment', () => {
     const message = `Stats of the last 365 days for ${linkOrg(ORG)}:`;
 
     it('builds the message in singular', () => {
-      const expected = `${title}\n${message}\n${TABLE_MOCK}\n${FOOTER}`;
+      const expected = `${title}\n${message}\n${TABLE_MOCK}\n\n${FOOTER}`;
       const response = buildComment({ periodLength, table: TABLE_MOCK, org: ORG });
       expect(response).toEqual(expected);
     });
@@ -56,7 +56,7 @@ describe('Interactors | .buildComment', () => {
     const message = `Stats of the last day for ${linkRepo(REPO1)} and ${linkRepo(REPO2)}:`;
 
     it('builds the message in singular', () => {
-      const expected = `${title}\n${message}\n${TABLE_MOCK}\n${FOOTER}`;
+      const expected = `${title}\n${message}\n${TABLE_MOCK}\n\n${FOOTER}`;
       const response = buildComment({ periodLength, table: TABLE_MOCK, repos });
       expect(response).toEqual(expected);
     });

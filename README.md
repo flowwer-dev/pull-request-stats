@@ -149,13 +149,13 @@ and print a table like this:
 
 |                                                                                                                                                                     | User                 | Total comments      | Total reviews      | Median time to review     |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ------------------------- | ------------------ | ------------------- |
-| <a href="https://github.com/manuelmhtr"><img src="https://avatars2.githubusercontent.com/u/1031639?u=30204017b73f7a1f08005cb8ead3f70b0410486c&v=4" width="32"></a>    | manuelmhtr<br/>🥇    | **12**<br/>▀▀▀▀▀▀▀▀ | **8**<br/>▀▀▀▀     | 53m<br/>                  |
-| <a href="https://github.com/jartmez"><img src="https://avatars0.githubusercontent.com/u/8755542?v=4" width="32"></a>                                                  | jartmez<br/>🥈       | 3<br/>▀▀            | 4<br/>▀▀           | 58m<br/>                  |
-| <a href="https://github.com/JohanAlvarado"><img src="https://avatars1.githubusercontent.com/u/4240201?u=5f845c5d64ccdef5da89024edd22fcbb306bad82&v=4" width="32"></a> | JohanAlvarado<br/>🥉 | 1<br/>▀             | 2<br/>▀            | 1d 16h 18m<br/>▀▀▀▀▀▀     |
-| <a href="https://github.com/Estebes10"><img src="https://avatars1.githubusercontent.com/u/22161828?v=4" width="32"></a>                                               | Estebes10<br/>       | 1<br/>▀             | 1<br/>             | **19m**<br/>              |
-| <a href="https://github.com/ernestognw"><img src="https://avatars1.githubusercontent.com/u/33379285?v=4" width="32"></a>                                              | ernestognw<br/>      | 0<br/>              | 2<br/>▀            | 2h 15m<br/>               |
-| <a href="https://github.com/Phaze1D"><img src="https://avatars1.githubusercontent.com/u/8495952?u=19bbf940d00c110d3ca5db5abd00684fa1fad8d3&v=4" width="32"></a>       | Phaze1D<br/>         | 0<br/>              | 3<br/>▀            | 1h 28m<br/>               |
-| <a href="https://github.com/javierbyte"><img src="https://avatars0.githubusercontent.com/u/2009676?u=701513ff4a6b0b7a33f4ad155de43f2fff916a6d&v=4" width="32"></a>    | javierbyte<br/>      | 0<br/>              | 1<br/>             | 21h 24m<br/>▀▀▀           |
+| <a href="https://github.com/manuelmhtr"><img src="https://avatars2.githubusercontent.com/u/1031639" width="32"></a>  | manuelmhtr<br/>🥇  | **12**<br/>▀▀▀▀▀▀▀▀ | **8**<br/>▀▀▀▀     | 53m<br/>                  |
+| <a href="https://github.com/CarlosCRG19"><img src="https://avatars.githubusercontent.com/u/61464973" width="32"></a> | CarlosCRG19<br/>🥈 | 3<br/>▀▀            | 4<br/>▀▀           | 58m<br/>                  |
+| <a href="https://github.com/jartmez"><img src="https://avatars0.githubusercontent.com/u/8755542" width="32"></a>     | jartmez<br/>🥉     | 1<br/>▀             | 2<br/>▀            | 1d 16h 18m<br/>▀▀▀▀▀▀     |
+| <a href="https://github.com/Estebes10"><img src="https://avatars1.githubusercontent.com/u/22161828" width="32"></a>  | Estebes10<br/>     | 1<br/>▀             | 1<br/>             | **19m**<br/>              |
+| <a href="https://github.com/ernestognw"><img src="https://avatars1.githubusercontent.com/u/33379285" width="32"></a> | ernestognw<br/>    | 0<br/>              | 2<br/>▀            | 2h 15m<br/>               |
+| <a href="https://github.com/Phaze1D"><img src="https://avatars1.githubusercontent.com/u/8495952" width="32"></a>     | Phaze1D<br/>       | 0<br/>              | 3<br/>▀            | 1h 28m<br/>               |
+| <a href="https://github.com/javierbyte"><img src="https://avatars0.githubusercontent.com/u/2009676" width="32"></a>  | javierbyte<br/>    | 0<br/>              | 1<br/>             | 21h 24m<br/>▀▀▀           |
 
 ## Stats
 
@@ -265,16 +265,17 @@ This project is maintained by a small team, considering supporting the project b
 * Joining the [community](https://discord.gg/wk5zy5aAZQ).
 * Becoming a [sponsor](https://github.com/sponsors/manuelmhtr).
 
-## NEW: We are building the web version! ⚡
+## NEW: Check the web version! ⚡
 
-![](/assets/web-banner.png)
+[<img alt="Flowwer web preview" src="/assets/web-preview.png" />](https://bit.ly/flowwer-app)
 
-Exciting News! After receiving numerous requests from developers, we're actively developing a stand-alone version of this action!
+Breaking News! **We’ve unleashed the stand-alone version of this action!**
 
-**Get early access** by filling out [this form](https://c4tj3h4y5wh.typeform.com/to/Ejo56p27).
+* Filter by repositories and date range.
+* Stats tracking over the time.
+* Tons of new features coming soon!
 
-Psst! Current sponsors will receive early access and free premium feature for a limited time 🤫
-
+[<img alt="Sign up to Flowwer" height="42px" src="/assets/signup-btn.png" />](https://bit.ly/flowwer-app)
 
 ## License
 

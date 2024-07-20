@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { t } = require('./i18n');
 const { subtractDaysToDate } = require('./utils');
 const { Telemetry } = require('./services');
 const { fetchPullRequestById } = require('./fetchers');
@@ -102,7 +103,7 @@ module.exports = async (params) => {
   const octokit = github.getOctokit(githubToken, { baseUrl: getGithubApiUrl() });
   const isSponsor = await checkSponsorship({ octokit, org, repos });
   const telemetry = new Telemetry({ core, isSponsor, telemetry: params.telemetry });
-  if (isSponsor) core.info('Thanks for sponsoring this project! 💙');
+  if (isSponsor) core.info(t('execution.logs.sponsors'));
 
   try {
     telemetry.start(params);
