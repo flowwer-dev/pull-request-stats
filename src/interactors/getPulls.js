@@ -1,5 +1,8 @@
+const core = require('@actions/core');
+
 const { fetchPullRequests } = require('../fetchers');
 const { parsePullRequest } = require('../parsers');
+const { stringify } = require('jsurl');
 
 const filterNullAuthor = ({ node }) => !!node.author;
 
@@ -35,5 +38,6 @@ module.exports = ({
   itemsPerPage = 100,
 }) => {
   const search = buildQuery({ org, repos, startDate });
+  core.debug(`Search: ${JSON.stringify(search, null, 2)}`);
   return getPullRequests({ octokit, search, limit: itemsPerPage });
 };
