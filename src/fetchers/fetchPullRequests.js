@@ -1,3 +1,5 @@
+const core = require('@actions/core');
+
 const PRS_QUERY = `
   query($search: String!, $limit: Int!, $after: String) {
     search(query: $search, first: $limit, after: $after, type: ISSUE) {
@@ -38,6 +40,8 @@ module.exports = ({
   limit = null,
 }) => {
   const variables = { search, after, limit };
+  core.debug(PRS_QUERY);
+  core.debug(core.debug(`Variables: ${JSON.stringify(variables, null, 2)}`));
   return octokit
     .graphql(PRS_QUERY, variables)
     .catch((error) => {
