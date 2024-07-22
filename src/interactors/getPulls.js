@@ -2,7 +2,6 @@ const core = require('@actions/core');
 
 const { fetchPullRequests } = require('../fetchers');
 const { parsePullRequest } = require('../parsers');
-const { stringify } = require('jsurl');
 
 const filterNullAuthor = ({ node }) => !!node.author;
 
