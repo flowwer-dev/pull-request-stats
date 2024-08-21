@@ -25,10 +25,10 @@ module.exports = async ({
     return;
   }
 
-  if (!isSponsor) {
-    core.setFailed(t('integrations.teams.errors.notSponsor'));
-    return;
-  }
+  // if (!isSponsor) {
+  //   core.setFailed(t('integrations.teams.errors.notSponsor'));
+  //   return;
+  // }
 
   const send = (body) => {
     const params = {
