@@ -22,10 +22,10 @@ module.exports = async ({
     return;
   }
 
-  if (!isSponsor) {
-    core.setFailed(t('integrations.slack.errors.notSponsor'));
-    return;
-  }
+  // if (!isSponsor) {
+  //   core.setFailed(t('integrations.slack.errors.notSponsor'));
+  //   return;
+  // }
 
   const send = (message) => {
     const params = {
