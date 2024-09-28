@@ -164,7 +164,7 @@ The stats are calculated as follows:
 * **Time to review:** The time a reviewer takes from the _Pull Request publication_ or the last _Commit push_ (whatever happens last) to the first time the pull request is reviewed.
 * **Time to review:** The **median** of the _times to review_ of all Pull Requests reviewed by a person in the period.
 * **Total reviews:** The count of all Pull Requests reviewed by a person in the period.
-* **Total comments:** The count of all the comments while reviewing other users' Pull Requests in the period (comments in own PRs don't count).
+* **Total comments:** The number of comments made while reviewing other users' Pull Requests during the specified period. Comments made on your own PRs or general PR discussions are excluded; only comments directly related to code are counted.
 
 ## Integrations 🔌
 
