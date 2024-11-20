@@ -4,7 +4,10 @@ const buildComment = require('./buildComment');
 const buildJsonOutput = require('./buildJsonOutput');
 const checkSponsorship = require('./checkSponsorship');
 const getPulls = require('./getPulls');
-const getReviewers = require('./getReviewers');
+const getPullRequestStats = require('./getPullRequestStats');
+const getReviewStats = require('./getReviewStats');
+const getUsers = require('./getUsers');
+const mergeStats = require('./mergeStats');
 const postComment = require('./postComment');
 const setUpReviewers = require('./setUpReviewers');
 const postSlackMessage = require('./postSlackMessage');
@@ -19,7 +22,10 @@ module.exports = {
   buildJsonOutput,
   checkSponsorship,
   getPulls,
-  getReviewers,
+  getPullRequestStats,
+  getReviewStats,
+  getUsers,
+  mergeStats,
   postComment,
   setUpReviewers,
   postSlackMessage,

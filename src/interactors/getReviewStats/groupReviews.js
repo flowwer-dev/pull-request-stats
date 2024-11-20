@@ -13,11 +13,11 @@ module.exports = (pulls) => {
 
   const byAuthor = all.reduce((acc, review) => {
     const { author, isOwnPull, ...other } = review;
-    const key = author.id;
+    const authorId = author.id;
 
-    if (!acc[key]) acc[key] = { author, reviews: [] };
+    if (!acc[authorId]) acc[authorId] = { authorId, reviews: [] };
 
-    acc[key].reviews.push(other);
+    acc[authorId].reviews.push(other);
     return acc;
   }, {});
 

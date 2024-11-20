@@ -1,6 +1,6 @@
 const parseExclude = require('../parseExclude');
 
-describe('Interactors | getReviewers | .parseExclude', () => {
+describe('Interactors | getUsers | .parseExclude', () => {
   it('returns an empty array when the input does not contain usernames or regexp', () => {
     expect(parseExclude()).toEqual([]);
     expect(parseExclude(null)).toEqual([]);

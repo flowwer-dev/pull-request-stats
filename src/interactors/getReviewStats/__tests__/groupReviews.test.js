@@ -1,24 +1,24 @@
-const input = require('./mocks/pullRequests');
+const { pullRequests: input } = require('../../../../tests/mocks');
 const groupReviews = require('../groupReviews');
 
-const getReviewsByAuthor = (data, login) => {
-  const { reviews } = data.find(({ author }) => author.login === login);
+const getReviewsByAuthorId = (data, authorId) => {
+  const { reviews } = data.find((review) => review.authorId === authorId);
   return reviews.map(({ id }) => id);
 };
 
-describe('Interactors | getReviewers | .groupReviews', () => {
+describe('Interactors | getReviewStats | .groupReviews', () => {
   it('groups reviews by author', () => {
     const result = groupReviews(input);
     expect(result.length).toEqual(2);
-    const authors = result.map((r) => r.author.login);
-    expect(authors).toContain('manuelmhtr', 'jartmez');
-    expect(getReviewsByAuthor(result, 'manuelmhtr')).toEqual([9876]);
-    expect(getReviewsByAuthor(result, 'jartmez').sort()).toEqual([5679, 9877].sort());
+    const authorIds = result.map((r) => r.authorId);
+    expect(authorIds).toContain('1031639', '8755542');
+    expect(getReviewsByAuthorId(result, '1031639')).toEqual([9876]);
+    expect(getReviewsByAuthorId(result, '8755542').sort()).toEqual([5679, 9877].sort());
   });
 
   it('removes reviews marked as own pull request', () => {
     const result = groupReviews(input);
-    expect(getReviewsByAuthor(result, 'manuelmhtr')).not.toContain([5678]);
+    expect(getReviewsByAuthorId(result, '1031639')).not.toContain([5678]);
   });
 
   it('keeps only the required properties', () => {

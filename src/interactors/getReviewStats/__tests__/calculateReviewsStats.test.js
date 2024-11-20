@@ -1,7 +1,7 @@
-const input = require('./mocks/reviews');
+const { reviews: input } = require('../../../../tests/mocks');
 const calculateReviewsStats = require('../calculateReviewsStats');
 
-describe('Interactors | getReviewers | .calculateReviewsStats', () => {
+describe('Interactors | getReviewStats | .calculateReviewsStats', () => {
   const result = calculateReviewsStats(input);
 
   it('calculates the totalReviews', () => {

@@ -1,6 +1,6 @@
-const filterReviewer = require('../filterReviewer');
+const filterUser = require('../filterUser');
 
-describe('Interactors | getReviewers | .filterReviewer', () => {
+describe('Interactors | getUsers | .filterUser', () => {
   const reviewers = [
     'manuelmhtr',
     'jartmez',
@@ -10,7 +10,7 @@ describe('Interactors | getReviewers | .filterReviewer', () => {
 
   it('filters out reviewers by a list of usernames', () => {
     const exclude = ['manuelmhtr', 'jartmez'];
-    const results = reviewers.filter((reviewer) => filterReviewer(exclude, reviewer));
+    const results = reviewers.filter((reviewer) => filterUser(exclude, reviewer));
     expect(results.length).toEqual(2);
     expect(results).toEqual([
       'bot1',
@@ -20,7 +20,7 @@ describe('Interactors | getReviewers | .filterReviewer', () => {
 
   it('filters out reviewers by a regular expression', () => {
     const exclude = /bot/;
-    const results = reviewers.filter((reviewer) => filterReviewer(exclude, reviewer));
+    const results = reviewers.filter((reviewer) => filterUser(exclude, reviewer));
     expect(results.length).toEqual(2);
     expect(results).toEqual([
       'manuelmhtr',

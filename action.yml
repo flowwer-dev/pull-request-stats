@@ -23,6 +23,10 @@ inputs:
     description: 'The maximum number of rows to display in the table. A value of `0` means unlimited.'
     required: false
     default: 0
+  stats:
+    description: 'A comma separated list of the stats to be calculated and displayed.'
+    required: false
+    default: 'REVIEWS,TIME,COMMENTS'
   charts:
     description: 'Whether to add charts to the stats or not. Possible values: "true" or "false"'
     required: false
