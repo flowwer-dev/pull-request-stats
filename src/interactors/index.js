@@ -1,6 +1,7 @@
 const alreadyPublished = require('./alreadyPublished');
 const buildTable = require('./buildTable');
 const buildComment = require('./buildComment');
+const buildJsonOutput = require('./buildJsonOutput');
 const checkSponsorship = require('./checkSponsorship');
 const getPulls = require('./getPulls');
 const getReviewers = require('./getReviewers');
@@ -15,6 +16,7 @@ module.exports = {
   alreadyPublished,
   buildTable,
   buildComment,
+  buildJsonOutput,
   checkSponsorship,
   getPulls,
   getReviewers,

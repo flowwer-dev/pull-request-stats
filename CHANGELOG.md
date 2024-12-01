@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.15.2] - 2024-12-01
+### Fixed
+- Prevents `githubToken` and `personalToken` from be included in the JSON output.
+
 ## [2.15.1] - 2024-07-19
 ### Changes
 - Fix on "Build with" link.

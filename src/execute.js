@@ -11,6 +11,7 @@ const {
   postComment,
   getReviewers,
   buildComment,
+  buildJsonOutput,
   setUpReviewers,
   checkSponsorship,
   alreadyPublished,
@@ -72,12 +73,13 @@ const run = async (params) => {
   core.debug(`Commit content built successfully: ${content}`);
 
   const whParams = { ...params, core, reviewers };
+  const jsonOutput = buildJsonOutput({ ...params, reviewers });
   await postWebhook(whParams);
   await postSlackMessage({ ...whParams, pullRequest });
   await postTeamsMessage({ ...whParams, pullRequest });
   await postSummary({ core, content });
   await core.setOutput('resultsMd', content);
-  await core.setOutput('resultsJson', whParams);
+  await core.setOutput('resultsJson', jsonOutput);
 
   if (pullRequestId) {
     await postComment({
