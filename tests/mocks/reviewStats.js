@@ -1,6 +1,6 @@
 module.exports = [
   {
-    authorId: '1234',
+    userId: '1234',
     reviews: [
       {
         submittedAt: '2021-03-12T17:41:18.000Z',
@@ -39,7 +39,7 @@ module.exports = [
     },
   },
   {
-    authorId: '5678',
+    userId: '5678',
     reviews: [
       {
         submittedAt: '2021-03-15T12:14:00.000Z',

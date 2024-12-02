@@ -1,18 +1,18 @@
 module.exports = [
   {
-    authorId: '1234',
+    userId: '1234',
     stats: {
       openedPullRequests: 17,
     },
   },
   {
-    authorId: '5678',
+    userId: '5678',
     stats: {
       openedPullRequests: 25,
     },
   },
   {
-    authorId: '9090',
+    userId: '9090',
     stats: {
       openedPullRequests: 1,
     },
