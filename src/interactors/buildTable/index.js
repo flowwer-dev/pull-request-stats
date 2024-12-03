@@ -7,13 +7,13 @@ const applyLimit = (data, limit) => (limit > 0 ? data.slice(0, limit) : data);
 module.exports = ({
   limit,
   entries,
-  sortKey,
+  sortBy,
   mainStats,
   disableLinks,
   displayCharts,
 }) => {
   const execute = () => {
-    const sorted = applyLimit(sortByStats(entries, sortKey), limit);
+    const sorted = applyLimit(sortByStats(entries, sortBy), limit);
     const bests = calculateBests(sorted);
 
     return getTableData({

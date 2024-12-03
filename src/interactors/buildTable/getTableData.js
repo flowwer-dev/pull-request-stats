@@ -10,7 +10,7 @@ const EMOJIS = [
   'medal3',
 ];
 
-const buildUser = ({ user, displayCharts, index }) => ({
+const buildUser = ({ index, user, displayCharts }) => ({
   link: user.url,
   image: user.avatarUrl,
   text: user.login,

@@ -9,7 +9,7 @@ describe('Interactors | .buildTable', () => {
   const defaultParams = {
     entries,
     limit: null,
-    sortKey: VALID_STATS[0],
+    sortBy: VALID_STATS[0],
     mainStats: VALID_STATS,
     disableLinks: true,
     displayCharts: false,

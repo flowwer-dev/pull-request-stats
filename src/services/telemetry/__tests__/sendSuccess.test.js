@@ -9,16 +9,16 @@ describe('sendSuccess', () => {
       login: 'author',
     },
   };
-  const reviewers = [
-    { author: { login: 'reviewer1' } },
-    { author: { login: 'reviewer2' } },
+  const entries = [
+    { user: { login: 'reviewer1' } },
+    { user: { login: 'reviewer2' } },
   ];
 
   const setup = () => sendSuccess({
     timeMs,
     tracker,
     pullRequest,
-    reviewers,
+    entries,
   });
 
   beforeEach(() => {
