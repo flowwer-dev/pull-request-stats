@@ -1,29 +1,34 @@
 const buildMessage = require('../index');
 const buildHeaders = require('../buildHeaders');
 const buildSubtitle = require('../buildSubtitle');
-const buildReviewer = require('../buildReviewer');
+const buildRow = require('../buildRow');
 
 const HEADERS = 'HEADERS';
 const SUBTITLE = 'SUBTITLE';
-const REVIEWER = 'REVIEWER';
+const ROW = 'ROW';
+const table = {
+  headers: [
+    { text: 'HEADER 1' },
+    { text: 'HEADER 2' },
+  ],
+  rows: [ROW],
+};
 
 jest.mock('../buildHeaders', () => jest.fn(() => HEADERS));
 jest.mock('../buildSubtitle', () => jest.fn(() => SUBTITLE));
-jest.mock('../buildReviewer', () => jest.fn(() => REVIEWER));
+jest.mock('../buildRow', () => jest.fn(() => ROW));
 
 const defaultOptions = {
-  reviewers: ['REVIEWER 1'],
+  table,
   pullRequest: 'PULL REQUEST',
   periodLength: 'PERIOD LENGTH',
-  disableLinks: 'DISABLE LINKS',
-  displayCharts: 'DISPLAY CHARTS',
 };
 
 describe('Interactors | postTeamsMessage | .buildMessage', () => {
   beforeEach(() => {
     buildHeaders.mockClear();
     buildSubtitle.mockClear();
-    buildReviewer.mockClear();
+    buildRow.mockClear();
   });
 
   it('returns the expected structure', () => {
@@ -31,7 +36,7 @@ describe('Interactors | postTeamsMessage | .buildMessage', () => {
     expect(response).toEqual([
       SUBTITLE,
       HEADERS,
-      REVIEWER,
+      ROW,
     ]);
   });
 
@@ -42,20 +47,16 @@ describe('Interactors | postTeamsMessage | .buildMessage', () => {
       pullRequest: defaultOptions.pullRequest,
       periodLength: defaultOptions.periodLength,
     });
-    expect(buildHeaders).toHaveBeenCalledWith({
-      t: expect.anything(),
-    });
-    expect(buildReviewer).toHaveBeenCalledWith({
-      index: 0,
-      reviewer: defaultOptions.reviewers[0],
-      disableLinks: defaultOptions.disableLinks,
-      displayCharts: defaultOptions.displayCharts,
+    expect(buildHeaders).toHaveBeenCalledWith(defaultOptions.table.headers);
+    expect(buildRow).toHaveBeenCalledWith({
+      row: defaultOptions.table.rows[0],
     });
   });
 
   it('builds a reviewers per each passed', () => {
-    const reviewers = ['REVIEWER 1', 'REVIEWER 2', 'REVIEWER 3'];
-    buildMessage({ ...defaultOptions, reviewers });
-    expect(buildReviewer).toHaveBeenCalledTimes(reviewers.length);
+    const rows = ['ROW 1', 'ROW 2', 'ROW 3'];
+    const tableCopy = { ...table, rows };
+    buildMessage({ ...defaultOptions, table: tableCopy });
+    expect(buildRow).toHaveBeenCalledTimes(rows.length);
   });
 });
