@@ -1,21 +1,22 @@
 const mergeStats = require('../mergeStats');
 const { VALID_STATS } = require('../../config/stats');
-const { authors, reviewStats, pullRequestStats } = require('../../../tests/mocks');
+const { users, reviewStats, pullRequestStats } = require('../../../tests/mocks');
 
 describe('Interactors | .mergeStats', () => {
   const baseParams = {
-    authors,
+    users,
     reviewStats,
     pullRequestStats,
   };
 
-  it('returns an array with all the stats for each author', async () => {
+  it('returns an array with all the stats for each user', async () => {
     const results = mergeStats(baseParams);
-    expect(results.length).toEqual(authors.length);
+    expect(results.length).toEqual(users.length);
 
     results.forEach((result) => {
-      expect(result).toHaveProperty('author');
-      expect(result.author).toHaveProperty('login');
+      expect(result).toHaveProperty('user');
+      expect(result.user).toHaveProperty('login');
+      expect(result).toHaveProperty('reviews');
       expect(result).toHaveProperty('stats');
       VALID_STATS.forEach((stat) => {
         expect(result.stats).toHaveProperty(stat);
@@ -23,9 +24,9 @@ describe('Interactors | .mergeStats', () => {
     });
   });
 
-  it('returns all the stats for authors with data', async () => {
+  it('returns all the stats for users with data', async () => {
     const results = mergeStats(baseParams)
-      .find(({ author }) => author.login === 'user1');
+      .find(({ user }) => user.login === 'user1');
 
     expect(results.stats).toEqual({
       totalReviews: 4,
@@ -36,9 +37,9 @@ describe('Interactors | .mergeStats', () => {
     });
   });
 
-  it('returns empty stats for authors with no data', async () => {
+  it('returns empty stats for users with no data', async () => {
     const results = mergeStats(baseParams)
-      .find(({ author }) => author.login === 'user4');
+      .find(({ user }) => user.login === 'user4');
 
     expect(results.stats).toEqual({
       timeToReview: null,
@@ -49,8 +50,8 @@ describe('Interactors | .mergeStats', () => {
     });
   });
 
-  it('returns empty array when no authors passed', async () => {
-    const results = mergeStats({ ...baseParams, authors: [] });
+  it('returns empty array when no users passed', async () => {
+    const results = mergeStats({ ...baseParams, users: [] });
     expect(results).toEqual([]);
   });
 });

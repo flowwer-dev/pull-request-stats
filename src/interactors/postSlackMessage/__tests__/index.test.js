@@ -26,11 +26,9 @@ describe('Interactors | .postSlackMessage', () => {
   const defaultOptions = {
     core,
     isSponsor: true,
-    reviewers: 'REVIEWERS',
+    table: 'TABLE',
     pullRequest: 'PULl REQUEST',
     periodLength: 'PERIOD LENGTH',
-    disableLinks: 'DISPLAY LINKS',
-    displayCharts: 'DISPLAY CHARTS',
     slack: {
       webhook: 'https://slack.com/webhook',
       channel: '#my-channel',
@@ -81,11 +79,9 @@ describe('Interactors | .postSlackMessage', () => {
       await postSlackMessage({ ...defaultOptions });
       expect(error).not.toHaveBeenCalled();
       expect(buildMessage).toBeCalledWith({
-        reviewers: defaultOptions.reviewers,
+        table: defaultOptions.table,
         pullRequest: defaultOptions.pullRequest,
         periodLength: defaultOptions.periodLength,
-        disableLinks: defaultOptions.disableLinks,
-        displayCharts: defaultOptions.displayCharts,
       });
       expect(Fetchers.postToSlack).toBeCalledTimes(1);
       expect(Fetchers.postToSlack).toBeCalledWith({

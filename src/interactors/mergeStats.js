@@ -4,26 +4,27 @@ const EMPTY_STATS = VALID_STATS
   .reduce((acc, stat) => ({ ...acc, [stat]: null }), {});
 
 module.exports = ({
-  authors,
+  users,
   reviewStats,
   pullRequestStats,
 }) => {
-  const reviewStatsByAuthorId = reviewStats.reduce((acc, reviewStat) => ({
+  const reviewsByUserId = reviewStats.reduce((acc, reviewsData) => ({
     ...acc,
-    [reviewStat.authorId]: reviewStat.stats,
+    [reviewsData.userId]: reviewsData,
   }), {});
 
-  const prStatsByAuthorId = pullRequestStats.reduce((acc, prStat) => ({
+  const pullRequestsByUserId = pullRequestStats.reduce((acc, prsData) => ({
     ...acc,
-    [prStat.authorId]: prStat.stats,
+    [prsData.userId]: prsData,
   }), {});
 
-  return authors.map((author) => ({
-    author,
+  return users.map((user) => ({
+    user,
+    reviews: reviewsByUserId[user.id]?.reviews || [],
     stats: {
       ...EMPTY_STATS,
-      ...(reviewStatsByAuthorId[author.id] || {}),
-      ...(prStatsByAuthorId[author.id] || {}),
+      ...(reviewsByUserId[user.id]?.stats || {}),
+      ...(pullRequestsByUserId[user.id]?.stats || {}),
     },
   }));
 };

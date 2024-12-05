@@ -1,15 +1,15 @@
 const { t } = require('../../../i18n');
 const buildSubtitle = require('./buildSubtitle');
-const buildReviewer = require('./buildReviewer');
+const buildRow = require('./buildRow');
+
+const getStatNames = (headers) => headers.slice(1).map(({ text }) => text);
 
 module.exports = ({
   org,
   repos,
-  reviewers,
+  table,
   pullRequest,
   periodLength,
-  disableLinks,
-  displayCharts,
 }) => ({
   blocks: [
     ...buildSubtitle({
@@ -20,16 +20,10 @@ module.exports = ({
       periodLength,
     }),
 
-    ...reviewers.reduce(
-      (prev, reviewer, index) => [
+    ...table.rows.reduce(
+      (prev, row) => [
         ...prev,
-        ...buildReviewer({
-          t,
-          index,
-          reviewer,
-          disableLinks,
-          displayCharts,
-        })],
+        ...buildRow({ row, statNames: getStatNames(table.headers) })],
       [],
     ),
   ],

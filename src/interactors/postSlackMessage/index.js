@@ -4,15 +4,13 @@ const { SlackSplitter } = require('../../services/splitter');
 const buildMessage = require('./buildMessage');
 
 module.exports = async ({
+  core,
   org,
   repos,
-  core,
   slack,
   isSponsor,
-  reviewers,
+  table,
   periodLength,
-  disableLinks,
-  displayCharts,
   pullRequest = null,
 }) => {
   const { webhook, channel } = slack || {};
@@ -44,11 +42,9 @@ module.exports = async ({
   const fullMessage = buildMessage({
     org,
     repos,
-    reviewers,
+    table,
     pullRequest,
     periodLength,
-    disableLinks,
-    displayCharts,
   });
 
   const { chunks } = new SlackSplitter({ message: fullMessage });
