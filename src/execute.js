@@ -9,10 +9,14 @@ const {
   getPulls,
   buildTable,
   postComment,
-  getReviewers,
+  fulfillEntries,
+  getPullRequestStats,
+  getReviewStats,
+  getUsers,
+  mergeStats,
   buildComment,
   buildJsonOutput,
-  setUpReviewers,
+  buildMarkdown,
   checkSponsorship,
   alreadyPublished,
   postSlackMessage,
@@ -28,6 +32,7 @@ const run = async (params) => {
     limit,
     sortBy,
     octokit,
+    mainStats,
     publishAs,
     periodLength,
     disableLinks,
@@ -53,32 +58,58 @@ const run = async (params) => {
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
 
-  const reviewersRaw = getReviewers(pulls, { excludeStr: params.excludeStr });
-  core.info(`Analyzed stats for ${reviewersRaw.length} pull request reviewers`);
+  const users = await getUsers(pulls, { excludeStr: params.excludeStr });
+  core.info(`Found ${users.length} collaborators to analyze`);
 
-  const reviewers = setUpReviewers({
+  const pullRequestStats = getPullRequestStats(pulls);
+  core.info(`Analyzed stats for ${pullRequestStats.length} authors`);
+
+  const reviewStats = getReviewStats(pulls);
+  core.info(`Analyzed stats for ${reviewStats.length} reviewers`);
+
+  const entries = fulfillEntries(
+    mergeStats({ users, pullRequestStats, reviewStats }),
+    { periodLength },
+  );
+  core.debug(`Analyzed users: ${entries.length}`);
+
+  const table = buildTable({
     limit,
     sortBy,
-    periodLength,
-    reviewers: reviewersRaw,
+    entries,
+    mainStats,
+    disableLinks,
+    displayCharts,
   });
-  core.debug(`Analyzed reviewers: ${reviewers}`);
+  core.debug('Table content built successfully');
 
-  const table = buildTable({ reviewers, disableLinks, displayCharts });
-  core.debug('Stats table built successfully');
+  const markdownTable = buildMarkdown({ table });
+  core.debug('Markdown table built successfully');
 
   const content = buildComment({
-    table, periodLength, org, repos, isSponsor: params.isSponsor,
+    org,
+    repos,
+    periodLength,
+    markdownTable,
+    isSponsor: params.isSponsor,
   });
   core.debug(`Commit content built successfully: ${content}`);
 
-  const whParams = { ...params, core, reviewers };
-  const jsonOutput = buildJsonOutput({ ...params, reviewers });
-  await postWebhook(whParams);
-  await postSlackMessage({ ...whParams, pullRequest });
-  await postTeamsMessage({ ...whParams, pullRequest });
+  const whParams = {
+    core,
+    org,
+    repos,
+    table,
+    periodLength,
+    pullRequest,
+    isSponsor: params.isSponsor,
+  };
+  const jsonOutput = buildJsonOutput({ params, entries, pullRequest });
+  await postWebhook({ core, payload: jsonOutput, webhook: params.webhook });
+  await postSlackMessage({ ...whParams, slack: params.slack });
+  await postTeamsMessage({ ...whParams, teams: params.teams });
   await postSummary({ core, content });
-  await core.setOutput('resultsMd', content);
+  await core.setOutput('resultsMd', markdownTable);
   await core.setOutput('resultsJson', jsonOutput);
 
   if (pullRequestId) {
@@ -93,7 +124,7 @@ const run = async (params) => {
   }
 
   return {
-    reviewers,
+    entries,
     pullRequest,
   };
 };

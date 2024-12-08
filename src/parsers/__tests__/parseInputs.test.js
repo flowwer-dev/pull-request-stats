@@ -70,7 +70,7 @@ describe('Parsers | .parseInputs', () => {
       org: baseInputs.organization,
       repos: ['REPOSITORY1', 'REPOSITORY2'],
       sortBy: baseInputs.sortBy,
-      stats: VALID_STATS,
+      mainStats: VALID_STATS,
       publishAs: baseInputs.publishAs,
       periodLength: 30,
       displayCharts: true,
@@ -101,13 +101,13 @@ describe('Parsers | .parseInputs', () => {
     it('defaults to DEFAULT_STATS if no stats are provided', () => {
       mockCore({ stats: '' });
       const response = parseInputs({ core, github, currentRepo });
-      expect(response.stats).toEqual(DEFAULT_STATS);
+      expect(response.mainStats).toEqual(DEFAULT_STATS);
     });
 
     it('filters out invalid stats', () => {
       mockCore({ stats: `invalidStat,${VALID_STATS[0]}` });
       const response = parseInputs({ core, github, currentRepo });
-      expect(response.stats).toEqual([VALID_STATS[0]]);
+      expect(response.mainStats).toEqual([VALID_STATS[0]]);
     });
   });
 });

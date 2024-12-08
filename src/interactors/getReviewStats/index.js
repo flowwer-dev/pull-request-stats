@@ -2,7 +2,7 @@ const calculateReviewsStats = require('./calculateReviewsStats');
 const groupReviews = require('./groupReviews');
 
 module.exports = (pulls) => groupReviews(pulls)
-  .map(({ authorId, reviews }) => {
+  .map(({ userId, reviews }) => {
     const stats = calculateReviewsStats(reviews);
-    return { authorId, reviews, stats };
+    return { userId, reviews, stats };
   });

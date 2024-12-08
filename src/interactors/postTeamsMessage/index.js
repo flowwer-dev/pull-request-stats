@@ -7,9 +7,9 @@ const buildPayload = require('./buildPayload');
 const DELAY = 500;
 
 module.exports = async ({
+  core,
   org,
   repos,
-  core,
   teams,
   isSponsor,
   table,

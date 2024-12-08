@@ -1,10 +1,10 @@
 module.exports = (pulls) => {
   const byAuthor = pulls.reduce((acc, pull) => {
-    const authorId = pull.author.id;
+    const userId = pull.author.id;
 
-    if (!acc[authorId]) acc[authorId] = { authorId, pullRequests: [] };
+    if (!acc[userId]) acc[userId] = { userId, pullRequests: [] };
 
-    acc[authorId].pullRequests.push({
+    acc[userId].pullRequests.push({
       id: pull.id,
       submittedAt: pull.submittedAt,
     });

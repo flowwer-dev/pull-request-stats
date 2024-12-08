@@ -11,15 +11,15 @@ module.exports = (pulls) => {
     return acc.concat(reviews);
   }, []);
 
-  const byAuthor = all.reduce((acc, review) => {
+  const byUser = all.reduce((acc, review) => {
     const { author, isOwnPull, ...other } = review;
-    const authorId = author.id;
+    const userId = author.id;
 
-    if (!acc[authorId]) acc[authorId] = { authorId, reviews: [] };
+    if (!acc[userId]) acc[userId] = { userId, reviews: [] };
 
-    acc[authorId].reviews.push(other);
+    acc[userId].reviews.push(other);
     return acc;
   }, {});
 
-  return Object.values(byAuthor);
+  return Object.values(byUser);
 };

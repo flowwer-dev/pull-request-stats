@@ -1,16 +1,13 @@
-const Fetchers = require('../../../fetchers');
-const buildPayload = require('../buildPayload');
-const postWebhook = require('../index');
+const Fetchers = require('../../fetchers');
+const postWebhook = require('../postWebhook');
 
-const PAYLOAD = 'PAYLOAD';
-
-jest.mock('../../../fetchers', () => ({ postToWebhook: jest.fn(() => Promise.resolve()) }));
-jest.mock('../buildPayload', () => jest.fn(() => PAYLOAD));
+jest.mock('../../fetchers', () => ({ postToWebhook: jest.fn(() => Promise.resolve()) }));
 
 describe('Interactors | .postWebhook', () => {
   const debug = jest.fn();
   const error = jest.fn();
-
+  const payload = 'PAYLOAD';
+  const webhook = 'https://somewebhook.com/';
   const core = {
     debug,
     error,
@@ -18,24 +15,19 @@ describe('Interactors | .postWebhook', () => {
 
   const defaultOptions = {
     core,
-    org: 'ORGANIZATION',
-    repos: 'REPOSITORIES',
-    webhook: 'https://somewebhook.com/',
-    reviewers: 'REVIEWERS',
-    periodLength: 'PERIOD LENGTH',
+    payload,
+    webhook,
   };
 
   beforeEach(() => {
     debug.mockClear();
     error.mockClear();
-    buildPayload.mockClear();
     Fetchers.postToWebhook.mockClear();
   });
 
   describe('when integration is not configured', () => {
     const expectDisabledIntegration = () => {
       expect(debug).toHaveBeenCalled();
-      expect(buildPayload).not.toHaveBeenCalled();
       expect(Fetchers.postToWebhook).not.toHaveBeenCalled();
     };
 
@@ -49,16 +41,10 @@ describe('Interactors | .postWebhook', () => {
     it('posts successfully to webhook', async () => {
       await postWebhook({ ...defaultOptions });
       expect(error).not.toHaveBeenCalled();
-      expect(buildPayload).toBeCalledWith({
-        org: defaultOptions.org,
-        repos: defaultOptions.repos,
-        reviewers: defaultOptions.reviewers,
-        periodLength: defaultOptions.periodLength,
-      });
       expect(Fetchers.postToWebhook).toBeCalledTimes(1);
       expect(Fetchers.postToWebhook).toBeCalledWith({
-        payload: PAYLOAD,
-        webhook: defaultOptions.webhook,
+        payload,
+        webhook,
       });
     });
   });

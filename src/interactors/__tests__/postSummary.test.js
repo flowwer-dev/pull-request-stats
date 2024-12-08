@@ -1,5 +1,5 @@
-const { t } = require('../../../i18n');
-const postSummary = require('../index');
+const { t } = require('../../i18n');
+const postSummary = require('../postSummary');
 
 const CONTENT = 'CONTENT';
 
