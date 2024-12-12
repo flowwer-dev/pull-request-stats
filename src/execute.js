@@ -6,38 +6,16 @@ const { Telemetry } = require('./services');
 const { fetchPullRequestById } = require('./fetchers');
 const { getGithubApiUrl } = require('./config');
 const {
-  getPulls,
-  buildTable,
-  postComment,
-  getReviewers,
-  buildComment,
-  buildJsonOutput,
-  setUpReviewers,
-  checkSponsorship,
   alreadyPublished,
-  postSlackMessage,
-  postSummary,
-  postTeamsMessage,
-  postWebhook,
+  checkSponsorship,
+  getPulls,
+  getEntries,
+  publish,
 } = require('./interactors');
 
-const run = async (params) => {
-  const {
-    org,
-    repos,
-    limit,
-    sortBy,
-    octokit,
-    publishAs,
-    periodLength,
-    disableLinks,
-    personalToken,
-    displayCharts,
-    pullRequestId,
-  } = params;
-
-  const pullRequest = pullRequestId
-    ? await fetchPullRequestById(octokit, pullRequestId)
+const run = async ({ inputs, octokit }) => {
+  const pullRequest = inputs.pullRequestId
+    ? await fetchPullRequestById(octokit, inputs.pullRequestId)
     : null;
 
   if (alreadyPublished(pullRequest)) {
@@ -46,71 +24,52 @@ const run = async (params) => {
   }
 
   const pulls = await getPulls({
-    org,
-    repos,
-    octokit: github.getOctokit(personalToken, { baseUrl: getGithubApiUrl() }),
-    startDate: subtractDaysToDate(new Date(), periodLength),
+    org: inputs.org,
+    repos: inputs.repos,
+    octokit: github.getOctokit(inputs.personalToken, { baseUrl: getGithubApiUrl() }),
+    startDate: subtractDaysToDate(new Date(), inputs.periodLength),
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
 
-  const reviewersRaw = getReviewers(pulls, { excludeStr: params.excludeStr });
-  core.info(`Analyzed stats for ${reviewersRaw.length} pull request reviewers`);
-
-  const reviewers = setUpReviewers({
-    limit,
-    sortBy,
-    periodLength,
-    reviewers: reviewersRaw,
+  const entries = await getEntries({
+    core,
+    pulls,
+    excludeStr: inputs.excludeStr,
+    periodLength: inputs.periodLength,
   });
-  core.debug(`Analyzed reviewers: ${reviewers}`);
+  core.debug(`Analyzed entries: ${entries.length}`);
 
-  const table = buildTable({ reviewers, disableLinks, displayCharts });
-  core.debug('Stats table built successfully');
-
-  const content = buildComment({
-    table, periodLength, org, repos, isSponsor: params.isSponsor,
+  await publish({
+    core,
+    octokit,
+    entries,
+    pullRequest,
+    inputs,
   });
-  core.debug(`Commit content built successfully: ${content}`);
-
-  const whParams = { ...params, core, reviewers };
-  const jsonOutput = buildJsonOutput({ ...params, reviewers });
-  await postWebhook(whParams);
-  await postSlackMessage({ ...whParams, pullRequest });
-  await postTeamsMessage({ ...whParams, pullRequest });
-  await postSummary({ core, content });
-  await core.setOutput('resultsMd', content);
-  await core.setOutput('resultsJson', jsonOutput);
-
-  if (pullRequestId) {
-    await postComment({
-      octokit,
-      content,
-      publishAs,
-      pullRequestId,
-      currentBody: pullRequest.body,
-    });
-    core.debug('Posted comment successfully');
-  }
 
   return {
-    reviewers,
+    entries,
     pullRequest,
   };
 };
 
-module.exports = async (params) => {
-  core.debug(`Params: ${JSON.stringify(params, null, 2)}`);
+module.exports = async (inputs) => {
+  core.debug(`Inputs: ${JSON.stringify(inputs, null, 2)}`);
 
-  const { githubToken, org, repos } = params;
+  const { githubToken, org, repos } = inputs;
   const octokit = github.getOctokit(githubToken, { baseUrl: getGithubApiUrl() });
   const isSponsor = await checkSponsorship({ octokit, org, repos });
-  const telemetry = new Telemetry({ core, isSponsor, telemetry: params.telemetry });
+  const telemetry = new Telemetry({ core, isSponsor, telemetry: inputs.telemetry });
   if (isSponsor) core.info(t('execution.logs.sponsors'));
 
   try {
-    telemetry.start(params);
-    const results = await run({ ...params, isSponsor, octokit });
+    telemetry.start(inputs);
+    const results = await run({
+      octokit,
+      inputs: { ...inputs, isSponsor },
+    });
     telemetry.success(results);
+    return results;
   } catch (error) {
     telemetry.error(error);
     throw error;

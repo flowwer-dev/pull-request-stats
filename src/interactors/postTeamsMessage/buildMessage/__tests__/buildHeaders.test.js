@@ -1,15 +1,16 @@
-const { t } = require('../../../../i18n');
 const buildHeaders = require('../buildHeaders');
 
 const EXPECTED_HEADERS = [
-  t('table.columns.username'),
-  t('table.columns.timeToReview'),
-  t('table.columns.totalReviews'),
-  t('table.columns.totalComments'),
+  'header1',
+  'header2',
+  'header3',
+  'header4',
 ];
 
+const headers = EXPECTED_HEADERS.map((text) => ({ text }));
+
 describe('Interactors | .postTeamsMessage | .buildHeaders', () => {
-  const result = buildHeaders({ t });
+  const result = buildHeaders(headers);
   const texts = (result?.columns || []).map((column) => column?.items?.[0]?.text);
 
   it('includes headers structure', () => {

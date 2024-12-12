@@ -1,25 +1,29 @@
-const table = require('markdown-table');
 const calculateBests = require('./calculateBests');
 const getTableData = require('./getTableData');
-const toTableArray = require('./toTableArray');
+const sortByStats = require('./sortByStats');
+
+const applyLimit = (data, limit) => (limit > 0 ? data.slice(0, limit) : data);
 
 module.exports = ({
-  reviewers,
+  limit,
+  entries,
+  sortBy,
+  mainStats,
   disableLinks,
   displayCharts,
 }) => {
   const execute = () => {
-    const allStats = reviewers.map((r) => r.stats);
-    const bests = calculateBests(allStats);
+    const sortByStat = sortBy || mainStats[0];
+    const sorted = applyLimit(sortByStats(entries, sortByStat), limit);
+    const bests = calculateBests(sorted);
 
-    const tableData = getTableData({
+    return getTableData({
+      mainStats,
       bests,
-      reviewers,
       disableLinks,
       displayCharts,
+      entries: sorted,
     });
-
-    return table(toTableArray(tableData));
   };
 
   return execute();

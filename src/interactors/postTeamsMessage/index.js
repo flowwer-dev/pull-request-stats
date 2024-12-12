@@ -7,15 +7,13 @@ const buildPayload = require('./buildPayload');
 const DELAY = 500;
 
 module.exports = async ({
+  core,
   org,
   repos,
-  core,
   teams,
   isSponsor,
-  reviewers,
+  table,
   periodLength,
-  disableLinks,
-  displayCharts,
   pullRequest = null,
 }) => {
   const { webhook } = teams || {};
@@ -44,11 +42,9 @@ module.exports = async ({
   const fullMessage = buildMessage({
     org,
     repos,
-    reviewers,
+    table,
     pullRequest,
     periodLength,
-    disableLinks,
-    displayCharts,
   });
 
   const { chunks } = new TeamsSplitter({ message: fullMessage });

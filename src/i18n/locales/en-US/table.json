@@ -13,9 +13,11 @@
   "columns": {
     "avatar": "",
     "username": "User",
+    "commentsPerReview": "Comments per review",
     "timeToReview": "Time to review",
     "totalReviews": "Total reviews",
-    "totalComments": "Total comments"
+    "totalComments": "Total comments",
+    "openedPullRequests": "Opened PRs"
   },
   "footer": "<sup>⚡️ [Pull request stats](https://bit.ly/pull-request-stats)</sup>"
 }

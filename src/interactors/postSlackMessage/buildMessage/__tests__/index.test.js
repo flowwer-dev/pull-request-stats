@@ -1,33 +1,38 @@
+const { table } = require('../../../../../tests/mocks');
 const buildMessage = require('../index');
 const buildSubtitle = require('../buildSubtitle');
-const buildReviewer = require('../buildReviewer');
+const buildRow = require('../buildRow');
 
 const SUBTITLE = 'SUBTITLE';
-const REVIEWER = 'REVIEWER';
+const ROW = 'ROW';
+const statNames = table.headers.slice(1).map(({ text }) => text);
 
 jest.mock('../buildSubtitle', () => jest.fn(() => [SUBTITLE]));
-jest.mock('../buildReviewer', () => jest.fn(() => [REVIEWER]));
+jest.mock('../buildRow', () => jest.fn(() => [ROW]));
 
 const defaultOptions = {
-  reviewers: ['REVIEWER 1'],
+  table,
+  org: 'ORG',
+  repos: 'REPOS',
   pullRequest: 'PULL REQUEST',
   periodLength: 'PERIOD LENGTH',
-  disableLinks: 'DISABLE LINKS',
-  displayCharts: 'DISPLAY CHARTS',
 };
 
 describe('Interactors | postSlackMessage | .buildMessage', () => {
   beforeEach(() => {
     buildSubtitle.mockClear();
-    buildReviewer.mockClear();
+    buildRow.mockClear();
   });
 
   it('returns the expected structure', () => {
-    const response = buildMessage({ ...defaultOptions });
+    const tableCopy = { ...table };
+    tableCopy.rows = [tableCopy.rows[0]];
+
+    const response = buildMessage({ ...defaultOptions, table: tableCopy });
     expect(response).toEqual({
       blocks: [
         SUBTITLE,
-        REVIEWER,
+        ROW,
       ],
     });
   });
@@ -36,21 +41,19 @@ describe('Interactors | postSlackMessage | .buildMessage', () => {
     buildMessage({ ...defaultOptions });
     expect(buildSubtitle).toHaveBeenCalledWith({
       t: expect.anything(),
+      org: defaultOptions.org,
+      repos: defaultOptions.repos,
       pullRequest: defaultOptions.pullRequest,
       periodLength: defaultOptions.periodLength,
     });
-    expect(buildReviewer).toHaveBeenCalledWith({
-      t: expect.anything(),
-      index: 0,
-      reviewer: defaultOptions.reviewers[0],
-      disableLinks: defaultOptions.disableLinks,
-      displayCharts: defaultOptions.displayCharts,
+    expect(buildRow).toHaveBeenCalledWith({
+      row: table.rows[0],
+      statNames,
     });
   });
 
-  it('builds a reviewers per each passed', () => {
-    const reviewers = ['REVIEWER 1', 'REVIEWER 2', 'REVIEWER 3'];
-    buildMessage({ ...defaultOptions, reviewers });
-    expect(buildReviewer).toHaveBeenCalledTimes(reviewers.length);
+  it('builds a row per each passed', () => {
+    buildMessage(defaultOptions);
+    expect(buildRow).toHaveBeenCalledTimes(table.rows.length);
   });
 });

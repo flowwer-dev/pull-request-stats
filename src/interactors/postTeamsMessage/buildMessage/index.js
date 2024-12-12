@@ -1,16 +1,14 @@
 const { t } = require('../../../i18n');
 const buildHeaders = require('./buildHeaders');
 const buildSubtitle = require('./buildSubtitle');
-const buildReviewer = require('./buildReviewer');
+const buildRow = require('./buildRow');
 
 module.exports = ({
   org,
   repos,
-  reviewers,
+  table,
   pullRequest,
   periodLength,
-  disableLinks,
-  displayCharts,
 }) => ([
   buildSubtitle({
     t,
@@ -20,12 +18,7 @@ module.exports = ({
     periodLength,
   }),
 
-  buildHeaders({ t }),
+  buildHeaders(table.headers),
 
-  ...reviewers.map((reviewer, index) => buildReviewer({
-    index,
-    reviewer,
-    disableLinks,
-    displayCharts,
-  })),
+  ...table.rows.map((row) => buildRow({ row })),
 ]);

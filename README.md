@@ -36,7 +36,7 @@ Just add this action to one of your [workflow files](https://docs.github.com/en/
 
 ```yml
       - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@master
+        uses: flowwer-dev/pull-request-stats@main
 ```
 
 If you are getting an empty table or an error, check the [troubleshooting section](#troubleshooting).
@@ -45,23 +45,24 @@ If you are getting an empty table or an error, check the [troubleshooting sectio
 
 The possible inputs for this action are:
 
-| Parameter | Description | Default |
-| --------- | ----------- | ------- |
-| `token` | A [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with `repo` permissions. Required to calculate stats for an organization or multiple repos. | `GITHUB_TOKEN` |
-| `repositories` | A comma-separated list of GitHub repositories to calculate the stats, e.g. `username/repo1,username/repo2`. When specifying other repo(s), **it is mandatory to pass a Personal Access Token** in the `token` parameter.| Current repository |
-| `organization` | If you prefer, you may specify your organization's name to calculate the stats across all of its repos. When specifying an organization, **it is mandatory to pass a Personal Access Token** in the `token` parameter. | `null` |
-| `period` | The period used to calculate the stats, expressed in days. | `30` |
-| `limit` | The maximum number of rows to display in the table. A value of `0` means unlimited. | `0` |
-| `charts` | Whether to add a chart to the start. Possible values: `true` or `false`. | `false` |
-| `disableLinks` | If `true`, removes the links to the detailed charts. Possible values: `true` or `false`. | `false` |
-| `sortBy` | The column used to sort the data. Possible values: `REVIEWS`, `TIME`, `COMMENTS`. | `REVIEWS` |
-| `publishAs` | Where to publish the results. Possible values: as a `COMMENT`, on the pull request `DESCRIPTION`, or publish `NONE`. | `COMMENT` |
-| `exclude` | A comma-separated list of usernames (case-insensitive) to be excluded from the results (e.g. `username1,username2`), or a regular expression enclosed between slashes (eg. `/^bot/i` will exclude all usernames that begin with "bot"). | `null` |
-| `telemetry` | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps me improve this action. **This option is a premium feature reserved for [sponsors](#premium-features-).** |`true`|
-| `slackWebhook` | **🔥 New.** A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/slack.md).  | `null` |
-| `slackChannel` | The Slack channel where stats will be posted. Include the `#` character (eg. `#mychannel`). Required when a `slackWebhook` is configured. | `null` |
-| `teamsWebhook` | **🔥 New.** A Microsoft Teams webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/teams.md).  | `null` |
-| `webhook` | **🔥 New.** A webhook URL to send the resulting stats as JSON (integrate with Zapier, IFTTT...). See [full documentation here](/docs/webhook.md). | `null` |
+| Parameter       | Description                                                                                                   | Default           |
+|-----------------|---------------------------------------------------------------------------------------------------------------|-------------------|
+| `token`         | A [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with `repo` permissions. Required to calculate stats for an organization or multiple repositories. | `GITHUB_TOKEN`    |
+| `repositories`  | A comma-separated list of GitHub repositories to calculate the stats, e.g. `username/repo1,username/repo2`. If no repositories are specified, the action defaults to the repository where the workflow is running. When specifying other repo(s), **it is mandatory to pass a Personal Access Token** in the `token` parameter. | Current repository |
+| `organization`  | If you prefer, you may specify your organization's name to calculate the stats across all of its repositories. When specifying an organization, **it is mandatory to pass a Personal Access Token** in the `token` parameter. | `null`            |
+| `period`        | The period used to calculate the stats, expressed in days.                                                   | `30`              |
+| `limit`         | The maximum number of rows to display in the table. A value of `0` means unlimited.                          | `0`               |
+| `stats`         | A comma-separated list of stats to calculate and display. Possible values: `totalReviews`, `timeToReview`, `totalComments`, `commentsPerReview`, `openedPullRequests`. For details on each stats check the [Stats](#stats) section. | `totalReviews,timeToReview,totalComments` |
+| `charts`        | Whether to add a chart to the start. Possible values: `true` or `false`.                                     | `false`           |
+| `disableLinks`  | If `true`, removes the links to the detailed charts. Possible values: `true` or `false`.                      | `false`           |
+| `sortBy`        | The column used to sort the data. Possible values: `totalReviews`, `timeToReview`, `totalComments`, `commentsPerReview`, `openedPullRequests`. | `totalReviews`    |
+| `publishAs`     | Where to publish the results. Possible values: `COMMENT`, `DESCRIPTION`, or `NONE`.                         | `COMMENT`         |
+| `exclude`       | A comma-separated list of usernames (case-insensitive) to be excluded from the results (e.g. `username1,username2`), or a regular expression enclosed between slashes (e.g. `/^bot/i` will exclude all usernames that begin with "bot"). | `null`            |
+| `telemetry`     | Indicates if the action is allowed to send monitoring data to the developer. This data is [minimal](/src/services/telemetry/sendStart.js) and helps improve this action. **This option is a premium feature reserved for [sponsors](#premium-features-).** | `true`            |
+| `slackWebhook`  | A Slack webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/slack.md). | `null`            |
+| `slackChannel`  | The Slack channel where stats will be posted. Include the `#` character (e.g. `#mychannel`). Required when a `slackWebhook` is configured. | `null`            |
+| `teamsWebhook`  | A Microsoft Teams webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/teams.md). | `null`            |
+| `webhook`       | A webhook URL to send the resulting stats as JSON (integrate with Zapier, IFTTT...). See [full documentation here](/docs/webhook.md). | `null`            |
 
 
 ### Action outputs
@@ -92,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@master
+        uses: flowwer-dev/pull-request-stats@main
 ```
 
 This config will:
@@ -128,14 +129,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@master
+        uses: flowwer-dev/pull-request-stats@main
         with:
           token: ${{ secrets.ADD_A_PERSONAL_ACCESS_TOKEN }}
           organization: 'piedpiper'
           period: 7
           charts: true
           disableLinks: true
-          sortBy: 'COMMENTS'
+          sortBy: 'totalComments'
+          stats: 'totalComments,openedPullRequests'
 ```
 
 This config will:
@@ -143,7 +145,8 @@ This config will:
 * Calculate the reviewer stats for all the repos in the "piedpiper" organization in the lasts 7 days.
 * Display charts for the metrics.
 * Remove the links to detailed charts.
-* Sort results by the "comments" column.
+* Sort results by the "Total comments" column.
+* Show the "Total comments" and "Opened pull requests" columns (in that order).
 
 and print a table like this:
 
@@ -161,10 +164,11 @@ and print a table like this:
 
 The stats are calculated as follows:
 
-* **Time to review:** The time a reviewer takes from the _Pull Request publication_ or the last _Commit push_ (whatever happens last) to the first time the pull request is reviewed.
-* **Time to review:** The **median** of the _times to review_ of all Pull Requests reviewed by a person in the period.
-* **Total reviews:** The count of all Pull Requests reviewed by a person in the period.
-* **Total comments:** The number of comments made while reviewing other users' Pull Requests during the specified period. Comments made on your own PRs or general PR discussions are excluded; only comments directly related to code are counted.
+* **Total reviews (`totalReviews`):** The count of all Pull Requests reviewed by a person in the period.
+* **Time to review (`timeToReview`):** The **median** time a reviewer takes from the _Pull Request publication_ or the last _Commit push_ (whatever happens last) to the first time the pull request is reviewed.
+* **Total comments (`totalComments`):** The number of comments made while reviewing other users' Pull Requests during the specified period. Comments made on your own PRs or general PR discussions are excluded; only comments directly related to code are counted.
+* **Comments per review (`commentsPerReview`):** The **average** comments the reviewer made on the pull requests.
+* **Opened pull requests (`openedPullRequests`):** The number of pull requests opened by the user in the period.
 
 ## Integrations 🔌
 
@@ -193,7 +197,7 @@ Check the guide for the tool you want to integrate:
         pull-requests: write
       steps:
         - name: Run pull request stats
-          uses: flowwer-dev/pull-request-stats@master
+          uses: flowwer-dev/pull-request-stats@main
   ```
 </details>
 
@@ -211,7 +215,7 @@ Check the guide for the tool you want to integrate:
         pull-requests: write
       steps:
         - name: Run pull request stats
-          uses: flowwer-dev/pull-request-stats@master
+          uses: flowwer-dev/pull-request-stats@main
   ```
 </details>
 

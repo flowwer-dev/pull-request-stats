@@ -22,7 +22,7 @@ describe('Interactors | .buildComment', () => {
     it('builds an environment-specific comment using this URL', () => {
       process.env.GITHUB_SERVER_URL = 'https://github.example.io';
       const expected = `${title}\n${message}\n${TABLE_MOCK}\n\n${FOOTER}`;
-      const response = buildComment({ periodLength, table: TABLE_MOCK, org: ORG });
+      const response = buildComment({ periodLength, markdownTable: TABLE_MOCK, org: ORG });
       delete process.env.GITHUB_SERVER_URL;
       expect(response).toEqual(expected);
     });
@@ -34,7 +34,7 @@ describe('Interactors | .buildComment', () => {
 
     it('builds the message in singular', () => {
       const expected = `${title}\n${message}\n${TABLE_MOCK}\n\n${FOOTER}`;
-      const response = buildComment({ periodLength, table: TABLE_MOCK, org: ORG });
+      const response = buildComment({ periodLength, markdownTable: TABLE_MOCK, org: ORG });
       expect(response).toEqual(expected);
     });
   });
@@ -45,7 +45,7 @@ describe('Interactors | .buildComment', () => {
 
     it('builds the message in singular', () => {
       const expected = `${title}\n${message}\n${TABLE_MOCK}\n\n${FOOTER}`;
-      const response = buildComment({ periodLength, table: TABLE_MOCK, org: ORG });
+      const response = buildComment({ periodLength, markdownTable: TABLE_MOCK, org: ORG });
       expect(response).toEqual(expected);
     });
   });
@@ -57,7 +57,7 @@ describe('Interactors | .buildComment', () => {
 
     it('builds the message in singular', () => {
       const expected = `${title}\n${message}\n${TABLE_MOCK}\n\n${FOOTER}`;
-      const response = buildComment({ periodLength, table: TABLE_MOCK, repos });
+      const response = buildComment({ periodLength, markdownTable: TABLE_MOCK, repos });
       expect(response).toEqual(expected);
     });
   });
@@ -73,7 +73,7 @@ describe('Interactors | .buildComment', () => {
         isSponsor,
         periodLength,
         org: ORG,
-        table: TABLE_MOCK,
+        markdownTable: TABLE_MOCK,
       });
       expect(response).toEqual(expected);
     });

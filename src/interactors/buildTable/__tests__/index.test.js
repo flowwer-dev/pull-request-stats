@@ -1,44 +1,50 @@
-const reviewers = require('../../__tests__/mocks/populatedReviewers.json');
+const { entries } = require('../../../../tests/mocks');
+const { VALID_STATS } = require('../../../config/stats');
+const getTableData = require('../getTableData');
 const buildTable = require('../index');
 
-const SIMPLE_RESPONSE = `|                                                                                                            | User  | Total reviews | Time to review | Total comments |
-| ---------------------------------------------------------------------------------------------------------- | ----- | ------------- | -------------- | -------------- |
-| <a href="https://github.com/user1"><img src="https://avatars.githubusercontent.com/u/1234" width="20"></a> | user1 | **4**         | **34m**        | 1              |
-| <a href="https://github.com/user2"><img src="https://avatars.githubusercontent.com/u/5678" width="20"></a> | user2 | 1             | 2h 21m         | **5**          |`;
-
-const CHARTS_RESPONSE = `|                                                                                                            | User         | Total reviews      | Time to review      | Total comments     |
-| ---------------------------------------------------------------------------------------------------------- | ------------ | ------------------ | ------------------- | ------------------ |
-| <a href="https://github.com/user1"><img src="https://avatars.githubusercontent.com/u/1234" width="32"></a> | user1<br/>🥇 | **4**<br/>▀▀▀▀▀▀▀▀ | **34m**<br/>▀▀      | 1<br/>▀▀           |
-| <a href="https://github.com/user2"><img src="https://avatars.githubusercontent.com/u/5678" width="32"></a> | user2<br/>🥈 | 1<br/>▀▀           | 2h 21m<br/>▀▀▀▀▀▀▀▀ | **5**<br/>▀▀▀▀▀▀▀▀ |`;
-
-const LINKS_RESPONSE = `|                                                                                                            | User  | Total reviews | Time to review                                          | Total comments |
-| ---------------------------------------------------------------------------------------------------------- | ----- | ------------- | ------------------------------------------------------- | -------------- |
-| <a href="https://github.com/user1"><img src="https://avatars.githubusercontent.com/u/1234" width="20"></a> | user1 | **4**         | [**34m**](https://app.flowwer.dev/charts/review-time/1) | 1              |
-| <a href="https://github.com/user2"><img src="https://avatars.githubusercontent.com/u/5678" width="20"></a> | user2 | 1             | [2h 21m](https://app.flowwer.dev/charts/review-time/2)  | **5**          |`;
-
-const LINKS_AND_CHARTS_RESPONSE = `|                                                                                                            | User         | Total reviews      | Time to review                                                      | Total comments     |
-| ---------------------------------------------------------------------------------------------------------- | ------------ | ------------------ | ------------------------------------------------------------------- | ------------------ |
-| <a href="https://github.com/user1"><img src="https://avatars.githubusercontent.com/u/1234" width="32"></a> | user1<br/>🥇 | **4**<br/>▀▀▀▀▀▀▀▀ | [**34m**](https://app.flowwer.dev/charts/review-time/1)<br/>▀▀      | 1<br/>▀▀           |
-| <a href="https://github.com/user2"><img src="https://avatars.githubusercontent.com/u/5678" width="32"></a> | user2<br/>🥈 | 1<br/>▀▀           | [2h 21m](https://app.flowwer.dev/charts/review-time/2)<br/>▀▀▀▀▀▀▀▀ | **5**<br/>▀▀▀▀▀▀▀▀ |`;
+jest.mock('../getTableData', () => jest.fn());
 
 describe('Interactors | .buildTable', () => {
-  it('returns all available reviewers in a set of pull requests', () => {
-    const response = buildTable({ reviewers, disableLinks: true });
-    expect(response).toEqual(SIMPLE_RESPONSE);
+  const defaultParams = {
+    entries,
+    limit: null,
+    sortBy: VALID_STATS[0],
+    mainStats: VALID_STATS,
+    disableLinks: true,
+    displayCharts: false,
+  };
+
+  getTableData.mockImplementation(jest.requireActual('../getTableData'));
+
+  beforeEach(() => {
+    getTableData.mockClear();
   });
 
-  it('can add charts to the table', () => {
-    const response = buildTable({ reviewers, displayCharts: true, disableLinks: true });
-    expect(response).toEqual(CHARTS_RESPONSE);
+  it('limits the results', () => {
+    const response1 = buildTable(defaultParams);
+    expect(response1.rows.length).toEqual(entries.length);
+
+    const limit = 1;
+    const response2 = buildTable({ ...defaultParams, limit });
+    expect(response2.rows.length).toEqual(limit);
   });
 
-  it('with links enabled by default', () => {
-    const response = buildTable({ reviewers });
-    expect(response).toEqual(LINKS_RESPONSE);
+  it('sorts data by the given key', () => {
+    const response = buildTable(defaultParams);
+    expect(response.rows[0].user.text).toEqual('user1');
+    expect(response.rows[1].user.text).toEqual('user2');
+    expect(response.rows[2].user.text).toEqual('user3');
   });
 
-  it('with links and charts', () => {
-    const response = buildTable({ reviewers, displayCharts: true });
-    expect(response).toEqual(LINKS_AND_CHARTS_RESPONSE);
+  it('calls build table data with the correct params', () => {
+    buildTable(defaultParams);
+    expect(getTableData).toHaveBeenCalledWith(expect.objectContaining({
+      entries,
+      bests: expect.any(Object),
+      mainStats: defaultParams.mainStats,
+      disableLinks: defaultParams.disableLinks,
+      displayCharts: defaultParams.displayCharts,
+    }));
   });
 });

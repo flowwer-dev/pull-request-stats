@@ -25,11 +25,9 @@ describe('Interactors | .postTeamsMessage', () => {
   const defaultOptions = {
     core,
     isSponsor: true,
-    reviewers: 'REVIEWERS',
+    table: 'TABLE',
     pullRequest: 'PULl REQUEST',
     periodLength: 'PERIOD LENGTH',
-    disableLinks: 'DISPLAY LINKS',
-    displayCharts: 'DISPLAY CHARTS',
     teams: {
       webhook: 'https://microsoft.com/teams/webhook',
     },
@@ -77,11 +75,9 @@ describe('Interactors | .postTeamsMessage', () => {
       await postTeamsMessage({ ...defaultOptions });
       expect(error).not.toHaveBeenCalled();
       expect(buildMessage).toBeCalledWith({
-        reviewers: defaultOptions.reviewers,
+        table: defaultOptions.table,
         pullRequest: defaultOptions.pullRequest,
         periodLength: defaultOptions.periodLength,
-        disableLinks: defaultOptions.disableLinks,
-        displayCharts: defaultOptions.displayCharts,
       });
       expect(buildPayload).toBeCalledWith(MESSAGE);
       expect(Fetchers.postToWebhook).toBeCalledTimes(1);

@@ -13,16 +13,11 @@ const wrapHeader = (text) => ({
   ],
 });
 
-module.exports = ({ t }) => ({
+module.exports = (headers) => ({
   type: 'ColumnSet',
   padding: 'Small',
   horizontalAlignment: 'Left',
   style: 'emphasis',
   spacing: 'Small',
-  columns: [
-    wrapHeader(t('table.columns.username')),
-    wrapHeader(t('table.columns.timeToReview')),
-    wrapHeader(t('table.columns.totalReviews')),
-    wrapHeader(t('table.columns.totalComments')),
-  ],
+  columns: headers.map(({ text }) => wrapHeader(text)),
 });
