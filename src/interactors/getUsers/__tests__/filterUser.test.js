@@ -27,4 +27,13 @@ describe('Interactors | getUsers | .filterUser', () => {
       'jartmez',
     ]);
   });
+
+  it('removes the empty users', () => {
+    const exclude = /bot/;
+    const results = ['user1', '', null, undefined].filter((reviewer) => filterUser(exclude, reviewer));
+    expect(results.length).toEqual(1);
+    expect(results).toEqual([
+      'user1',
+    ]);
+  });
 });
