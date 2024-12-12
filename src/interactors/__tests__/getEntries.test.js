@@ -13,7 +13,7 @@ jest.mock('../getUsers', () => jest.fn());
 jest.mock('../mergeStats', () => jest.fn());
 
 describe('Interactors | .getEntries', () => {
-  const core = { info: jest.fn() };
+  const core = { info: jest.fn(), debug: jest.fn() };
   const pulls = ['PULL1', 'PULL2', 'PULL3'];
   const entries = ['ENTRY1', 'ENTRY2', 'ENTRY3'];
   const merged = 'MERGED';
@@ -41,5 +41,6 @@ describe('Interactors | .getEntries', () => {
     expect(mergeStats).toBeCalledWith({ users, pullRequestStats, reviewStats });
     expect(fulfillEntries).toBeCalledWith(merged, { periodLength: params.periodLength });
     expect(core.info).toHaveBeenCalledTimes(3);
+    expect(core.debug).toHaveBeenCalledTimes(3);
   });
 });

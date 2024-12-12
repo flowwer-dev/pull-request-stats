@@ -42757,7 +42757,8 @@ module.exports = ({
   displayCharts,
 }) => {
   const execute = () => {
-    const sorted = applyLimit(sortByStats(entries, sortBy), limit);
+    const sortByStat = sortBy || mainStats[0];
+    const sorted = applyLimit(sortByStats(entries, sortByStat), limit);
     const bests = calculateBests(sorted);
 
     return getTableData({
@@ -43022,12 +43023,15 @@ module.exports = async ({
 }) => {
   const users = await getUsers(pulls, { excludeStr });
   core.info(`Found ${users.length} collaborators to analyze`);
+  core.debug(JSON.stringify(users, null, 2));
 
   const pullRequestStats = getPullRequestStats(pulls);
   core.info(`Analyzed stats for ${pullRequestStats.length} authors`);
+  core.debug(JSON.stringify(pullRequestStats, null, 2));
 
   const reviewStats = getReviewStats(pulls);
   core.info(`Analyzed stats for ${reviewStats.length} reviewers`);
+  core.debug(JSON.stringify(reviewStats, null, 2));
 
   return fulfillEntries(
     mergeStats({ users, pullRequestStats, reviewStats }),

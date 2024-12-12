@@ -13,7 +13,8 @@ module.exports = ({
   displayCharts,
 }) => {
   const execute = () => {
-    const sorted = applyLimit(sortByStats(entries, sortBy), limit);
+    const sortByStat = sortBy || mainStats[0];
+    const sorted = applyLimit(sortByStats(entries, sortByStat), limit);
     const bests = calculateBests(sorted);
 
     return getTableData({
