@@ -1,17 +1,19 @@
-# Posting stats to a Webhook
+# Posting Stats to a Webhook
 
-> 🔥 This integration does **not** require a sponsorship. Enjoy!
+> **🔥 This integration does not require sponsorship. Enjoy!**
 
-This action can also send the results to a webhook of your preference. This way, you can send them to [Zapier](https://zapier.com/), [IFTTT](https://ifttt.com/), [Automate.io](https://automate.io/) and more, to take actions based on the results.
+This action allows you to send results to a webhook of your choice. This means you can integrate with platforms like [Zapier](https://zapier.com/), [IFTTT](https://ifttt.com/), [Automate.io](https://automate.io/), and more, to perform actions based on the results.
 
-Just send a URL in the `webhook` parameter. For example:
+## How to Use the Webhook Parameter
+
+To use this feature, provide a URL in the `webhook` parameter. For example:
 
 ```yml
 name: Pull Request Stats
 
 on:
   schedule:
-    - cron:  '0 16 * * 5'
+    - cron: '0 16 * * 5'
 
 jobs:
   stats:
@@ -25,45 +27,45 @@ jobs:
           # webhook: ${{ secrets.WEBHOOK_URL }} You may want to store this value as a secret.
 ```
 
-This action will calculate the pull request reviewers' stats for the repos `piedpiper/repo1` and `piedpiper/repo2`, each Friday at 14pm and send the results to the webhook using a `POST` request.
+This configuration calculates pull request stats for the repositories `piedpiper/repo1` and `piedpiper/repo2` every Friday at 16:00 (UTC). The results are sent to the specified webhook URL via a `POST` request.
 
-## Webhook content
+## Webhook Payload Structure
 
-The webhook payload will include:
+The webhook payload includes detailed information:
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| `reviewers[]` | `object` | A list of objects containing data about each reviewer. |
-| `reviewers[].author` | `object` | Information about the reviewer being described. |
-| `reviewers[].author.id` | `string` | Github's unique identified for the reviewer. |
-| `reviewers[].author.url` | `string` | The URL to reviewer's profile. |
-| `reviewers[].author.login` | `string` | Reviewer's username. |
-| `reviewers[].author.avatarUrl` | `string` | The URL to the profile picture of the reviewer. |
-| `reviewers[].stats` | `object` | The summarized stats about the reviewer given the current options. |
-| `reviewers[].stats.totalReviews` | `integer` | The total number of pull request reviews made. |
-| `reviewers[].stats.totalComments` | `integer` | The total number of comment across the pull requests reviewed. |
-| `reviewers[].stats.commentsPerReview` | `float` | The number of comments divided by the pull requests reviewed. |
-| `reviewers[].stats.timeToReview` | `integer` | The **median** time in milliseconds took to review the pull requests the first time. |
-| `reviewers[].urls` | `object` | The set of urls pointing to this action's web version. |
-| `reviewers[].urls.timeToReview` | `string` | A URL to the web version of the historic review times of the user. |
-| `reviewers[].reviews[]` | `object` | The full list of reviews performed by the user. |
-| `reviewers[].reviews[].id` | `integer` | Github's id for the review. |
-| `reviewers[].reviews[].pullRequestId` | `integer` | Github's id for the review pull request. |
-| `reviewers[].reviews[].submittedAt` | `date` | The date the review was made. |
-| `reviewers[].reviews[].commentsCount` | `date` | The total comments made on this review. |
-| `reviewers[].reviews[].timeToReview` | `date` | The total time in milliseconds take for the review. That is, the different between the `submittedAt` date and the most recent date between the pull request creation an it's last commit. |
-| `options` | `object` | An object containing the specified options to calculate the stats. |
-| `options.organization` | `string` | The name of the organization the stats are calculated from. Only when `repositories` is not specified. |
-| `options.repositories[]` | `string` | The names of the repositories the stats are calculated from. Only when `organization` is not specified. |
-| `options.periodLength` | `integer` | The number of days used to calculate the stats. |
+### Parameters
 
-### Example
+| Parameter                           | Type      | Description                                                                  |
+| ----------------------------------- | --------- | ---------------------------------------------------------------------------- |
+| `entries[]`                         | `object`  | A list of objects containing data about each user contributing to the stats. |
+| `entries[].user`                    | `object`  | Information about the user.                                                  |
+| `entries[].user.id`                 | `string`  | GitHub's unique identifier for the user.                                     |
+| `entries[].user.url`                | `string`  | The URL to the user's GitHub profile.                                        |
+| `entries[].user.login`              | `string`  | GitHub username.                                                             |
+| `entries[].user.avatarUrl`          | `string`  | URL to the user's profile picture.                                           |
+| `entries[].stats`                   | `object`  | Summarized stats for the user based on the selected options.                 |
+| `entries[].contributions`           | `object`  | Represents the proportion of a specific stat attributed to the user. For example, if there are 50 total reviews and the user performed 10, their contribution is `0.2`. |
+| `entries[].urls`                    | `object`  | URLs pointing to this action's web-based views.                              |
+| `entries[].urls.timeToReview`       | `string`  | URL to the user's historic review times.                                     |
+| `entries[].reviews[]`               | `object`  | List of reviews performed by the user.                                       |
+| `entries[].reviews[].id`            | `integer` | GitHub ID for the review.                                                    |
+| `entries[].reviews[].pullRequestId` | `integer` | GitHub ID for the reviewed pull request.                                     |
+| `entries[].reviews[].submittedAt`   | `date`    | Date when the review was submitted.                                          |
+| `entries[].reviews[].commentsCount` | `integer` | Number of comments made in the review.                                       |
+| `entries[].reviews[].timeToReview`  | `integer` | Time in milliseconds taken to complete the review.                           |
+| `options`                           | `object`  | Options used to calculate the stats.                                         |
+| `options.organization`              | `string`  | Name of the organization analyzed (if repositories are not specified).       |
+| `options.repositories[]`            | `string`  | Names of the analyzed repositories (if the organization is not specified).   |
+| `options.periodLength`              | `integer` | Number of days used to calculate the stats.                                  |
+| `options.pullRequestId`             | `string`  | GitHub ID for the pull request that triggered the action, if applicable.     |
+
+### Example Payload
 
 ```json
 {
-  "reviewers": [
+  "entries": [
     {
-      "author": {
+      "user": {
         "id": 1031639,
         "url": "https://github.com/manuelmhtr",
         "login": "manuelmhtr",
@@ -93,19 +95,27 @@ The webhook payload will include:
       },
       "urls": {
         "timeToReview": "https://app.flowwer.dev/charts/review-time/..."
+      },
+      "contributions": {
+        "totalReviews": 0.3,
+        "totalComments": 0,
+        "commentsPerReview": 0.5,
+        "timeToReview": 0.1
       }
     }
   ],
   "options": {
     "periodLength": 30,
     "organization": "flowwer-dev",
-    "repositories": null
+    "repositories": null,
+    "pullRequestId": "PR_Mhspq3784A10asbbs"
   }
 }
 ```
 
-## What's next?
+## What's Next?
 
-I'm building other integrations for this action, [I'd love to hear](https://github.com/flowwer-dev/pull-request-stats/discussions/new) which integration you want and how you are planning to use webhooks.
+We’re building more integrations for this action! [Share your ideas](https://github.com/flowwer-dev/pull-request-stats/discussions/new) about the integrations you'd like to see and how you plan to use webhooks.
 
-Support this project by becoming a [sponsor](https://github.com/sponsors/manuelmhtr) 💙
+Support this project by becoming a [sponsor](https://github.com/sponsors/manuelmhtr). 💙
+

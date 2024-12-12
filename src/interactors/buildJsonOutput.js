@@ -1,13 +1,12 @@
 module.exports = ({
   inputs,
   entries,
-  pullRequest,
 }) => ({
+  entries,
   options: {
     organization: inputs.org || null,
     repositories: inputs.org ? null : inputs.repos,
     periodLength: inputs.periodLength,
+    pullRequestId: inputs.pullRequestId,
   },
-  entries,
-  pullRequest,
 });

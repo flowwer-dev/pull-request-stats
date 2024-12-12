@@ -60,7 +60,7 @@ module.exports = async ({
     pullRequest,
     isSponsor,
   };
-  const jsonOutput = buildJsonOutput({ inputs, entries, pullRequest });
+  const jsonOutput = buildJsonOutput({ inputs, entries });
   await postWebhook({ core, payload: jsonOutput, webhook: inputs.webhook });
   await postSlackMessage({ ...whParams, slack: inputs.slack });
   await postTeamsMessage({ ...whParams, teams: inputs.teams });

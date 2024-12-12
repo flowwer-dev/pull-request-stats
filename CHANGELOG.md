@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [3.0.0] - 2024-12-12
+### Added
+- New `stats` option to specify the stats to be calculated.
+
+### Breaking changes
+- Deprecated the kebab case options: `publish-as`, `disable-links`, `sort-by`, `slack-webhook`, `slack-channel` and `teams-webhook`. Now you need to use the camel case format: `publishAs`, `disableLinks`, `sortBy`, `slackWebhook`, `slackChannel` and `teamsWebhook`.`
+- The values for `sortBy` have changed. `REVIEWS`, `TIME`, `COMMENTS` are invalid. Now you need to use the full name of the stat that will be used for sorting, for example: `totalComments`, `timeToReview`...
+- The JSON output for the action and the JSON payload for the webhook have changed. Check the new format in the [webhook documentation](/docs/webhook.md).
+
 ## [2.15.2] - 2024-12-01
 ### Fixed
 - Prevents `githubToken` and `personalToken` from be included in the JSON output.

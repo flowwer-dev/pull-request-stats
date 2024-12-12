@@ -68,7 +68,7 @@ describe('Interactors | .publish', () => {
     expect(buildTable).toBeCalled();
     expect(buildMarkdown).toBeCalledWith({ table });
     expect(buildComment).toBeCalled();
-    expect(buildJsonOutput).toBeCalledWith({ inputs, entries, pullRequest });
+    expect(buildJsonOutput).toBeCalledWith({ inputs, entries });
     expect(postWebhook).toBeCalledWith({ core, payload: jsonOutput, webhook: inputs.webhook });
     expect(postSlackMessage).toBeCalled();
     expect(postTeamsMessage).toBeCalled();

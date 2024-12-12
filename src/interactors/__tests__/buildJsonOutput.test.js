@@ -8,10 +8,10 @@ describe('Interactors | .alreadyPublished', () => {
     repos: ['REPO1', 'REPO2'],
     periodLength: 'PERIOD_LENGTH',
     foo: 'BAR',
+    pullRequestId: 'PULL_REQUEST_ID',
   };
   const entries = 'ENTRIES';
-  const pullRequest = 'PULL_REQUEST';
-  const input = { inputs, entries, pullRequest };
+  const input = { inputs, entries };
 
   it('removes tokens and unknown inputs', () => {
     const results = buildJsonOutput(input);
@@ -24,11 +24,11 @@ describe('Interactors | .alreadyPublished', () => {
     const results = buildJsonOutput(input);
     expect(results).toEqual(expect.objectContaining({
       entries,
-      pullRequest,
       options: expect.objectContaining({
         organization: inputs.org,
         repositories: null,
         periodLength: inputs.periodLength,
+        pullRequestId: inputs.pullRequestId,
       }),
     }));
   });
