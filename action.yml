@@ -26,15 +26,13 @@ inputs:
   stats:
     description: 'A comma separated list of the stats to be calculated and displayed.'
     required: false
-    default: 'REVIEWS,TIME,COMMENTS'
   charts:
     description: 'Whether to add charts to the stats or not. Possible values: "true" or "false"'
     required: false
     default: 'false'
   sortBy:
-    description: 'The column used to sort the data. Possible values: "REVIEWS", "TIME" or "COMMENTS"'
+    description: 'The column used to sort the data.'
     required: false
-    default: 'REVIEWS'
   publishAs:
     description: 'Where to publish the results. Possible values: "COMMENT", "DESCRIPTION" or "NONE"'
     required: false
