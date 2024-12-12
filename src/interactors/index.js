@@ -5,6 +5,7 @@ const buildJsonOutput = require('./buildJsonOutput');
 const buildMarkdown = require('./buildMarkdown');
 const checkSponsorship = require('./checkSponsorship');
 const fulfillEntries = require('./fulfillEntries');
+const getEntries = require('./getEntries');
 const getPulls = require('./getPulls');
 const getPullRequestStats = require('./getPullRequestStats');
 const getReviewStats = require('./getReviewStats');
@@ -15,6 +16,7 @@ const postSlackMessage = require('./postSlackMessage');
 const postSummary = require('./postSummary');
 const postTeamsMessage = require('./postTeamsMessage');
 const postWebhook = require('./postWebhook');
+const publish = require('./publish');
 
 module.exports = {
   alreadyPublished,
@@ -24,6 +26,7 @@ module.exports = {
   buildMarkdown,
   checkSponsorship,
   fulfillEntries,
+  getEntries,
   getPulls,
   getPullRequestStats,
   getReviewStats,
@@ -34,4 +37,5 @@ module.exports = {
   postSummary,
   postTeamsMessage,
   postWebhook,
+  publish,
 };
