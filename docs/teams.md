@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@master
+        uses: flowwer-dev/pull-request-stats@main
         with:
           teamsWebhook: 'https://abcXXX.webhook.office.com/webhookb2/...'
           # teamsWebhook: ${{ secrets.TEAMS_WEBHOOK }} You may want to store this value as a secret.

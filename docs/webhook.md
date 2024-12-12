@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@master
+        uses: flowwer-dev/pull-request-stats@main
         with:
           repositories: 'piedpiper/repo1,piedpiper/repo2'
           webhook: 'https://hooks.zapier.com/hooks/catch/123456/XXXXXXXX'

@@ -36,7 +36,7 @@ Just add this action to one of your [workflow files](https://docs.github.com/en/
 
 ```yml
       - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@master
+        uses: flowwer-dev/pull-request-stats@main
 ```
 
 If you are getting an empty table or an error, check the [troubleshooting section](#troubleshooting).
@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@master
+        uses: flowwer-dev/pull-request-stats@main
 ```
 
 This config will:
@@ -129,7 +129,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@master
+        uses: flowwer-dev/pull-request-stats@main
         with:
           token: ${{ secrets.ADD_A_PERSONAL_ACCESS_TOKEN }}
           organization: 'piedpiper'
@@ -197,7 +197,7 @@ Check the guide for the tool you want to integrate:
         pull-requests: write
       steps:
         - name: Run pull request stats
-          uses: flowwer-dev/pull-request-stats@master
+          uses: flowwer-dev/pull-request-stats@main
   ```
 </details>
 
@@ -215,7 +215,7 @@ Check the guide for the tool you want to integrate:
         pull-requests: write
       steps:
         - name: Run pull request stats
-          uses: flowwer-dev/pull-request-stats@master
+          uses: flowwer-dev/pull-request-stats@main
   ```
 </details>
 
