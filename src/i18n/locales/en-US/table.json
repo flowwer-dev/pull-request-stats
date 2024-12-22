@@ -13,11 +13,20 @@
   "columns": {
     "avatar": "",
     "username": "User",
-    "commentsPerReview": "Comments per review",
-    "timeToReview": "Time to review",
     "totalReviews": "Total reviews",
     "totalComments": "Total comments",
-    "openedPullRequests": "Opened PRs"
+    "timeToReview": "Time to review",
+    "commentsPerReview": "Comments per review",
+    "reviewedAdditions": "Reviewed additions",
+    "reviewedDeletions": "Reviewed deletions",
+    "reviewedLines": "Reviewed lines",
+    "openedPullRequests": "Opened PRs",
+    "totalObservations": "Total observations",
+    "medianObservations": "Observations per PR",
+    "revisionSuccessRate": "Revision success rate",
+    "additions": "Additions",
+    "deletions": "Deletions",
+    "lines": "Lines of code"
   },
   "footer": "<sup>⚡️ [Pull request stats](https://bit.ly/pull-request-stats)</sup>"
 }

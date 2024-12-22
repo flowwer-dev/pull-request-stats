@@ -13,16 +13,15 @@ describe('Interactors | getPullRequestStats | .groupPullRequests', () => {
     const userIds = result.map((pr) => pr.userId);
     expect(userIds).toContain('1031639', '2009676');
     expect(getPRsByUserId(result, '1031639')).toEqual([12345]);
-    expect(getPRsByUserId(result, '2009676').sort()).toEqual([12346].sort());
+    expect(getPRsByUserId(result, '2009676').sort()).toEqual([56789].sort());
   });
 
   it('keeps only the required properties', () => {
     const result = groupPullRequests(input);
     result.forEach(({ pullRequests }) => pullRequests.forEach((pullRequest) => {
       expect(pullRequest).toHaveProperty('id');
-      expect(pullRequest).toHaveProperty('submittedAt');
-      expect(pullRequest).not.toHaveProperty('cursor');
-      expect(pullRequest).not.toHaveProperty('reviews');
+      expect(pullRequest).toHaveProperty('reviews');
+      expect(pullRequest).toHaveProperty('publishedAt');
     }));
   });
 });

@@ -1,5 +1,7 @@
 {
   "id": 5678,
+  "body": "This is a review",
+  "state": "APPROVED",
   "submittedAt": "2021-02-12T23:55:22Z",
   "commit": {
     "pushedDate": "2021-02-12T23:53:13Z"

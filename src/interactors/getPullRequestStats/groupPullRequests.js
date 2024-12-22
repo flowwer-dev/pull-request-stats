@@ -4,10 +4,7 @@ module.exports = (pulls) => {
 
     if (!acc[userId]) acc[userId] = { userId, pullRequests: [] };
 
-    acc[userId].pullRequests.push({
-      id: pull.id,
-      submittedAt: pull.submittedAt,
-    });
+    acc[userId].pullRequests.push(pull);
     return acc;
   }, {});
 

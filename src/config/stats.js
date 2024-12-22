@@ -2,33 +2,84 @@ const { durationToString, isNil } = require('../utils');
 
 const noParse = (value) => String(value ?? '-');
 
-const toFixed = (decimals) => (value) => (isNil(value) ? '-' : value.toFixed(decimals));
+const toFixed = (decimals = 0) => (value) => {
+  if (isNil(value)) return '-';
+  return new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: decimals,
+    minimumFractionDigits: decimals,
+  }).format(value);
+};
 
 const STATS = {
   totalReviews: {
     id: 'totalReviews',
     sortOrder: 'DESC',
-    parser: noParse,
+    parser: toFixed(0),
+  },
+  totalComments: {
+    id: 'totalComments',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
   },
   timeToReview: {
     id: 'timeToReview',
     sortOrder: 'ASC',
     parser: durationToString,
   },
-  totalComments: {
-    id: 'totalComments',
-    sortOrder: 'DESC',
-    parser: noParse,
-  },
   commentsPerReview: {
     id: 'commentsPerReview',
     sortOrder: 'DESC',
     parser: toFixed(2),
   },
+  reviewedAdditions: {
+    id: 'reviewedAdditions',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
+  reviewedDeletions: {
+    id: 'reviewedDeletions',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
+  reviewedLines: {
+    id: 'reviewedLines',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
   openedPullRequests: {
     id: 'openedPullRequests',
     sortOrder: 'DESC',
     parser: noParse,
+  },
+  totalObservations: {
+    id: 'totalObservations',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
+  medianObservations: {
+    id: 'medianObservations',
+    sortOrder: 'DESC',
+    parser: toFixed(2),
+  },
+  revisionSuccessRate: {
+    id: 'revisionSuccessRate',
+    sortOrder: 'DESC',
+    parser: toFixed(2),
+  },
+  additions: {
+    id: 'additions',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
+  deletions: {
+    id: 'deletions',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
+  lines: {
+    id: 'lines',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
   },
 };
 

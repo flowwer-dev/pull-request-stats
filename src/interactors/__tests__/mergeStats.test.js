@@ -33,7 +33,16 @@ describe('Interactors | .mergeStats', () => {
       totalComments: 1,
       timeToReview: 2052500,
       commentsPerReview: 0.25,
+      reviewedAdditions: 1_000,
+      reviewedDeletions: 500,
+      reviewedLines: 1_500,
       openedPullRequests: 17,
+      totalObservations: 68,
+      medianObservations: 4,
+      revisionSuccessRate: 0.35,
+      additions: 100,
+      deletions: 50,
+      lines: 150,
     });
   });
 
@@ -42,11 +51,20 @@ describe('Interactors | .mergeStats', () => {
       .find(({ user }) => user.login === 'user4');
 
     expect(results.stats).toEqual({
-      timeToReview: null,
       totalReviews: null,
       totalComments: null,
+      timeToReview: null,
       commentsPerReview: null,
+      reviewedAdditions: null,
+      reviewedDeletions: null,
+      reviewedLines: null,
       openedPullRequests: null,
+      totalObservations: null,
+      medianObservations: null,
+      revisionSuccessRate: null,
+      additions: null,
+      deletions: null,
+      lines: null,
     });
   });
 

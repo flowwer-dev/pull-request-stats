@@ -2,6 +2,8 @@
   "cursor": "Y3Vyc29yOjQ=",
   "node": {
     "id": 12345,
+    "additions": 10,
+    "deletions": 5,
     "publishedAt": "2021-02-12T23:54:38Z",
     "author": {
       "databaseId": "1031639",

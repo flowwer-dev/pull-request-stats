@@ -6,6 +6,9 @@ describe('Parsers | .parsePullRequest', () => {
     const response = parsePullRequest(input);
 
     expect(response).toHaveProperty('id', 12345);
+    expect(response).toHaveProperty('additions', 10);
+    expect(response).toHaveProperty('deletions', 5);
+    expect(response).toHaveProperty('lines', 15);
     expect(response).toHaveProperty('cursor', 'Y3Vyc29yOjQ=');
     expect(response).toHaveProperty('publishedAt', new Date('2021-02-12T23:54:38Z'));
     expect(response).toHaveProperty('author', {

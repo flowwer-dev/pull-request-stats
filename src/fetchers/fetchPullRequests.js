@@ -6,11 +6,15 @@ const PRS_QUERY = `
         node {
           ... on PullRequest {
             id
+            additions
+            deletions
             publishedAt
             author { ...ActorFragment }
             reviews(first: 100) {
               nodes {
                 id
+                body
+                state
                 submittedAt
                 commit { pushedDate }
                 comments { totalCount }

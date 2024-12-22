@@ -34,8 +34,11 @@ module.exports = [
     stats: {
       totalReviews: 4,
       totalComments: 1,
-      commentsPerReview: 0.25,
       timeToReview: 2052500,
+      commentsPerReview: 0.25,
+      reviewedAdditions: 1_000,
+      reviewedDeletions: 500,
+      reviewedLines: 1_500,
     },
   },
   {
@@ -52,8 +55,11 @@ module.exports = [
     stats: {
       totalReviews: 1,
       totalComments: 5,
-      commentsPerReview: 5,
       timeToReview: 8465000,
+      commentsPerReview: 5,
+      reviewedAdditions: 5_000,
+      reviewedDeletions: 4_500,
+      reviewedLines: 9_500,
     },
   },
 ];

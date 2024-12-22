@@ -3,10 +3,11 @@
 [![CI](https://github.com/flowwer-dev/pull-request-stats/workflows/Tests/badge.svg)](https://github.com/flowwer-dev/pull-request-stats/actions?query=workflow%3ATests)
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Pull%20Request%20Stats-blue.svg?colorA=24292e&colorB=0366d6&style=flat&longCache=true&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAM6wAADOsB5dZE0gAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAERSURBVCiRhZG/SsMxFEZPfsVJ61jbxaF0cRQRcRJ9hlYn30IHN/+9iquDCOIsblIrOjqKgy5aKoJQj4O3EEtbPwhJbr6Te28CmdSKeqzeqr0YbfVIrTBKakvtOl5dtTkK+v4HfA9PEyBFCY9AGVgCBLaBp1jPAyfAJ/AAdIEG0dNAiyP7+K1qIfMdonZic6+WJoBJvQlvuwDqcXadUuqPA1NKAlexbRTAIMvMOCjTbMwl1LtI/6KWJ5Q6rT6Ht1MA58AX8Apcqqt5r2qhrgAXQC3CZ6i1+KMd9TRu3MvA3aH/fFPnBodb6oe6HM8+lYHrGdRXW8M9bMZtPXUji69lmf5Cmamq7quNLFZXD9Rq7v0Bpc1o/tp0fisAAAAASUVORK5CYII=)](https://github.com/marketplace/actions/pull-request-stats)
 
-Github action to print relevant stats about Pull Request reviewers.
+Github action to print relevant [stats](#stats) about Pull Request.
 
 The objective of this action is to:
 
+* Track and increase your team's performance.
 * Reduce the time taken to review the pull requests.
 * Encourage quality on reviews.
 * Help to decide which people to assign as reviewers.
@@ -52,7 +53,7 @@ The possible inputs for this action are:
 | `organization`  | If you prefer, you may specify your organization's name to calculate the stats across all of its repositories. When specifying an organization, **it is mandatory to pass a Personal Access Token** in the `token` parameter. | `null`            |
 | `period`        | The period used to calculate the stats, expressed in days.                                                   | `30`              |
 | `limit`         | The maximum number of rows to display in the table. A value of `0` means unlimited.                          | `0`               |
-| `stats`         | A comma-separated list of stats to calculate and display. Possible values: `totalReviews`, `timeToReview`, `totalComments`, `commentsPerReview`, `openedPullRequests`. For details on each stats check the [Stats](#stats) section. | `totalReviews,timeToReview,totalComments` |
+| `stats`         | A comma-separated list of stats to calculate and display. Possible values: `totalReviews`, `timeToReview`, `totalComments`, etc... (Check all available in the [Stats](#stats) section) | `totalReviews,timeToReview,totalComments` |
 | `charts`        | Whether to add a chart to the start. Possible values: `true` or `false`.                                     | `false`           |
 | `disableLinks`  | If `true`, removes the links to the detailed charts. Possible values: `true` or `false`.                      | `false`           |
 | `sortBy`        | The column used to sort the data. Possible values: `totalReviews`, `timeToReview`, `totalComments`, `commentsPerReview`, `openedPullRequests`. | `totalReviews`    |
@@ -137,7 +138,7 @@ jobs:
           charts: true
           disableLinks: true
           sortBy: 'totalComments'
-          stats: 'totalComments,openedPullRequests'
+          stats: 'totalComments,openedPullRequests,totalReviews'
 ```
 
 This config will:
@@ -146,11 +147,11 @@ This config will:
 * Display charts for the metrics.
 * Remove the links to detailed charts.
 * Sort results by the "Total comments" column.
-* Show the "Total comments" and "Opened pull requests" columns (in that order).
+* Show the "Total comments", "Opened pull requests"and "Median time to review" columns (in that order).
 
 and print a table like this:
 
-|                                                                                                                                                                     | User                 | Total comments      | Total reviews      | Median time to review     |
+|                                                                                                                                                                     | User                 | Total comments      | Opened pull requests      | Median time to review     |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ------------------------- | ------------------ | ------------------- |
 | <a href="https://github.com/manuelmhtr"><img src="https://avatars2.githubusercontent.com/u/1031639" width="32"></a>  | manuelmhtr<br/>🥇  | **12**<br/>▀▀▀▀▀▀▀▀ | **8**<br/>▀▀▀▀     | 53m<br/>                  |
 | <a href="https://github.com/CarlosCRG19"><img src="https://avatars.githubusercontent.com/u/61464973" width="32"></a> | CarlosCRG19<br/>🥈 | 3<br/>▀▀            | 4<br/>▀▀           | 58m<br/>                  |
@@ -162,13 +163,35 @@ and print a table like this:
 
 ## Stats
 
-The stats are calculated as follows:
+This section explains the available stats that can be displayed using the [`stats` option](#action-inputs) and how they are calculated.
 
-* **Total reviews (`totalReviews`):** The count of all Pull Requests reviewed by a person in the period.
-* **Time to review (`timeToReview`):** The **median** time a reviewer takes from the _Pull Request publication_ or the last _Commit push_ (whatever happens last) to the first time the pull request is reviewed.
-* **Total comments (`totalComments`):** The number of comments made while reviewing other users' Pull Requests during the specified period. Comments made on your own PRs or general PR discussions are excluded; only comments directly related to code are counted.
-* **Comments per review (`commentsPerReview`):** The **average** comments the reviewer made on the pull requests.
-* **Opened pull requests (`openedPullRequests`):** The number of pull requests opened by the user in the period.
+### Review stats
+
+Stats related to the review process:
+
+| Stat name and ID | Description |
+| ---------------- | ----------- |
+| **Total reviews (`totalReviews`):** | The total number of pull requests reviewed by a user during the specified period. |
+| **Total comments (`totalComments`):** | The number of comments made while reviewing other users' Pull Requests during the specified period. Excludes comments made on your own pull requests or general discussions; only code-related comments are included. |
+| **Time to review (`timeToReview`):** | The **median** time a reviewer takes from the _Pull Request publication_ or the last _commit push_ (whatever happens last) to the first time the pull request is reviewed. |
+| **Comments per review (`commentsPerReview`):** | The **median** number of comments a reviewer made per pull request. |
+| **Reviewed additions (`reviewedAdditions`):** | The total number of added lines reviewed. |
+| **Reviewed deletions (`reviewedDeletions`):** | The total number of deleted lines reviewed. |
+| **Reviewed lines (`reviewedLines`):** | The total number of lines reviewed (additions + deletions). |
+
+### Performance stats:
+
+Stats related to the production process (opened pull requests):
+
+| Stat name and ID | Description |
+| ---------------- | ----------- |
+| **Opened pull requests (`openedPullRequests`):** | The number of pull requests opened by the user in the period. |
+| **Total observations (`totalObservations`):** | The total number of comments received on pull requests opened by the user. |
+| **Median observations (`medianObservations`):** | The **median** number of comments received per pull request opened by the user. |
+| **Revision success rate (`revisionSuccessRate`):** | The percentage of pull request reviews resulting in approval, compared to the total reviews received. (eg. After 2 "Comment", 4 "Request changes" and 3 "Approve" reviews, the success rate would be `0.33`)|
+| **Additions (`additions`):** | The total number of added lines across the opened pull requests. |
+| **Deletions (`deletions`):** | The total number of deleted lines across the opened pull requests. |
+| **Lines (`lines`):** | The total number of lines changed (added and deleted) across all pull requests opened by the user. |
 
 ## Integrations 🔌
 

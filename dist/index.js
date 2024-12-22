@@ -41996,33 +41996,84 @@ const { durationToString, isNil } = __nccwpck_require__(5494);
 
 const noParse = (value) => String(value ?? '-');
 
-const toFixed = (decimals) => (value) => (isNil(value) ? '-' : value.toFixed(decimals));
+const toFixed = (decimals = 0) => (value) => {
+  if (isNil(value)) return '-';
+  return new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: decimals,
+    minimumFractionDigits: decimals,
+  }).format(value);
+};
 
 const STATS = {
   totalReviews: {
     id: 'totalReviews',
     sortOrder: 'DESC',
-    parser: noParse,
+    parser: toFixed(0),
+  },
+  totalComments: {
+    id: 'totalComments',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
   },
   timeToReview: {
     id: 'timeToReview',
     sortOrder: 'ASC',
     parser: durationToString,
   },
-  totalComments: {
-    id: 'totalComments',
-    sortOrder: 'DESC',
-    parser: noParse,
-  },
   commentsPerReview: {
     id: 'commentsPerReview',
     sortOrder: 'DESC',
     parser: toFixed(2),
   },
+  reviewedAdditions: {
+    id: 'reviewedAdditions',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
+  reviewedDeletions: {
+    id: 'reviewedDeletions',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
+  reviewedLines: {
+    id: 'reviewedLines',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
   openedPullRequests: {
     id: 'openedPullRequests',
     sortOrder: 'DESC',
     parser: noParse,
+  },
+  totalObservations: {
+    id: 'totalObservations',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
+  medianObservations: {
+    id: 'medianObservations',
+    sortOrder: 'DESC',
+    parser: toFixed(2),
+  },
+  revisionSuccessRate: {
+    id: 'revisionSuccessRate',
+    sortOrder: 'DESC',
+    parser: toFixed(2),
+  },
+  additions: {
+    id: 'additions',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
+  deletions: {
+    id: 'deletions',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
+  lines: {
+    id: 'lines',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
   },
 };
 
@@ -42252,11 +42303,15 @@ const PRS_QUERY = `
         node {
           ... on PullRequest {
             id
+            additions
+            deletions
             publishedAt
             author { ...ActorFragment }
             reviews(first: 100) {
               nodes {
                 id
+                body
+                state
                 submittedAt
                 commit { pushedDate }
                 comments { totalCount }
@@ -42780,12 +42835,14 @@ module.exports = ({
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const { STATS } = __nccwpck_require__(8612);
+const { isNil } = __nccwpck_require__(5494);
 
 const buildSort = (statConfig) => (a, b) => {
   const { id, sortOrder } = statConfig;
   const { stats: statsA = {} } = a;
   const { stats: statsB = {} } = b;
   const multiplier = sortOrder === 'DESC' ? -1 : 1;
+  if (isNil(statsA[id])) return 1;
   return multiplier * (statsA[id] - statsB[id]);
 };
 
@@ -43043,13 +43100,40 @@ module.exports = async ({
 /***/ }),
 
 /***/ 8216:
-/***/ ((module) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { sum, median, divide } = __nccwpck_require__(5494);
+
+const getProperty = (list, prop) => list.map((el) => el[prop]);
+
+const removeOwnPulls = ({ isOwnPull }) => !isOwnPull;
+
+const removeWithEmptyId = ({ id }) => !!id;
 
 module.exports = (pulls) => {
   const openedPullRequests = pulls.length;
+  const reviews = pulls
+    .reduce((acc, pull) => ([...acc, ...pull.reviews]), [])
+    .filter(removeOwnPulls)
+    .filter(removeWithEmptyId);
+
+  const approvedReviews = reviews.filter(({ isApproved }) => isApproved);
+  const observationsList = getProperty(reviews, 'commentsCount');
+  const totalObservations = sum(observationsList);
+  const medianObservations = median(observationsList);
+  const totalApprovedReviews = approvedReviews.length || 0;
+  const additions = sum(getProperty(pulls, 'additions'));
+  const deletions = sum(getProperty(pulls, 'deletions'));
+  const lines = additions + deletions;
 
   return {
     openedPullRequests,
+    totalObservations,
+    medianObservations,
+    revisionSuccessRate: divide(totalApprovedReviews, reviews.length),
+    additions,
+    deletions,
+    lines,
   };
 };
 
@@ -43065,10 +43149,7 @@ module.exports = (pulls) => {
 
     if (!acc[userId]) acc[userId] = { userId, pullRequests: [] };
 
-    acc[userId].pullRequests.push({
-      id: pull.id,
-      submittedAt: pull.submittedAt,
-    });
+    acc[userId].pullRequests.push(pull);
     return acc;
   }, {});
 
@@ -43142,20 +43223,28 @@ module.exports = ({
 /***/ 4271:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { sum, median, divide } = __nccwpck_require__(5494);
+const { sum, median } = __nccwpck_require__(5494);
 
 const getProperty = (list, prop) => list.map((el) => el[prop]);
 
-module.exports = (reviews) => {
-  const pullRequestIds = getProperty(reviews, 'pullRequestId');
-  const totalReviews = new Set(pullRequestIds).size;
-  const totalComments = sum(getProperty(reviews, 'commentsCount'));
+module.exports = (reviews, pullsById) => {
+  const pullRequestIds = new Set(getProperty(reviews, 'pullRequestId'));
+  const totalReviews = pullRequestIds.size;
+  const commentsCountList = getProperty(reviews, 'commentsCount');
+  const totalComments = sum(commentsCountList);
+  const pullRequests = [...pullRequestIds].map((id) => pullsById[id]);
+  const reviewedAdditions = sum(getProperty(pullRequests, 'additions'));
+  const reviewedDeletions = sum(getProperty(pullRequests, 'deletions'));
+  const reviewedLines = reviewedAdditions + reviewedDeletions;
 
   return {
     totalReviews,
     totalComments,
-    commentsPerReview: divide(totalComments, totalReviews),
     timeToReview: median(getProperty(reviews, 'timeToReview')),
+    commentsPerReview: median(commentsCountList),
+    reviewedAdditions,
+    reviewedDeletions,
+    reviewedLines,
   };
 };
 
@@ -43200,11 +43289,15 @@ module.exports = (pulls) => {
 const calculateReviewsStats = __nccwpck_require__(4271);
 const groupReviews = __nccwpck_require__(7308);
 
-module.exports = (pulls) => groupReviews(pulls)
-  .map(({ userId, reviews }) => {
-    const stats = calculateReviewsStats(reviews);
-    return { userId, reviews, stats };
-  });
+module.exports = (pulls) => {
+  const pullsById = pulls.reduce((acc, pull) => ({ ...acc, [pull.id]: pull }), {});
+
+  return groupReviews(pulls)
+    .map(({ userId, reviews }) => {
+      const stats = calculateReviewsStats(reviews, pullsById);
+      return { userId, reviews, stats };
+    });
+};
 
 
 /***/ }),
@@ -44148,13 +44241,18 @@ const getFilteredReviews = (data) => get(data, 'node.reviews.nodes', []).filter(
 module.exports = (data = {}) => {
   const author = parseUser(get(data, 'node.author'));
   const publishedAt = new Date(get(data, 'node.publishedAt'));
+  const additions = get(data, 'node.additions');
+  const deletions = get(data, 'node.deletions');
   const handleReviews = (review) => parseReview(review, { publishedAt, authorLogin: author.login });
 
   return {
     author,
+    additions,
+    deletions,
     publishedAt,
     cursor: data.cursor,
     id: get(data, 'node.id'),
+    lines: additions + deletions,
     reviews: getFilteredReviews(data).map(handleReviews),
   };
 };
@@ -44168,19 +44266,28 @@ module.exports = (data = {}) => {
 const get = __nccwpck_require__(615);
 const parseUser = __nccwpck_require__(4203);
 
+const APPROVED = 'APPROVED';
+
 module.exports = (data = {}, pullRequest = {}) => {
   const author = parseUser(data.author);
   const isOwnPull = author.login === pullRequest.authorLogin;
   const submittedAt = new Date(data.submittedAt);
+  const body = get(data, 'body');
+  const state = get(data, 'state');
   const commitDate = new Date(get(data, 'commit.pushedDate'));
   const startDate = Math.max(pullRequest.publishedAt, commitDate);
+  const hasBody = !!((body || '').trim());
+  const extraComment = hasBody ? 1 : 0;
 
   return {
     author,
     isOwnPull,
     submittedAt,
+    body,
     id: get(data, 'id'),
-    commentsCount: get(data, 'comments.totalCount'),
+    state: get(data, 'state'),
+    isApproved: state === APPROVED,
+    commentsCount: get(data, 'comments.totalCount') + extraComment,
     timeToReview: submittedAt - startDate,
   };
 };
@@ -49526,7 +49633,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"name":"mixpanel","description":"A si
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"pull-request-stats","version":"3.0.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.11.1","@actions/github":"^6.0.0","axios":"^1.7.9","humanize-duration":"^3.32.1","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@eslint/eslintrc":"^3.2.0","@eslint/js":"^9.16.0","@vercel/ncc":"^0.38.3","eslint":"^9.16.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.31.0","eslint-plugin-jest":"^28.9.0","globals":"^15.13.0","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"pull-request-stats","version":"3.1.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.11.1","@actions/github":"^6.0.0","axios":"^1.7.9","humanize-duration":"^3.32.1","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@eslint/eslintrc":"^3.2.0","@eslint/js":"^9.16.0","@vercel/ncc":"^0.38.3","eslint":"^9.16.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.31.0","eslint-plugin-jest":"^28.9.0","globals":"^15.13.0","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
 
 /***/ }),
 
@@ -49550,7 +49657,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"slack":{"logs":{"notConfigured":"Sla
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"title":"Pull reviewers stats","icon":"https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png","subtitle":{"one":"Stats of the last day for {{sources}}","other":"Stats of the last {{count}} days for {{sources}}"},"sources":{"separator":", ","fullList":"{{firsts}} and {{last}}","andOthers":"{{firsts}} and {{count}} others"},"columns":{"avatar":"","username":"User","commentsPerReview":"Comments per review","timeToReview":"Time to review","totalReviews":"Total reviews","totalComments":"Total comments","openedPullRequests":"Opened PRs"},"footer":"<sup>⚡️ [Pull request stats](https://bit.ly/pull-request-stats)</sup>"}');
+module.exports = /*#__PURE__*/JSON.parse('{"title":"Pull reviewers stats","icon":"https://s3.amazonaws.com/manuelmhtr.assets/flowwer/logo/logo-1024px.png","subtitle":{"one":"Stats of the last day for {{sources}}","other":"Stats of the last {{count}} days for {{sources}}"},"sources":{"separator":", ","fullList":"{{firsts}} and {{last}}","andOthers":"{{firsts}} and {{count}} others"},"columns":{"avatar":"","username":"User","totalReviews":"Total reviews","totalComments":"Total comments","timeToReview":"Time to review","commentsPerReview":"Comments per review","reviewedAdditions":"Reviewed additions","reviewedDeletions":"Reviewed deletions","reviewedLines":"Reviewed lines","openedPullRequests":"Opened PRs","totalObservations":"Total observations","medianObservations":"Observations per PR","revisionSuccessRate":"Revision success rate","additions":"Additions","deletions":"Deletions","lines":"Lines of code"},"footer":"<sup>⚡️ [Pull request stats](https://bit.ly/pull-request-stats)</sup>"}');
 
 /***/ })
 

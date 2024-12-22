@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [3.1.0] - 2024-12-22
+### Added
+- Adds new available stats: `reviewedAdditions`, `reviewedDeletions`, `reviewedLines`, `totalObservations`, `medianObservations`, `revisionSuccessRate`, `additions`, `deletions` and `lines`.
+
+### Changes
+- `commentsPerReview` is calculated now as the median, not the average.
+
 ## [3.0.0] - 2024-12-12
 ### Added
 - New `stats` option to specify the stats to be calculated.

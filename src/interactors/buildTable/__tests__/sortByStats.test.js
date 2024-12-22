@@ -7,6 +7,8 @@ describe('Interactors | .buildTable | .sortByStats', () => {
     expect(actualOrder).toEqual(expectedOrder);
   };
 
+  const getLastUserId = (results) => results[results.length - 1].user.id;
+
   it('sorts the reviewers by "totalReviews" when sortBy is not specified', () => {
     const sortBy = null;
     const response = sortByStats(entries, sortBy);
@@ -55,5 +57,14 @@ describe('Interactors | .buildTable | .sortByStats', () => {
       'user1',
       'user2',
     ]);
+  });
+
+  it('nil values always go last', () => {
+    const list = [...entries, { user: { id: 'user4' }, stats: {} }];
+    const response1 = sortByStats(list, 'timeToReview');
+    expect(getLastUserId(response1)).toEqual('user4');
+
+    const response2 = sortByStats(list, 'totalComments');
+    expect(getLastUserId(response2)).toEqual('user4');
   });
 });

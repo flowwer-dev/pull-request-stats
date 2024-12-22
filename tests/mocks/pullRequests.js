@@ -1,6 +1,8 @@
 module.exports = [
   {
     id: 12345,
+    additions: 100,
+    deletions: 50,
     cursor: 'Y3Vyc29yOjQ=',
     publishedAt: new Date('2021-02-12T23:54:38Z'),
     author: {
@@ -14,6 +16,8 @@ module.exports = [
         id: 5678,
         submittedAt: new Date('2021-02-12T23:55:22Z'),
         commentsCount: 1,
+        isApproved: true,
+        body: 'This is an approved review',
         author: {
           id: '1031639',
           url: 'https://github.com/manuelmhtr',
@@ -27,6 +31,8 @@ module.exports = [
         id: 5679,
         submittedAt: new Date('2021-02-15T16:00:59Z'),
         commentsCount: 3,
+        isApproved: false,
+        body: ' ',
         author: {
           id: '8755542',
           url: 'https://github.com/jartmez',
@@ -39,7 +45,9 @@ module.exports = [
     ],
   },
   {
-    id: 12346,
+    id: 56789,
+    additions: 73,
+    deletions: 37,
     cursor: 'Y3Vmh29yO21=',
     publishedAt: new Date('2021-02-07T00:14:38Z'),
     author: {
@@ -53,6 +61,8 @@ module.exports = [
         id: 9876,
         submittedAt: new Date('2021-02-08T00:00:00Z'),
         commentsCount: 3,
+        isApproved: false,
+        body: 'This is a rejected review',
         author: {
           id: '1031639',
           url: 'https://github.com/manuelmhtr',
@@ -66,6 +76,8 @@ module.exports = [
         id: 9877,
         submittedAt: new Date('2021-02-09T00:00:00Z'),
         commentsCount: 2,
+        isApproved: true,
+        body: 'It\'s something',
         author: {
           id: '8755542',
           url: 'https://github.com/jartmez',
