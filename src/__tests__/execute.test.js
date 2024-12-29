@@ -64,6 +64,8 @@ describe('execute', () => {
     displayCharts: 'displayCharts',
     publishAs: 'publishAs',
     pullRequestId: 'pullRequestId',
+    excludeStr: 'excludeStr',
+    includeStr: 'includeStr',
     slack: 'slack',
     teams: 'teams',
     webhook: 'webhook',
@@ -100,6 +102,7 @@ describe('execute', () => {
       core,
       pulls,
       excludeStr: inputs.excludeStr,
+      includeStr: inputs.includeStr,
       periodLength: inputs.periodLength,
     });
     expect(publish).toBeCalledWith({

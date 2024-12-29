@@ -42160,6 +42160,7 @@ const run = async ({ inputs, octokit }) => {
     core,
     pulls,
     excludeStr: inputs.excludeStr,
+    includeStr: inputs.includeStr,
     periodLength: inputs.periodLength,
   });
   core.debug(`Analyzed entries: ${entries.length}`);
@@ -43076,9 +43077,10 @@ module.exports = async ({
   core,
   pulls,
   excludeStr,
+  includeStr,
   periodLength,
 }) => {
-  const users = await getUsers(pulls, { excludeStr });
+  const users = await getUsers(pulls, { excludeStr, includeStr });
   core.info(`Found ${users.length} collaborators to analyze`);
   core.debug(JSON.stringify(users, null, 2));
 
@@ -43302,19 +43304,6 @@ module.exports = (pulls) => {
 
 /***/ }),
 
-/***/ 6691:
-/***/ ((module) => {
-
-module.exports = (exclude, username) => {
-  if (!username) return false;
-  if (exclude.test) return !exclude.test(username);
-  if (exclude.includes) return !exclude.includes(username);
-  return true;
-};
-
-
-/***/ }),
-
 /***/ 3317:
 /***/ ((module) => {
 
@@ -43338,22 +43327,25 @@ module.exports = (pulls) => {
 /***/ 5304:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const filterUser = __nccwpck_require__(6691);
+const testFilter = __nccwpck_require__(756);
 const findUsers = __nccwpck_require__(3317);
-const parseExclude = __nccwpck_require__(1465);
+const parseFilter = __nccwpck_require__(7265);
 
-module.exports = (pulls, { excludeStr } = {}) => {
-  const exclude = parseExclude(excludeStr);
+module.exports = (pulls, { excludeStr, includeStr } = {}) => {
+  const include = parseFilter(includeStr);
+  const exclude = parseFilter(excludeStr);
   const users = findUsers(pulls);
 
   return users
-    .filter(({ login }) => filterUser(exclude, login));
+    .filter(({ login }) => !!login)
+    .filter(({ login }) => !include || testFilter(include, login))
+    .filter(({ login }) => !exclude || !testFilter(exclude, login));
 };
 
 
 /***/ }),
 
-/***/ 1465:
+/***/ 7265:
 /***/ ((module) => {
 
 const REGEXP_PATTERN = /^\/.+\/[a-z]*$/;
@@ -43368,10 +43360,22 @@ const parseRegExp = (str) => {
   return new RegExp(pattern, flags);
 };
 
-module.exports = (excludeStr) => {
-  if (!sanitize(excludeStr)) return [];
-  if (isRegExp(excludeStr)) return parseRegExp(excludeStr);
-  return excludeStr.split(',').map(sanitize);
+module.exports = (filterStr) => {
+  if (!sanitize(filterStr)) return null;
+  if (isRegExp(filterStr)) return parseRegExp(filterStr);
+  return filterStr.split(',').map(sanitize);
+};
+
+
+/***/ }),
+
+/***/ 756:
+/***/ ((module) => {
+
+module.exports = (filter, username) => {
+  if (filter.test) return filter.test(username);
+  if (filter.includes) return filter.includes(username);
+  return false;
 };
 
 
@@ -44212,6 +44216,7 @@ module.exports = ({ core, github, currentRepo }) => {
     disableLinks: core.getBooleanInput('disableLinks'),
     limit: parseInt(core.getInput('limit'), 10),
     excludeStr: core.getInput('exclude'),
+    includeStr: core.getInput('include'),
     telemetry: core.getBooleanInput('telemetry'),
     webhook: core.getInput('webhook'),
     slack: {

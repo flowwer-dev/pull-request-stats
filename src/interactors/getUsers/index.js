@@ -1,11 +1,14 @@
-const filterUser = require('./filterUser');
+const testFilter = require('./testFilter');
 const findUsers = require('./findUsers');
-const parseExclude = require('./parseExclude');
+const parseFilter = require('./parseFilter');
 
-module.exports = (pulls, { excludeStr } = {}) => {
-  const exclude = parseExclude(excludeStr);
+module.exports = (pulls, { excludeStr, includeStr } = {}) => {
+  const include = parseFilter(includeStr);
+  const exclude = parseFilter(excludeStr);
   const users = findUsers(pulls);
 
   return users
-    .filter(({ login }) => filterUser(exclude, login));
+    .filter(({ login }) => !!login)
+    .filter(({ login }) => !include || testFilter(include, login))
+    .filter(({ login }) => !exclude || !testFilter(exclude, login));
 };

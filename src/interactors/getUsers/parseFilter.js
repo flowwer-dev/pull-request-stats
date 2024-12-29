@@ -10,8 +10,8 @@ const parseRegExp = (str) => {
   return new RegExp(pattern, flags);
 };
 
-module.exports = (excludeStr) => {
-  if (!sanitize(excludeStr)) return [];
-  if (isRegExp(excludeStr)) return parseRegExp(excludeStr);
-  return excludeStr.split(',').map(sanitize);
+module.exports = (filterStr) => {
+  if (!sanitize(filterStr)) return null;
+  if (isRegExp(filterStr)) return parseRegExp(filterStr);
+  return filterStr.split(',').map(sanitize);
 };

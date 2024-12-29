@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [3.2.0] - 2024-12-28
+### Added
+- The option `include` to include only specific users in the stats.
+
 ## [3.1.0] - 2024-12-22
 ### Added
 - Adds new available stats: `reviewedAdditions`, `reviewedDeletions`, `reviewedLines`, `totalObservations`, `medianObservations`, `revisionSuccessRate`, `additions`, `deletions` and `lines`.

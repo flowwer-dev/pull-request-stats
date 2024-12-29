@@ -40,6 +40,7 @@ module.exports = ({ core, github, currentRepo }) => {
     disableLinks: core.getBooleanInput('disableLinks'),
     limit: parseInt(core.getInput('limit'), 10),
     excludeStr: core.getInput('exclude'),
+    includeStr: core.getInput('include'),
     telemetry: core.getBooleanInput('telemetry'),
     webhook: core.getInput('webhook'),
     slack: {

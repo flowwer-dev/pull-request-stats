@@ -8,9 +8,10 @@ module.exports = async ({
   core,
   pulls,
   excludeStr,
+  includeStr,
   periodLength,
 }) => {
-  const users = await getUsers(pulls, { excludeStr });
+  const users = await getUsers(pulls, { excludeStr, includeStr });
   core.info(`Found ${users.length} collaborators to analyze`);
   core.debug(JSON.stringify(users, null, 2));
 

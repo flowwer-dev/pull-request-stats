@@ -21,6 +21,7 @@ describe('Interactors | .getEntries', () => {
     core,
     pulls,
     excludeStr: 'EXCLUDE',
+    includeStr: 'INCLUDE',
     periodLength: 'PERIOD_LENGTH',
   };
 
@@ -35,7 +36,10 @@ describe('Interactors | .getEntries', () => {
   it('calls the correct interactors with the expected params', async () => {
     const results = await getEntries(params);
     expect(results).toBe(entries);
-    expect(getUsers).toBeCalledWith(pulls, { excludeStr: params.excludeStr });
+    expect(getUsers).toBeCalledWith(pulls, {
+      excludeStr: params.excludeStr,
+      includeStr: params.includeStr,
+    });
     expect(getPullRequestStats).toBeCalledWith(pulls);
     expect(getReviewStats).toBeCalledWith(pulls);
     expect(mergeStats).toBeCalledWith({ users, pullRequestStats, reviewStats });

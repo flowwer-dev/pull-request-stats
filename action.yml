@@ -40,6 +40,9 @@ inputs:
   exclude:
     description: 'A list or regular expression to exclude users from the stats'
     required: false
+  include:
+    description: 'A list or regular expression to specify the users that will be included in the stats'
+    required: false
   disableLinks:
     description: 'Prevents from adding any external links in the stats'
     required: false

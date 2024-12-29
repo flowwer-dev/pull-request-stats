@@ -29,6 +29,7 @@ const baseInputs = {
   disableLinks: 'true',
   limit: '10',
   exclude: 'EXCLUDE',
+  include: 'INCLUDE',
   telemetry: 'true',
   webhook: 'WEBHOOK',
   slackWebhook: 'SLACK_WEBHOOK',
@@ -77,6 +78,7 @@ describe('Parsers | .parseInputs', () => {
       disableLinks: true,
       limit: 10,
       excludeStr: baseInputs.exclude,
+      includeStr: baseInputs.include,
       telemetry: true,
       webhook: baseInputs.webhook,
       slack: {

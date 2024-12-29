@@ -35,6 +35,7 @@ const run = async ({ inputs, octokit }) => {
     core,
     pulls,
     excludeStr: inputs.excludeStr,
+    includeStr: inputs.includeStr,
     periodLength: inputs.periodLength,
   });
   core.debug(`Analyzed entries: ${entries.length}`);
