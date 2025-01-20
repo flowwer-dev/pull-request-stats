@@ -43372,9 +43372,11 @@ module.exports = (filterStr) => {
 /***/ 756:
 /***/ ((module) => {
 
+const sanitize = (str) => String(str).toLowerCase();
+
 module.exports = (filter, username) => {
   if (filter.test) return filter.test(username);
-  if (filter.includes) return filter.includes(username);
+  if (filter.includes) return filter.includes(sanitize(username));
   return false;
 };
 
@@ -49638,7 +49640,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"name":"mixpanel","description":"A si
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"pull-request-stats","version":"3.1.0","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.11.1","@actions/github":"^6.0.0","axios":"^1.7.9","humanize-duration":"^3.32.1","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@eslint/eslintrc":"^3.2.0","@eslint/js":"^9.16.0","@vercel/ncc":"^0.38.3","eslint":"^9.16.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.31.0","eslint-plugin-jest":"^28.9.0","globals":"^15.13.0","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"pull-request-stats","version":"3.2.1","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.11.1","@actions/github":"^6.0.0","axios":"^1.7.9","humanize-duration":"^3.32.1","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@eslint/eslintrc":"^3.2.0","@eslint/js":"^9.16.0","@vercel/ncc":"^0.38.3","eslint":"^9.16.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.31.0","eslint-plugin-jest":"^28.9.0","globals":"^15.13.0","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
 
 /***/ }),
 

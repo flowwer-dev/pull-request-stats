@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [3.2.1] - 2025-01-19
+### Fixed
+- Makes the `include` and `exclude` options case insensitive (solves #101)
+
 ## [3.2.0] - 2024-12-28
 ### Added
 - The option `include` to include only specific users in the stats.

@@ -28,4 +28,18 @@ describe('Interactors | getUsers', () => {
     const result = getUsers([emptyInput]);
     expect(result.length).toEqual(0);
   });
+
+  it('excludes users even if they have uppercase letters', () => {
+    const author = { id: '1', login: 'UPPERCASE' };
+    const customInput = { author, reviews: [] };
+    const result = getUsers([customInput], { excludeStr: 'uppercase' });
+    expect(result.length).toEqual(0);
+  });
+
+  it('includes users even if they have uppercase letters', () => {
+    const author = { id: '1', login: 'UPPERCASE' };
+    const customInput = { author, reviews: [] };
+    const result = getUsers([customInput], { includeStr: 'uppercase' });
+    expect(result.length).toEqual(1);
+  });
 });
