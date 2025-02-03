@@ -3,6 +3,8 @@ const { postToSlack } = require('../../fetchers');
 const { SlackSplitter } = require('../../services/splitter');
 const buildMessage = require('./buildMessage');
 
+const MAX_STATS_PER_BLOCK = 10; // https://api.slack.com/reference/block-kit/blocks
+
 module.exports = async ({
   core,
   org,
@@ -25,6 +27,13 @@ module.exports = async ({
     return;
   }
 
+  const statsCount = table.rows[0]?.stats?.length;
+  if (statsCount > MAX_STATS_PER_BLOCK) {
+    core.warning(t('integrations.slack.errors.statsLimitExceeded', {
+      statsLimit: MAX_STATS_PER_BLOCK,
+    }));
+  }
+
   const send = (message) => {
     const params = {
       webhook,
@@ -45,6 +54,7 @@ module.exports = async ({
     table,
     pullRequest,
     periodLength,
+    maxStats: MAX_STATS_PER_BLOCK,
   });
 
   const { chunks } = new SlackSplitter({ message: fullMessage });

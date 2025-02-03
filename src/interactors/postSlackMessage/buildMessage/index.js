@@ -10,6 +10,7 @@ module.exports = ({
   table,
   pullRequest,
   periodLength,
+  maxStats,
 }) => ({
   blocks: [
     ...buildSubtitle({
@@ -23,7 +24,12 @@ module.exports = ({
     ...table.rows.reduce(
       (prev, row) => [
         ...prev,
-        ...buildRow({ row, statNames: getStatNames(table.headers) })],
+        ...buildRow({
+          row,
+          maxStats,
+          statNames: getStatNames(table.headers),
+        }),
+      ],
       [],
     ),
   ],

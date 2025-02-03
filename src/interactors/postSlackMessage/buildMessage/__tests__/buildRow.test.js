@@ -4,6 +4,7 @@ const buildRow = require('../buildRow');
 const [row] = table.rows;
 const defaultParams = {
   row,
+  maxStats: 0,
   statNames: table.headers.slice(1).map(({ text }) => text),
 };
 
@@ -67,8 +68,13 @@ describe('Interactors | postSlackMessage | .buildRow', () => {
 
   describe('when the user has no emoji', () => {
     it('adds no medal to the username', () => {
-      const rowCopy = { ...row };
-      rowCopy.user.emoji = null;
+      const rowCopy = {
+        ...row,
+        user: {
+          ...row.user,
+          emoji: null,
+        },
+      };
       const response = buildRow({ ...defaultParams, row: rowCopy });
       expect(response).toEqual([
         {
@@ -83,6 +89,20 @@ describe('Interactors | postSlackMessage | .buildRow', () => {
           ],
         },
         STATS,
+        DIVIDER,
+      ]);
+    });
+  });
+
+  describe('when limiting the number of stats', () => {
+    it('shows the correct number of stats', () => {
+      const response = buildRow({ ...defaultParams, maxStats: 2 });
+      expect(response).toEqual([
+        USERNAME,
+        {
+          ...STATS,
+          fields: STATS.fields.slice(0, 2),
+        },
         DIVIDER,
       ]);
     });

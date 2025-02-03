@@ -28,7 +28,8 @@
       "success": "Successfully posted to slack"
     },
     "errors": {
-      "requestFailed": "Error posting Webhook: {{error}}"
+      "requestFailed": "Error posting Webhook: {{error}}",
+      "statsLimitExceeded": "Slack integration cannot post more than {{statsLimit}} stats due to API limits. Reduce the number of stats to post in the 'stats' parameter to avoid this error."
     }
   },
   "summary": {

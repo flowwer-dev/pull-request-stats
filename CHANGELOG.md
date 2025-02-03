@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [3.2.2] - 2025-02-03
+### Fixed
+- Removes the users with empty stats.
+- Limits the number of stats displayed in the Slack message to 10.
+
 ## [3.2.1] - 2025-01-19
 ### Fixed
 - Makes the `include` and `exclude` options case insensitive (solves #101)

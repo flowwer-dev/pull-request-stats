@@ -42800,6 +42800,7 @@ module.exports = ({
 
 const calculateBests = __nccwpck_require__(8657);
 const getTableData = __nccwpck_require__(6026);
+const removeEmpty = __nccwpck_require__(993);
 const sortByStats = __nccwpck_require__(3256);
 
 const applyLimit = (data, limit) => (limit > 0 ? data.slice(0, limit) : data);
@@ -42814,7 +42815,8 @@ module.exports = ({
 }) => {
   const execute = () => {
     const sortByStat = sortBy || mainStats[0];
-    const sorted = applyLimit(sortByStats(entries, sortByStat), limit);
+    const filtered = removeEmpty(entries, mainStats);
+    const sorted = applyLimit(sortByStats(filtered, sortByStat), limit);
     const bests = calculateBests(sorted);
 
     return getTableData({
@@ -42828,6 +42830,17 @@ module.exports = ({
 
   return execute();
 };
+
+
+/***/ }),
+
+/***/ 993:
+/***/ ((module) => {
+
+const removeEmpty = (entries, mainStats) => entries
+  .filter((entry) => mainStats.some((stat) => !!entry.stats[stat]));
+
+module.exports = removeEmpty;
 
 
 /***/ }),
@@ -43535,8 +43548,8 @@ const getUsername = ({ text, image, emoji }) => {
   };
 };
 
-const getStats = ({ row, statNames }) => {
-  const { stats } = row;
+const getStats = ({ row, maxStats, statNames }) => {
+  const stats = maxStats > 0 ? row.stats.slice(0, maxStats) : row.stats;
   const fields = stats.map(({ text, link }, index) => {
     const value = link ? `<${link}|${text}>` : text;
     return {
@@ -43557,10 +43570,11 @@ const getDivider = () => ({
 
 module.exports = ({
   row,
+  maxStats,
   statNames,
 }) => [
   getUsername(row.user),
-  getStats({ row, statNames }),
+  getStats({ row, maxStats, statNames }),
   getDivider(),
 ];
 
@@ -43621,6 +43635,7 @@ module.exports = ({
   table,
   pullRequest,
   periodLength,
+  maxStats,
 }) => ({
   blocks: [
     ...buildSubtitle({
@@ -43634,7 +43649,12 @@ module.exports = ({
     ...table.rows.reduce(
       (prev, row) => [
         ...prev,
-        ...buildRow({ row, statNames: getStatNames(table.headers) })],
+        ...buildRow({
+          row,
+          maxStats,
+          statNames: getStatNames(table.headers),
+        }),
+      ],
       [],
     ),
   ],
@@ -43650,6 +43670,8 @@ const { t } = __nccwpck_require__(269);
 const { postToSlack } = __nccwpck_require__(5045);
 const { SlackSplitter } = __nccwpck_require__(7117);
 const buildMessage = __nccwpck_require__(6429);
+
+const MAX_STATS_PER_BLOCK = 10; // https://api.slack.com/reference/block-kit/blocks
 
 module.exports = async ({
   core,
@@ -43673,6 +43695,13 @@ module.exports = async ({
     return;
   }
 
+  const statsCount = table.rows[0]?.stats?.length;
+  if (statsCount > MAX_STATS_PER_BLOCK) {
+    core.warning(t('integrations.slack.errors.statsLimitExceeded', {
+      statsLimit: MAX_STATS_PER_BLOCK,
+    }));
+  }
+
   const send = (message) => {
     const params = {
       webhook,
@@ -43693,6 +43722,7 @@ module.exports = async ({
     table,
     pullRequest,
     periodLength,
+    maxStats: MAX_STATS_PER_BLOCK,
   });
 
   const { chunks } = new SlackSplitter({ message: fullMessage });
@@ -49640,7 +49670,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"name":"mixpanel","description":"A si
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"pull-request-stats","version":"3.2.1","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.11.1","@actions/github":"^6.0.0","axios":"^1.7.9","humanize-duration":"^3.32.1","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@eslint/eslintrc":"^3.2.0","@eslint/js":"^9.16.0","@vercel/ncc":"^0.38.3","eslint":"^9.16.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.31.0","eslint-plugin-jest":"^28.9.0","globals":"^15.13.0","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"pull-request-stats","version":"3.2.2","description":"Github action to print relevant stats about Pull Request reviewers","main":"dist/index.js","type":"commonjs","scripts":{"build":"eslint src && ncc build src/index.js -o dist -a","test":"jest","lint":"eslint ./"},"keywords":[],"author":"Manuel de la Torre","license":"MIT","jest":{"testEnvironment":"node","testMatch":["**/?(*.)+(spec|test).[jt]s?(x)"]},"dependencies":{"@actions/core":"^1.11.1","@actions/github":"^6.0.0","axios":"^1.7.9","humanize-duration":"^3.32.1","i18n-js":"^3.9.2","jsurl":"^0.1.5","lodash.get":"^4.4.2","markdown-table":"^2.0.0","mixpanel":"^0.18.0"},"devDependencies":{"@eslint/eslintrc":"^3.2.0","@eslint/js":"^9.16.0","@vercel/ncc":"^0.38.3","eslint":"^9.16.0","eslint-config-airbnb-base":"^15.0.0","eslint-plugin-import":"^2.31.0","eslint-plugin-jest":"^28.9.0","globals":"^15.13.0","jest":"^29.7.0"},"funding":"https://github.com/sponsors/manuelmhtr","packageManager":"yarn@4.1.0"}');
 
 /***/ }),
 
@@ -49656,7 +49686,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"logs":{"success":"Action successfull
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"slack":{"logs":{"notConfigured":"Slack integration is disabled. No webhook or channel configured.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"notSponsor":"Slack integration is a premium feature, available to sponsors.\\n(If you are already an sponsor, please make sure it is configured as public).","requestFailed":"Error posting Slack message: {{error}}"}},"teams":{"logs":{"notConfigured":"Microsoft Teams integration is disabled. No webhook configured.","posting":"Post a MS Teams message with params: {{params}}","success":"Successfully posted to MS Teams"},"errors":{"notSponsor":"Microsoft Teams integration is a premium feature, available to sponsors.\\n(If you are already an sponsor, please make sure it is configured as public).","requestFailed":"Error posting MS Teams message: {{error}}"}},"webhook":{"logs":{"notConfigured":"Webhook integration is disabled.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"requestFailed":"Error posting Webhook: {{error}}"}},"summary":{"logs":{"posting":"Post action summary: {{content}}","success":"Successfully posted to action summary"},"errors":{"writeFailed":"Error posting action summary: {{error}}"}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"slack":{"logs":{"notConfigured":"Slack integration is disabled. No webhook or channel configured.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"notSponsor":"Slack integration is a premium feature, available to sponsors.\\n(If you are already an sponsor, please make sure it is configured as public).","requestFailed":"Error posting Slack message: {{error}}"}},"teams":{"logs":{"notConfigured":"Microsoft Teams integration is disabled. No webhook configured.","posting":"Post a MS Teams message with params: {{params}}","success":"Successfully posted to MS Teams"},"errors":{"notSponsor":"Microsoft Teams integration is a premium feature, available to sponsors.\\n(If you are already an sponsor, please make sure it is configured as public).","requestFailed":"Error posting MS Teams message: {{error}}"}},"webhook":{"logs":{"notConfigured":"Webhook integration is disabled.","posting":"Post a Slack message with params: {{params}}","success":"Successfully posted to slack"},"errors":{"requestFailed":"Error posting Webhook: {{error}}","statsLimitExceeded":"Slack integration cannot post more than {{statsLimit}} stats due to API limits. Reduce the number of stats to post in the \'stats\' parameter to avoid this error."}},"summary":{"logs":{"posting":"Post action summary: {{content}}","success":"Successfully posted to action summary"},"errors":{"writeFailed":"Error posting action summary: {{error}}"}}}');
 
 /***/ }),
 

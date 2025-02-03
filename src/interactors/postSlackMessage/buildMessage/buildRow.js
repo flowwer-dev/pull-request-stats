@@ -25,8 +25,8 @@ const getUsername = ({ text, image, emoji }) => {
   };
 };
 
-const getStats = ({ row, statNames }) => {
-  const { stats } = row;
+const getStats = ({ row, maxStats, statNames }) => {
+  const stats = maxStats > 0 ? row.stats.slice(0, maxStats) : row.stats;
   const fields = stats.map(({ text, link }, index) => {
     const value = link ? `<${link}|${text}>` : text;
     return {
@@ -47,9 +47,10 @@ const getDivider = () => ({
 
 module.exports = ({
   row,
+  maxStats,
   statNames,
 }) => [
   getUsername(row.user),
-  getStats({ row, statNames }),
+  getStats({ row, maxStats, statNames }),
   getDivider(),
 ];

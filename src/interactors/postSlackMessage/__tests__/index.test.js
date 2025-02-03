@@ -3,6 +3,7 @@ const { t } = require('../../../i18n');
 const buildMessage = require('../buildMessage');
 const postSlackMessage = require('../index');
 
+const MAX_STATS_PER_BLOCK = 10;
 const MESSAGE = {
   blocks: [
     { type: 'section', text: 'MESSAGE' },
@@ -15,18 +16,25 @@ jest.mock('../buildMessage', () => jest.fn());
 describe('Interactors | .postSlackMessage', () => {
   const debug = jest.fn();
   const error = jest.fn();
+  const warning = jest.fn();
   const setFailed = jest.fn();
+  const table = {
+    rows: [
+      { stats: [] },
+    ],
+  };
 
   const core = {
     debug,
     error,
+    warning,
     setFailed,
   };
 
   const defaultOptions = {
     core,
+    table,
     isSponsor: true,
-    table: 'TABLE',
     pullRequest: 'PULl REQUEST',
     periodLength: 'PERIOD LENGTH',
     slack: {
@@ -74,11 +82,29 @@ describe('Interactors | .postSlackMessage', () => {
     });
   });
 
+  describe('when there are more than the permitted stats', () => {
+    it('warns the user and posts successfully to Slack', async () => {
+      const inputTable = {
+        ...table,
+        rows: [
+          { stats: new Array(MAX_STATS_PER_BLOCK + 1) },
+        ],
+      };
+      const expectedWarning = t('integrations.slack.errors.statsLimitExceeded', {
+        statsLimit: MAX_STATS_PER_BLOCK,
+      });
+      await postSlackMessage({ ...defaultOptions, table: inputTable });
+      expect(warning).toHaveBeenCalledWith(expectedWarning);
+      expect(Fetchers.postToSlack).toHaveBeenCalled();
+    });
+  });
+
   describe('when integration is enabled', () => {
     it('posts successfully to Slack', async () => {
       await postSlackMessage({ ...defaultOptions });
       expect(error).not.toHaveBeenCalled();
       expect(buildMessage).toBeCalledWith({
+        maxStats: MAX_STATS_PER_BLOCK,
         table: defaultOptions.table,
         pullRequest: defaultOptions.pullRequest,
         periodLength: defaultOptions.periodLength,

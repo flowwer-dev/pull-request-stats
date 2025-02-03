@@ -47,4 +47,12 @@ describe('Interactors | .buildTable', () => {
       displayCharts: defaultParams.displayCharts,
     }));
   });
+
+  it('removes the entries with empty stats', () => {
+    const response = buildTable({
+      ...defaultParams,
+      mainStats: [],
+    });
+    expect(response.rows.length).toEqual(0);
+  });
 });
