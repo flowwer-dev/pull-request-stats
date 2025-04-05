@@ -26,6 +26,16 @@ module.exports = [
         },
         isOwnPull: true,
         timeToReview: 123000,
+        comments: [
+          {
+            id: 'comment1',
+            body: 'This is a comment',
+          },
+          {
+            id: 'comment2',
+            body: 'This is another comment',
+          },
+        ],
       },
       {
         id: 5679,
@@ -41,6 +51,12 @@ module.exports = [
         },
         isOwnPull: false,
         timeToReview: 75000,
+        comments: [
+          {
+            id: 'comment3',
+            body: 'This is another comment',
+          },
+        ],
       },
     ],
   },
@@ -71,6 +87,7 @@ module.exports = [
         },
         isOwnPull: false,
         timeToReview: 55000,
+        comments: [],
       },
       {
         id: 9877,
@@ -86,6 +103,7 @@ module.exports = [
         },
         isOwnPull: false,
         timeToReview: 145000,
+        comments: [],
       },
     ],
   },

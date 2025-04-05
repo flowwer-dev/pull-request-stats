@@ -1,10 +1,15 @@
-const { users, reviewStats, pullRequestStats } = require('../../../tests/mocks');
 const fulfillEntries = require('../fulfillEntries');
 const getPullRequestStats = require('../getPullRequestStats');
 const getReviewStats = require('../getReviewStats');
 const getUsers = require('../getUsers');
 const mergeStats = require('../mergeStats');
 const getEntries = require('../getEntries');
+const {
+  users,
+  reviewStats,
+  commentsAIStats,
+  pullRequestStats,
+} = require('../../../tests/mocks');
 
 jest.mock('../fulfillEntries', () => jest.fn());
 jest.mock('../getPullRequestStats', () => jest.fn());
@@ -20,6 +25,7 @@ describe('Interactors | .getEntries', () => {
   const params = {
     core,
     pulls,
+    commentsAIStats,
     excludeStr: 'EXCLUDE',
     includeStr: 'INCLUDE',
     periodLength: 'PERIOD_LENGTH',
@@ -41,7 +47,7 @@ describe('Interactors | .getEntries', () => {
       includeStr: params.includeStr,
     });
     expect(getPullRequestStats).toBeCalledWith(pulls);
-    expect(getReviewStats).toBeCalledWith(pulls);
+    expect(getReviewStats).toBeCalledWith({ pulls, commentsAIStats });
     expect(mergeStats).toBeCalledWith({ users, pullRequestStats, reviewStats });
     expect(fulfillEntries).toBeCalledWith(merged, { periodLength: params.periodLength });
     expect(core.info).toHaveBeenCalledTimes(3);

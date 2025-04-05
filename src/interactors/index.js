@@ -5,6 +5,7 @@ const buildJsonOutput = require('./buildJsonOutput');
 const buildMarkdown = require('./buildMarkdown');
 const checkSponsorship = require('./checkSponsorship');
 const fulfillEntries = require('./fulfillEntries');
+const getCommentsAIStats = require('./getCommentsAIStats');
 const getEntries = require('./getEntries');
 const getPulls = require('./getPulls');
 const getPullRequestStats = require('./getPullRequestStats');
@@ -26,6 +27,7 @@ module.exports = {
   buildMarkdown,
   checkSponsorship,
   fulfillEntries,
+  getCommentsAIStats,
   getEntries,
   getPulls,
   getPullRequestStats,

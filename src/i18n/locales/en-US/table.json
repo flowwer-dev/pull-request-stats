@@ -26,7 +26,10 @@
     "revisionSuccessRate": "Revision success rate",
     "additions": "Additions",
     "deletions": "Deletions",
-    "lines": "Lines of code"
+    "lines": "Lines of code",
+    "cognitiveEffortScore": "Cognitive effort score",
+    "estimatedWritingTime": "Writing time",
+    "constructiveComments": "Constructive comments"
   },
   "footer": "<sup>⚡️ [Pull request stats](https://bit.ly/pull-request-stats)</sup>"
 }

@@ -8,6 +8,7 @@ const { getGithubApiUrl } = require('./config');
 const {
   alreadyPublished,
   checkSponsorship,
+  getCommentsAIStats,
   getPulls,
   getEntries,
   publish,
@@ -30,10 +31,20 @@ const run = async ({ inputs, octokit }) => {
     startDate: subtractDaysToDate(new Date(), inputs.periodLength),
   });
   core.info(`Found ${pulls.length} pull requests to analyze`);
+  core.debug(`Sample pull requests: ${JSON.stringify(pulls.slice(0, 10), null, 2)}`);
+
+  const commentsAIStats = await getCommentsAIStats({
+    core,
+    pulls,
+    openaiApiKey: inputs.openaiApiKey,
+    mainStats: inputs.mainStats,
+  });
+  core.info(`Got ${Object.keys(commentsAIStats).length} AI insights for comments`);
 
   const entries = await getEntries({
     core,
     pulls,
+    commentsAIStats,
     excludeStr: inputs.excludeStr,
     includeStr: inputs.includeStr,
     periodLength: inputs.periodLength,

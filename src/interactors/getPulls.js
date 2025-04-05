@@ -32,7 +32,7 @@ module.exports = ({
   org,
   repos,
   startDate,
-  itemsPerPage = 100,
+  itemsPerPage = 25,
 }) => {
   const search = buildQuery({ org, repos, startDate });
   return getPullRequests({ octokit, search, limit: itemsPerPage });

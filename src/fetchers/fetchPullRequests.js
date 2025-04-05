@@ -17,8 +17,14 @@ const PRS_QUERY = `
                 state
                 submittedAt
                 commit { pushedDate }
-                comments { totalCount }
                 author { ...ActorFragment }
+                comments(first: 100) {
+                  totalCount
+                  nodes {
+                    id
+                    body
+                  }
+                }
               }
             }
           }

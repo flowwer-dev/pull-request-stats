@@ -65,6 +65,7 @@ The possible inputs for this action are:
 | `slackChannel`  | The Slack channel where stats will be posted. Include the `#` character (e.g. `#mychannel`). Required when a `slackWebhook` is configured. | `null`            |
 | `teamsWebhook`  | A Microsoft Teams webhook URL to post resulting stats. **This option is a premium feature reserved for [sponsors](#premium-features-).** See [full documentation here](/docs/teams.md). | `null`            |
 | `webhook`       | A webhook URL to send the resulting stats as JSON (integrate with Zapier, IFTTT...). See [full documentation here](/docs/webhook.md). | `null`            |
+| `openaiApiKey`  | Your OpenAI API key. **Used to calculate the [qualitative stats](#qualitative-stats).** THIS IS A BETA FEATURE, IT MAY CHANGE IN THE NEAR FUTURE TO SUPPORT OTHER AI PROVIDERS AND MODELS. | `null` |
 
 
 ### Action outputs
@@ -193,6 +194,20 @@ Stats related to the production process (opened pull requests):
 | **Additions (`additions`):** | The total number of added lines across the opened pull requests. |
 | **Deletions (`deletions`):** | The total number of deleted lines across the opened pull requests. |
 | **Lines (`lines`):** | The total number of lines changed (added and deleted) across all pull requests opened by the user. |
+
+### Qualitative stats:
+
+Qualitavie stats related to the comments on the reviews:
+
+> [!IMPORTANT]
+> To use these stats, you need to configure the `openaiApiKey` input with your OpenAI API key.
+
+| Stat name and ID | Description |
+| ---------------- | ----------- |
+| **Cognitive effort score (`cognitiveEffortScore`):** | Measures the depth and complexity of a review comment—ranging from 0 (minimal effort) to 5 (high effort)—based on reasoning, clarity, technical detail, and overall thoroughness. The output is the sum of the scores of all the comments in the reviews. |
+|**Estimated writing time (`estimatedWritingTime`):** | Estimates the time it likely took a reviewer to craft each comment, factoring in length, depth, and technical complexity.|
+|**Constructive comments (`constructiveComments`):** | The number of comments that are considered constructive, that means they add some value to the code (ie. not just "LGTM"). |
+
 
 ## Integrations 🔌
 

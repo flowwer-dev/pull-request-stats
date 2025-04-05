@@ -43,6 +43,9 @@ describe('Interactors | .mergeStats', () => {
       additions: 100,
       deletions: 50,
       lines: 150,
+      cognitiveEffortScore: 10,
+      estimatedWritingTime: 1000,
+      constructiveComments: 5,
     });
   });
 
@@ -65,6 +68,9 @@ describe('Interactors | .mergeStats', () => {
       additions: null,
       deletions: null,
       lines: null,
+      cognitiveEffortScore: null,
+      estimatedWritingTime: null,
+      constructiveComments: null,
     });
   });
 

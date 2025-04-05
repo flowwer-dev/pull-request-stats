@@ -27,7 +27,8 @@
     "jsurl": "^0.1.5",
     "lodash.get": "^4.4.2",
     "markdown-table": "^2.0.0",
-    "mixpanel": "^0.18.0"
+    "mixpanel": "^0.18.0",
+    "openai": "^4.91.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

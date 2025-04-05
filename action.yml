@@ -82,11 +82,16 @@ inputs:
   teams-webhook:
     description: 'Used for retro compatibility. Use "teamsWebhook" input instead.'
     required: false
+  openaiApiKey:
+    description: 'Your OpenAI API key.'
+    required: false
 outputs:
   resultsMd:
     description: 'The resulting stats stored as a step output variable in Markdown format.'
   resultsJson:
     description: 'The resulting stats stored as a step output variable in JSON format.'
+  aiCommentsStats:
+    description: 'The AI stats for the comments in JSON format.'
 runs:
   using: node20
   main: 'dist/index.js'

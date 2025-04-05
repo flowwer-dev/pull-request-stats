@@ -4,6 +4,7 @@ const parseUser = require('./parseUser');
 const APPROVED = 'APPROVED';
 
 module.exports = (data = {}, pullRequest = {}) => {
+  const id = get(data, 'id');
   const author = parseUser(data.author);
   const isOwnPull = author.login === pullRequest.authorLogin;
   const submittedAt = new Date(data.submittedAt);
@@ -13,6 +14,10 @@ module.exports = (data = {}, pullRequest = {}) => {
   const startDate = Math.max(pullRequest.publishedAt, commitDate);
   const hasBody = !!((body || '').trim());
   const extraComment = hasBody ? 1 : 0;
+  const comments = [
+    ...(body ? [{ id, body }] : []),
+    ...get(data, 'comments.nodes', []),
+  ];
 
   return {
     author,
@@ -24,5 +29,6 @@ module.exports = (data = {}, pullRequest = {}) => {
     isApproved: state === APPROVED,
     commentsCount: get(data, 'comments.totalCount') + extraComment,
     timeToReview: submittedAt - startDate,
+    comments,
   };
 };

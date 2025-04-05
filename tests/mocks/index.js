@@ -1,3 +1,4 @@
+const commentsAIStats = require('./commentsAIStats');
 const entries = require('./entries');
 const pullRequests = require('./pullRequests');
 const pullRequestStats = require('./pullRequestStats');
@@ -7,6 +8,7 @@ const table = require('./table');
 const users = require('./users');
 
 module.exports = {
+  commentsAIStats,
   entries,
   pullRequests,
   pullRequestStats,

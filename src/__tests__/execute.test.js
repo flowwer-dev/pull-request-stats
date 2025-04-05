@@ -7,6 +7,7 @@ const { fetchPullRequestById } = require('../fetchers');
 const {
   alreadyPublished,
   checkSponsorship,
+  getCommentsAIStats,
   getPulls,
   getEntries,
   publish,
@@ -37,6 +38,7 @@ jest.mock('../fetchers', () => ({
 jest.mock('../interactors', () => ({
   alreadyPublished: jest.fn(),
   checkSponsorship: jest.fn(),
+  getCommentsAIStats: jest.fn(),
   getPulls: jest.fn(),
   getEntries: jest.fn(),
   publish: jest.fn(),
@@ -48,6 +50,7 @@ describe('execute', () => {
   const pulls = ['PULL1', 'PULL2', 'PULL3'];
   const pullRequest = 'PULL_REQUEST';
   const isSponsor = 'isSponsor';
+  const commentsAIStats = 'COMMENTS_AI_STATS';
   const telemetry = {
     start: jest.fn(),
     success: jest.fn(),
@@ -72,6 +75,7 @@ describe('execute', () => {
     telemetry: 'telemetry',
     githubToken: 'githubToken',
     personalToken: 'personalToken',
+    openaiApiKey: 'openaiApiKey',
   };
   const globalOctokit = `OCTOKIT_${inputs.githubToken}`;
   const personalOctokit = `OCTOKIT_${inputs.personalToken}`;
@@ -81,6 +85,7 @@ describe('execute', () => {
   checkSponsorship.mockResolvedValue(isSponsor);
   github.getOctokit.mockImplementation((token) => `OCTOKIT_${token}`);
   fetchPullRequestById.mockResolvedValue(pullRequest);
+  getCommentsAIStats.mockResolvedValue(commentsAIStats);
   alreadyPublished.mockReturnValue(false);
   getPulls.mockResolvedValue(pulls);
   getEntries.mockResolvedValue(entries);
@@ -98,9 +103,16 @@ describe('execute', () => {
       octokit: personalOctokit,
       startDate: expect.any(Date),
     });
+    expect(getCommentsAIStats).toBeCalledWith({
+      core,
+      pulls,
+      openaiApiKey: inputs.openaiApiKey,
+      mainStats: inputs.mainStats,
+    });
     expect(getEntries).toBeCalledWith({
       core,
       pulls,
+      commentsAIStats,
       excludeStr: inputs.excludeStr,
       includeStr: inputs.includeStr,
       periodLength: inputs.periodLength,

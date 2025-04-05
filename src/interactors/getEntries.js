@@ -10,6 +10,7 @@ module.exports = async ({
   excludeStr,
   includeStr,
   periodLength,
+  commentsAIStats,
 }) => {
   const users = await getUsers(pulls, { excludeStr, includeStr });
   core.info(`Found ${users.length} collaborators to analyze`);
@@ -19,7 +20,7 @@ module.exports = async ({
   core.info(`Analyzed stats for ${pullRequestStats.length} authors`);
   core.debug(JSON.stringify(pullRequestStats, null, 2));
 
-  const reviewStats = getReviewStats(pulls);
+  const reviewStats = getReviewStats({ pulls, commentsAIStats });
   core.info(`Analyzed stats for ${reviewStats.length} reviewers`);
   core.debug(JSON.stringify(reviewStats, null, 2));
 

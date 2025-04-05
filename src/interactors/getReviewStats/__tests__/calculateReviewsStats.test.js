@@ -1,9 +1,9 @@
-const { reviews: input, pullRequests } = require('../../../../tests/mocks');
+const { reviews, pullRequests, commentsAIStats } = require('../../../../tests/mocks');
 const calculateReviewsStats = require('../calculateReviewsStats');
 
 describe('Interactors | getReviewStats | .calculateReviewsStats', () => {
   const pullsById = pullRequests.reduce((acc, pr) => ({ ...acc, [pr.id]: pr }), {});
-  const result = calculateReviewsStats(input, pullsById);
+  const result = calculateReviewsStats({ reviews, pullsById, commentsAIStats });
 
   it('calculates the totalReviews', () => {
     expect(result.totalReviews).toBe(2);
@@ -31,5 +31,17 @@ describe('Interactors | getReviewStats | .calculateReviewsStats', () => {
 
   it('calculates the reviewedLines', () => {
     expect(result.reviewedLines).toBe(260);
+  });
+
+  it('calculates the cognitiveEffortScore', () => {
+    expect(result.cognitiveEffortScore).toBe(10);
+  });
+
+  it('calculates the estimatedWritingTime', () => {
+    expect(result.estimatedWritingTime).toBe(1000);
+  });
+
+  it('calculates the constructiveComments', () => {
+    expect(result.constructiveComments).toBe(2);
   });
 });

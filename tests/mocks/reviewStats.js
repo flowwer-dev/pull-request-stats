@@ -39,6 +39,9 @@ module.exports = [
       reviewedAdditions: 1_000,
       reviewedDeletions: 500,
       reviewedLines: 1_500,
+      cognitiveEffortScore: 10,
+      estimatedWritingTime: 1000,
+      constructiveComments: 5,
     },
   },
   {
@@ -60,6 +63,9 @@ module.exports = [
       reviewedAdditions: 5_000,
       reviewedDeletions: 4_500,
       reviewedLines: 9_500,
+      cognitiveEffortScore: 1,
+      estimatedWritingTime: 60,
+      constructiveComments: 0,
     },
   },
 ];

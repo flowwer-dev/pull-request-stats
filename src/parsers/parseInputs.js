@@ -43,6 +43,7 @@ module.exports = ({ core, github, currentRepo }) => {
     includeStr: core.getInput('include'),
     telemetry: core.getBooleanInput('telemetry'),
     webhook: core.getInput('webhook'),
+    openaiApiKey: core.getInput('openaiApiKey'),
     slack: {
       webhook: core.getInput('slackWebhook'),
       channel: core.getInput('slackChannel'),

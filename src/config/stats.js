@@ -10,6 +10,8 @@ const toFixed = (decimals = 0) => (value) => {
   }).format(value);
 };
 
+const minutesToString = (value) => durationToString(value * 60 * 1000);
+
 const STATS = {
   totalReviews: {
     id: 'totalReviews',
@@ -81,14 +83,40 @@ const STATS = {
     sortOrder: 'DESC',
     parser: toFixed(0),
   },
+  cognitiveEffortScore: {
+    id: 'cognitiveEffortScore',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
+  estimatedWritingTime: {
+    id: 'estimatedWritingTime',
+    sortOrder: 'DESC',
+    parser: minutesToString,
+  },
+  constructiveComments: {
+    id: 'constructiveComments',
+    sortOrder: 'DESC',
+    parser: toFixed(0),
+  },
 };
 
 const VALID_STATS = Object.keys(STATS);
 
-const DEFAULT_STATS = ['totalReviews', 'timeToReview', 'totalComments'];
+const AI_STATS = [
+  STATS.cognitiveEffortScore.id,
+  STATS.estimatedWritingTime.id,
+  STATS.constructiveComments.id,
+];
+
+const DEFAULT_STATS = [
+  STATS.totalReviews.id,
+  STATS.timeToReview.id,
+  STATS.totalComments.id,
+];
 
 module.exports = {
   STATS,
+  AI_STATS,
   VALID_STATS,
   DEFAULT_STATS,
 };
