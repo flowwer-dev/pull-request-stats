@@ -12,7 +12,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@actions/core@npm:^1.11.1":
+"@actions/core@npm:1.11.1":
   version: 1.11.1
   resolution: "@actions/core@npm:1.11.1"
   dependencies:
@@ -31,7 +31,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@actions/github@npm:^6.0.0":
+"@actions/github@npm:6.0.0":
   version: 6.0.0
   resolution: "@actions/github@npm:6.0.0"
   dependencies:
@@ -781,7 +781,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/eslintrc@npm:^3.2.0":
+"@eslint/eslintrc@npm:3.2.0, @eslint/eslintrc@npm:^3.2.0":
   version: 3.2.0
   resolution: "@eslint/eslintrc@npm:3.2.0"
   dependencies:
@@ -798,7 +798,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.16.0, @eslint/js@npm:^9.16.0":
+"@eslint/js@npm:9.16.0":
   version: 9.16.0
   resolution: "@eslint/js@npm:9.16.0"
   checksum: 10c0/a55846a4ddade720662d36682f3eaaf38eac06eeee12c83bb837bba2b7d550dadcb3445b104219f0bc1da2e09b4fe5fb5ba123b8338c8c787bcfbd540878df75
@@ -1602,7 +1602,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vercel/ncc@npm:^0.38.3":
+"@vercel/ncc@npm:0.38.3":
   version: 0.38.3
   resolution: "@vercel/ncc@npm:0.38.3"
   dependencies:
@@ -1891,14 +1891,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.7.9":
-  version: 1.7.9
-  resolution: "axios@npm:1.7.9"
+"axios@npm:1.13.2":
+  version: 1.13.2
+  resolution: "axios@npm:1.13.2"
   dependencies:
     follow-redirects: "npm:^1.15.6"
-    form-data: "npm:^4.0.0"
+    form-data: "npm:^4.0.4"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/b7a41e24b59fee5f0f26c1fc844b45b17442832eb3a0fb42dd4f1430eb4abc571fe168e67913e8a1d91c993232bd1d1ab03e20e4d1fee8c6147649b576fc1b0b
+  checksum: 10c0/e8a42e37e5568ae9c7a28c348db0e8cf3e43d06fcbef73f0048669edfe4f71219664da7b6cc991b0c0f01c28a48f037c515263cb79be1f1ae8ff034cd813867b
   languageName: node
   linkType: hard
 
@@ -2845,6 +2845,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"es-set-tostringtag@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "es-set-tostringtag@npm:2.1.0"
+  dependencies:
+    es-errors: "npm:^1.3.0"
+    get-intrinsic: "npm:^1.2.6"
+    has-tostringtag: "npm:^1.0.2"
+    hasown: "npm:^2.0.2"
+  checksum: 10c0/ef2ca9ce49afe3931cb32e35da4dcb6d86ab02592cfc2ce3e49ced199d9d0bb5085fc7e73e06312213765f5efa47cc1df553a6a5154584b21448e9fb8355b1af
+  languageName: node
+  linkType: hard
+
 "es-shim-unscopables@npm:^1.0.0":
   version: 1.0.0
   resolution: "es-shim-unscopables@npm:1.0.0"
@@ -2902,7 +2914,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-airbnb-base@npm:^15.0.0":
+"eslint-config-airbnb-base@npm:15.0.0":
   version: 15.0.0
   resolution: "eslint-config-airbnb-base@npm:15.0.0"
   dependencies:
@@ -2940,7 +2952,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:^2.31.0":
+"eslint-plugin-import@npm:2.31.0":
   version: 2.31.0
   resolution: "eslint-plugin-import@npm:2.31.0"
   dependencies:
@@ -2969,7 +2981,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:^28.9.0":
+"eslint-plugin-jest@npm:28.9.0":
   version: 28.9.0
   resolution: "eslint-plugin-jest@npm:28.9.0"
   dependencies:
@@ -3018,7 +3030,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^9.16.0":
+"eslint@npm:9.16.0":
   version: 9.16.0
   resolution: "eslint@npm:9.16.0"
   dependencies:
@@ -3300,14 +3312,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"form-data@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "form-data@npm:4.0.0"
+"form-data@npm:4.0.4":
+  version: 4.0.4
+  resolution: "form-data@npm:4.0.4"
   dependencies:
     asynckit: "npm:^0.4.0"
     combined-stream: "npm:^1.0.8"
+    es-set-tostringtag: "npm:^2.1.0"
+    hasown: "npm:^2.0.2"
     mime-types: "npm:^2.1.12"
-  checksum: 10c0/cb6f3ac49180be03ff07ba3ff125f9eba2ff0b277fb33c7fc47569fc5e616882c5b1c69b9904c4c4187e97dd0419dd03b134174756f296dec62041e6527e2c6e
+  checksum: 10c0/373525a9a034b9d57073e55eab79e501a714ffac02e7a9b01be1c820780652b16e4101819785e1e18f8d98f0aee866cc654d660a435c378e16a72f2e7cac9695
   languageName: node
   linkType: hard
 
@@ -3550,6 +3564,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"globals@npm:15.13.0":
+  version: 15.13.0
+  resolution: "globals@npm:15.13.0"
+  checksum: 10c0/640365115ca5f81d91e6a7667f4935021705e61a1a5a76a6ec5c3a5cdf6e53f165af7f9db59b7deb65cf2e1f83d03ac8d6660d0b14c569c831a9b6483eeef585
+  languageName: node
+  linkType: hard
+
 "globals@npm:^11.1.0":
   version: 11.12.0
   resolution: "globals@npm:11.12.0"
@@ -3561,13 +3582,6 @@ __metadata:
   version: 14.0.0
   resolution: "globals@npm:14.0.0"
   checksum: 10c0/b96ff42620c9231ad468d4c58ff42afee7777ee1c963013ff8aabe095a451d0ceeb8dcd8ef4cbd64d2538cef45f787a78ba3a9574f4a634438963e334471302d
-  languageName: node
-  linkType: hard
-
-"globals@npm:^15.13.0":
-  version: 15.13.0
-  resolution: "globals@npm:15.13.0"
-  checksum: 10c0/640365115ca5f81d91e6a7667f4935021705e61a1a5a76a6ec5c3a5cdf6e53f165af7f9db59b7deb65cf2e1f83d03ac8d6660d0b14c569c831a9b6483eeef585
   languageName: node
   linkType: hard
 
@@ -3794,14 +3808,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"humanize-duration@npm:^3.32.1":
+"humanize-duration@npm:3.32.1":
   version: 3.32.1
   resolution: "humanize-duration@npm:3.32.1"
   checksum: 10c0/76cadedd4c5552912f04955a65e8776ce540da1c5e88bc8873a55fed20f312d0875d1642f13d4cd275dd837b19b8f10e460cbdddfc9e5596bf0dbcb383c11ec6
   languageName: node
   linkType: hard
 
-"i18n-js@npm:^3.9.2":
+"i18n-js@npm:3.9.2":
   version: 3.9.2
   resolution: "i18n-js@npm:3.9.2"
   checksum: 10c0/0d729d6fa341b173140b9aea6d4d5f9cda86c81f61bba9ad9ac31fc51f2a1e110da55e530cee55fd123e0a06c6ead86ca0479a661282f5e80579a819bea7c8cb
@@ -4761,7 +4775,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^29.7.0":
+"jest@npm:29.7.0":
   version: 29.7.0
   resolution: "jest@npm:29.7.0"
   dependencies:
@@ -4876,7 +4890,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsurl@npm:^0.1.5":
+"jsurl@npm:0.1.5":
   version: 0.1.5
   resolution: "jsurl@npm:0.1.5"
   checksum: 10c0/45af8a64ddb4e812c95bf06fd32383f52ed72541a9244b21b5f57ac31f3bd85aa9b41dd0602a7b738b6eb422d0c4ca227a5b67aede5ec4f508bf2bee6b589aca
@@ -4941,7 +4955,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.get@npm:^4.4.2":
+"lodash.get@npm:4.4.2":
   version: 4.4.2
   resolution: "lodash.get@npm:4.4.2"
   checksum: 10c0/48f40d471a1654397ed41685495acb31498d5ed696185ac8973daef424a749ca0c7871bf7b665d5c14f5cc479394479e0307e781f61d5573831769593411be6e
@@ -5017,7 +5031,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"markdown-table@npm:^2.0.0":
+"markdown-table@npm:2.0.0":
   version: 2.0.0
   resolution: "markdown-table@npm:2.0.0"
   dependencies:
@@ -5198,7 +5212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mixpanel@npm:^0.18.0":
+"mixpanel@npm:0.18.0":
   version: 0.18.0
   resolution: "mixpanel@npm:0.18.0"
   dependencies:
@@ -5664,24 +5678,24 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "pull-request-stats@workspace:."
   dependencies:
-    "@actions/core": "npm:^1.11.1"
-    "@actions/github": "npm:^6.0.0"
-    "@eslint/eslintrc": "npm:^3.2.0"
-    "@eslint/js": "npm:^9.16.0"
-    "@vercel/ncc": "npm:^0.38.3"
-    axios: "npm:^1.7.9"
-    eslint: "npm:^9.16.0"
-    eslint-config-airbnb-base: "npm:^15.0.0"
-    eslint-plugin-import: "npm:^2.31.0"
-    eslint-plugin-jest: "npm:^28.9.0"
-    globals: "npm:^15.13.0"
-    humanize-duration: "npm:^3.32.1"
-    i18n-js: "npm:^3.9.2"
-    jest: "npm:^29.7.0"
-    jsurl: "npm:^0.1.5"
-    lodash.get: "npm:^4.4.2"
-    markdown-table: "npm:^2.0.0"
-    mixpanel: "npm:^0.18.0"
+    "@actions/core": "npm:1.11.1"
+    "@actions/github": "npm:6.0.0"
+    "@eslint/eslintrc": "npm:3.2.0"
+    "@eslint/js": "npm:9.16.0"
+    "@vercel/ncc": "npm:0.38.3"
+    axios: "npm:1.13.2"
+    eslint: "npm:9.16.0"
+    eslint-config-airbnb-base: "npm:15.0.0"
+    eslint-plugin-import: "npm:2.31.0"
+    eslint-plugin-jest: "npm:28.9.0"
+    globals: "npm:15.13.0"
+    humanize-duration: "npm:3.32.1"
+    i18n-js: "npm:3.9.2"
+    jest: "npm:29.7.0"
+    jsurl: "npm:0.1.5"
+    lodash.get: "npm:4.4.2"
+    markdown-table: "npm:2.0.0"
+    mixpanel: "npm:0.18.0"
   languageName: unknown
   linkType: soft
 
