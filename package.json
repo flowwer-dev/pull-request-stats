@@ -21,7 +21,7 @@
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.0",
-    "axios": "1.13.2",
+    "axios": "1.12.0",
     "humanize-duration": "3.32.1",
     "i18n-js": "3.9.2",
     "jsurl": "0.1.5",
