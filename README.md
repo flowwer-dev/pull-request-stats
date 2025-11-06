@@ -37,7 +37,10 @@ Just add this action to one of your [workflow files](https://docs.github.com/en/
 
 ```yml
       - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@main
+        uses: pipedrive-actions/pull-request-stats@v3-pipedrive
+        # Optional: you can specify the length of the period used to calculate the stats, expressed in days
+        with:
+          period: 14
 ```
 
 If you are getting an empty table or an error, check the [troubleshooting section](#troubleshooting).
@@ -95,7 +98,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@main
+        uses: pipedrive-actions/pull-request-stats@v3-pipedrive
 ```
 
 This config will:
@@ -131,7 +134,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run pull request stats
-        uses: flowwer-dev/pull-request-stats@main
+        uses: pipedrive-actions/pull-request-stats@v3-pipedrive
         with:
           token: ${{ secrets.ADD_A_PERSONAL_ACCESS_TOKEN }}
           organization: 'piedpiper'
@@ -221,7 +224,7 @@ Check the guide for the tool you want to integrate:
         pull-requests: write
       steps:
         - name: Run pull request stats
-          uses: flowwer-dev/pull-request-stats@main
+          uses: pipedrive-actions/pull-request-stats@v3-pipedrive
   ```
 </details>
 
@@ -239,7 +242,7 @@ Check the guide for the tool you want to integrate:
         pull-requests: write
       steps:
         - name: Run pull request stats
-          uses: flowwer-dev/pull-request-stats@main
+          uses: pipedrive-actions/pull-request-stats@v3-pipedrive
   ```
 </details>
 
