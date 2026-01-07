@@ -141,6 +141,14 @@ describe('execute', () => {
     expect(github.getOctokit).toBeCalledWith(inputs.personalToken, { baseUrl: githubUrl });
   });
 
+  it('aborts execution when no entries are found', async () => {
+    getEntries.mockResolvedValueOnce([]);
+    const results = await execute(inputs);
+    expect(results).toBeNull();
+    expect(getEntries).toBeCalled();
+    expect(publish).not.toBeCalled();
+  });
+
   describe('Sponsorship', () => {
     it('checks if the user is a sponsor', async () => {
       checkSponsorship.mockResolvedValueOnce(true);
