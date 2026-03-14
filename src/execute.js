@@ -40,6 +40,11 @@ const run = async ({ inputs, octokit }) => {
   });
   core.debug(`Analyzed entries: ${entries.length}`);
 
+  if (entries.length === 0) {
+    core.info('No reviews found for the specified period.');
+    return null;
+  }
+
   await publish({
     core,
     octokit,
